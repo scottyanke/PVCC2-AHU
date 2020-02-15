@@ -1,0 +1,2598 @@
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"ds18b20.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.ds18b20_get_precision,"ax",%progbits
+  20              		.align	2
+  21              		.global	ds18b20_get_precision
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	ds18b20_get_precision, %function
+  25              	ds18b20_get_precision:
+  26              	.LFB64:
+  27              		.file 1 "..\\ds18b20.c"
+   1:..\ds18b20.c  **** #include "project.h"
+   2:..\ds18b20.c  **** #include "ds18b20.h"
+   3:..\ds18b20.c  **** // this code came from assorted places.  Most of it from https://github.com/ppkt/stm32f1-ds18b20/bl
+   4:..\ds18b20.c  **** // the original github code was written for the STM32 series of MCUs, not the Cypress PSoC 5LP.
+   5:..\ds18b20.c  **** 
+   6:..\ds18b20.c  **** static uint8_t precision = 2;       // this indicates 11 bit precision from the DS18B20, don't need
+   7:..\ds18b20.c  **** static one_wire_device *one_wire_list_of_devices;
+   8:..\ds18b20.c  **** static uint8_t one_wire_devices_list_size = 10; // never actually got more than 6 to work...
+   9:..\ds18b20.c  **** 
+  10:..\ds18b20.c  **** 
+  11:..\ds18b20.c  **** uint8_t ds18b20_get_precision(void)
+  12:..\ds18b20.c  **** {
+  28              		.loc 1 12 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  13:..\ds18b20.c  ****     return precision;
+  14:..\ds18b20.c  **** }
+  33              		.loc 1 14 0
+  34 0000 014B     		ldr	r3, .L2
+  35 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+  36 0004 7047     		bx	lr
+  37              	.L3:
+  38 0006 00BF     		.align	2
+  39              	.L2:
+  40 0008 00000000 		.word	.LANCHOR0
+  41              		.cfi_endproc
+  42              	.LFE64:
+  43              		.size	ds18b20_get_precision, .-ds18b20_get_precision
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 2
+
+
+  44              		.section	.text.ds18b20_get_devices,"ax",%progbits
+  45              		.align	2
+  46              		.global	ds18b20_get_devices
+  47              		.thumb
+  48              		.thumb_func
+  49              		.type	ds18b20_get_devices, %function
+  50              	ds18b20_get_devices:
+  51              	.LFB65:
+  15:..\ds18b20.c  **** 
+  16:..\ds18b20.c  **** ds18b20_devices ds18b20_get_devices(uint8_t scan) 
+  17:..\ds18b20.c  **** {
+  52              		.loc 1 17 0
+  53              		.cfi_startproc
+  54              		@ args = 0, pretend = 0, frame = 0
+  55              		@ frame_needed = 0, uses_anonymous_args = 0
+  56              	.LVL0:
+  57 0000 10B5     		push	{r4, lr}
+  58              		.cfi_def_cfa_offset 8
+  59              		.cfi_offset 4, -8
+  60              		.cfi_offset 14, -4
+  61 0002 0446     		mov	r4, r0
+  18:..\ds18b20.c  ****     if (scan) 
+  62              		.loc 1 18 0
+  63 0004 39B1     		cbz	r1, .L5
+  19:..\ds18b20.c  ****     {
+  20:..\ds18b20.c  ****         one_wire_devices_list_size = 0;
+  64              		.loc 1 20 0
+  65 0006 0848     		ldr	r0, .L7
+  66              	.LVL1:
+  67 0008 0023     		movs	r3, #0
+  68 000a 00F8013F 		strb	r3, [r0, #1]!
+  21:..\ds18b20.c  ****         one_wire_list_of_devices = one_wire_search_rom(&one_wire_devices_list_size);
+  69              		.loc 1 21 0
+  70 000e FFF7FEFF 		bl	one_wire_search_rom
+  71              	.LVL2:
+  72 0012 064B     		ldr	r3, .L7+4
+  73 0014 1860     		str	r0, [r3]
+  74              	.L5:
+  22:..\ds18b20.c  ****     }
+  23:..\ds18b20.c  ****     ds18b20_devices ret;
+  24:..\ds18b20.c  ****     ret.size = one_wire_devices_list_size;
+  75              		.loc 1 24 0
+  76 0016 044B     		ldr	r3, .L7
+  77 0018 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+  78 001a 2370     		strb	r3, [r4]
+  25:..\ds18b20.c  ****     ret.devices = one_wire_list_of_devices;
+  79              		.loc 1 25 0
+  80 001c 034B     		ldr	r3, .L7+4
+  81 001e 1B68     		ldr	r3, [r3]
+  82 0020 6360     		str	r3, [r4, #4]
+  26:..\ds18b20.c  ****     return ret;
+  27:..\ds18b20.c  **** }
+  83              		.loc 1 27 0
+  84 0022 2046     		mov	r0, r4
+  85 0024 10BD     		pop	{r4, pc}
+  86              	.LVL3:
+  87              	.L8:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 3
+
+
+  88 0026 00BF     		.align	2
+  89              	.L7:
+  90 0028 00000000 		.word	.LANCHOR0
+  91 002c 00000000 		.word	.LANCHOR1
+  92              		.cfi_endproc
+  93              	.LFE65:
+  94              		.size	ds18b20_get_devices, .-ds18b20_get_devices
+  95              		.section	.text.ds18b20_set_precision,"ax",%progbits
+  96              		.align	2
+  97              		.global	ds18b20_set_precision
+  98              		.thumb
+  99              		.thumb_func
+ 100              		.type	ds18b20_set_precision, %function
+ 101              	ds18b20_set_precision:
+ 102              	.LFB66:
+  28:..\ds18b20.c  **** 
+  29:..\ds18b20.c  **** void ds18b20_set_precision(uint8_t p) 
+  30:..\ds18b20.c  **** {
+ 103              		.loc 1 30 0
+ 104              		.cfi_startproc
+ 105              		@ args = 0, pretend = 0, frame = 0
+ 106              		@ frame_needed = 0, uses_anonymous_args = 0
+ 107              	.LVL4:
+ 108 0000 10B5     		push	{r4, lr}
+ 109              		.cfi_def_cfa_offset 8
+ 110              		.cfi_offset 4, -8
+ 111              		.cfi_offset 14, -4
+  31:..\ds18b20.c  ****     precision = p;
+ 112              		.loc 1 31 0
+ 113 0002 0C4C     		ldr	r4, .L11
+ 114 0004 2070     		strb	r0, [r4]
+  32:..\ds18b20.c  ****     one_wire_reset_pulse();
+ 115              		.loc 1 32 0
+ 116 0006 FFF7FEFF 		bl	one_wire_reset_pulse
+ 117              	.LVL5:
+  33:..\ds18b20.c  **** 
+  34:..\ds18b20.c  ****     one_wire_write_byte(0xCC); // Skip ROM
+ 118              		.loc 1 34 0
+ 119 000a CC20     		movs	r0, #204
+ 120 000c FFF7FEFF 		bl	one_wire_write_byte
+ 121              	.LVL6:
+  35:..\ds18b20.c  ****     one_wire_write_byte(0x4E); // Write scratchpad
+ 122              		.loc 1 35 0
+ 123 0010 4E20     		movs	r0, #78
+ 124 0012 FFF7FEFF 		bl	one_wire_write_byte
+ 125              	.LVL7:
+  36:..\ds18b20.c  **** 
+  37:..\ds18b20.c  ****     one_wire_write_byte(0x4B);
+ 126              		.loc 1 37 0
+ 127 0016 4B20     		movs	r0, #75
+ 128 0018 FFF7FEFF 		bl	one_wire_write_byte
+ 129              	.LVL8:
+  38:..\ds18b20.c  ****     one_wire_write_byte(0x46);
+ 130              		.loc 1 38 0
+ 131 001c 4620     		movs	r0, #70
+ 132 001e FFF7FEFF 		bl	one_wire_write_byte
+ 133              	.LVL9:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 4
+
+
+  39:..\ds18b20.c  ****     // set precision
+  40:..\ds18b20.c  ****     one_wire_write_byte(0x1F | (precision << 5));
+ 134              		.loc 1 40 0
+ 135 0022 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 136 0024 4001     		lsls	r0, r0, #5
+ 137 0026 40F01F00 		orr	r0, r0, #31
+ 138 002a C0B2     		uxtb	r0, r0
+ 139 002c FFF7FEFF 		bl	one_wire_write_byte
+ 140              	.LVL10:
+ 141 0030 10BD     		pop	{r4, pc}
+ 142              	.L12:
+ 143 0032 00BF     		.align	2
+ 144              	.L11:
+ 145 0034 00000000 		.word	.LANCHOR0
+ 146              		.cfi_endproc
+ 147              	.LFE66:
+ 148              		.size	ds18b20_set_precision, .-ds18b20_set_precision
+ 149              		.section	.text.ds18b20_convert_temperature_simple,"ax",%progbits
+ 150              		.align	2
+ 151              		.global	ds18b20_convert_temperature_simple
+ 152              		.thumb
+ 153              		.thumb_func
+ 154              		.type	ds18b20_convert_temperature_simple, %function
+ 155              	ds18b20_convert_temperature_simple:
+ 156              	.LFB67:
+  41:..\ds18b20.c  **** }
+  42:..\ds18b20.c  **** 
+  43:..\ds18b20.c  **** void ds18b20_convert_temperature_simple(void) 
+  44:..\ds18b20.c  **** {
+ 157              		.loc 1 44 0
+ 158              		.cfi_startproc
+ 159              		@ args = 0, pretend = 0, frame = 0
+ 160              		@ frame_needed = 0, uses_anonymous_args = 0
+ 161 0000 08B5     		push	{r3, lr}
+ 162              		.cfi_def_cfa_offset 8
+ 163              		.cfi_offset 3, -8
+ 164              		.cfi_offset 14, -4
+  45:..\ds18b20.c  ****     one_wire_reset_pulse();
+ 165              		.loc 1 45 0
+ 166 0002 FFF7FEFF 		bl	one_wire_reset_pulse
+ 167              	.LVL11:
+  46:..\ds18b20.c  ****     one_wire_write_byte(0xCC); // Skip ROM
+ 168              		.loc 1 46 0
+ 169 0006 CC20     		movs	r0, #204
+ 170 0008 FFF7FEFF 		bl	one_wire_write_byte
+ 171              	.LVL12:
+  47:..\ds18b20.c  ****     one_wire_write_byte(0x44); // Convert temperature
+ 172              		.loc 1 47 0
+ 173 000c 4420     		movs	r0, #68
+ 174 000e FFF7FEFF 		bl	one_wire_write_byte
+ 175              	.LVL13:
+ 176 0012 08BD     		pop	{r3, pc}
+ 177              		.cfi_endproc
+ 178              	.LFE67:
+ 179              		.size	ds18b20_convert_temperature_simple, .-ds18b20_convert_temperature_simple
+ 180              		.section	.text.ds18b20_convert_temperature,"ax",%progbits
+ 181              		.align	2
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 5
+
+
+ 182              		.global	ds18b20_convert_temperature
+ 183              		.thumb
+ 184              		.thumb_func
+ 185              		.type	ds18b20_convert_temperature, %function
+ 186              	ds18b20_convert_temperature:
+ 187              	.LFB68:
+  48:..\ds18b20.c  **** }
+  49:..\ds18b20.c  **** 
+  50:..\ds18b20.c  **** void ds18b20_convert_temperature(one_wire_device device) 
+  51:..\ds18b20.c  **** {
+ 188              		.loc 1 51 0
+ 189              		.cfi_startproc
+ 190              		@ args = 0, pretend = 0, frame = 8
+ 191              		@ frame_needed = 0, uses_anonymous_args = 0
+ 192 0000 10B5     		push	{r4, lr}
+ 193              		.cfi_def_cfa_offset 8
+ 194              		.cfi_offset 4, -8
+ 195              		.cfi_offset 14, -4
+ 196 0002 82B0     		sub	sp, sp, #8
+ 197              		.cfi_def_cfa_offset 16
+ 198 0004 8DE80300 		stmia	sp, {r0, r1}
+  52:..\ds18b20.c  ****     one_wire_reset_pulse();
+ 199              		.loc 1 52 0
+ 200 0008 FFF7FEFF 		bl	one_wire_reset_pulse
+ 201              	.LVL14:
+  53:..\ds18b20.c  ****     one_wire_match_rom(device); // Match ROM
+ 202              		.loc 1 53 0
+ 203 000c 9DE80300 		ldmia	sp, {r0, r1}
+ 204 0010 FFF7FEFF 		bl	one_wire_match_rom
+ 205              	.LVL15:
+  54:..\ds18b20.c  ****     one_wire_write_byte(0x44); // Convert temperature
+ 206              		.loc 1 54 0
+ 207 0014 4420     		movs	r0, #68
+ 208 0016 FFF7FEFF 		bl	one_wire_write_byte
+ 209              	.LVL16:
+  55:..\ds18b20.c  **** }
+ 210              		.loc 1 55 0
+ 211 001a 02B0     		add	sp, sp, #8
+ 212              		.cfi_def_cfa_offset 8
+ 213              		@ sp needed
+ 214 001c 10BD     		pop	{r4, pc}
+ 215              		.cfi_endproc
+ 216              	.LFE68:
+ 217              		.size	ds18b20_convert_temperature, .-ds18b20_convert_temperature
+ 218 001e 00BF     		.section	.text.ds18b20_convert_temperature_all,"ax",%progbits
+ 219              		.align	2
+ 220              		.global	ds18b20_convert_temperature_all
+ 221              		.thumb
+ 222              		.thumb_func
+ 223              		.type	ds18b20_convert_temperature_all, %function
+ 224              	ds18b20_convert_temperature_all:
+ 225              	.LFB69:
+  56:..\ds18b20.c  **** 
+  57:..\ds18b20.c  **** void ds18b20_convert_temperature_all(void) 
+  58:..\ds18b20.c  **** {
+ 226              		.loc 1 58 0
+ 227              		.cfi_startproc
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 6
+
+
+ 228              		@ args = 0, pretend = 0, frame = 0
+ 229              		@ frame_needed = 0, uses_anonymous_args = 0
+ 230 0000 10B5     		push	{r4, lr}
+ 231              		.cfi_def_cfa_offset 8
+ 232              		.cfi_offset 4, -8
+ 233              		.cfi_offset 14, -4
+ 234              	.LVL17:
+  59:..\ds18b20.c  ****     uint8_t i = 0;
+  60:..\ds18b20.c  ****     for (i = 0; i < one_wire_devices_list_size; ++i) 
+ 235              		.loc 1 60 0
+ 236 0002 0024     		movs	r4, #0
+ 237 0004 09E0     		b	.L18
+ 238              	.LVL18:
+ 239              	.L19:
+  61:..\ds18b20.c  ****     {
+  62:..\ds18b20.c  ****         ds18b20_convert_temperature(one_wire_list_of_devices[i]);
+ 240              		.loc 1 62 0 discriminator 3
+ 241 0006 074B     		ldr	r3, .L21
+ 242 0008 1B68     		ldr	r3, [r3]
+ 243 000a 03EBC403 		add	r3, r3, r4, lsl #3
+ 244 000e 1868     		ldr	r0, [r3]	@ unaligned
+ 245 0010 5968     		ldr	r1, [r3, #4]	@ unaligned
+ 246 0012 FFF7FEFF 		bl	ds18b20_convert_temperature
+ 247              	.LVL19:
+  60:..\ds18b20.c  ****     {
+ 248              		.loc 1 60 0 discriminator 3
+ 249 0016 0134     		adds	r4, r4, #1
+ 250              	.LVL20:
+ 251 0018 E4B2     		uxtb	r4, r4
+ 252              	.LVL21:
+ 253              	.L18:
+  60:..\ds18b20.c  ****     {
+ 254              		.loc 1 60 0 is_stmt 0 discriminator 1
+ 255 001a 034B     		ldr	r3, .L21+4
+ 256 001c 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 257 001e 9C42     		cmp	r4, r3
+ 258 0020 F1D3     		bcc	.L19
+  63:..\ds18b20.c  ****     }
+  64:..\ds18b20.c  **** }
+ 259              		.loc 1 64 0 is_stmt 1
+ 260 0022 10BD     		pop	{r4, pc}
+ 261              	.LVL22:
+ 262              	.L22:
+ 263              		.align	2
+ 264              	.L21:
+ 265 0024 00000000 		.word	.LANCHOR1
+ 266 0028 00000000 		.word	.LANCHOR0
+ 267              		.cfi_endproc
+ 268              	.LFE69:
+ 269              		.size	ds18b20_convert_temperature_all, .-ds18b20_convert_temperature_all
+ 270              		.global	__aeabi_i2f
+ 271              		.global	__aeabi_fmul
+ 272              		.section	.text.ds18b20_decode_temperature,"ax",%progbits
+ 273              		.align	2
+ 274              		.global	ds18b20_decode_temperature
+ 275              		.thumb
+ 276              		.thumb_func
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 7
+
+
+ 277              		.type	ds18b20_decode_temperature, %function
+ 278              	ds18b20_decode_temperature:
+ 279              	.LFB73:
+  65:..\ds18b20.c  **** 
+  66:..\ds18b20.c  **** float ds18b20_read_temperature_simple(void) 
+  67:..\ds18b20.c  **** {
+  68:..\ds18b20.c  ****     one_wire_reset_pulse();
+  69:..\ds18b20.c  ****     one_wire_write_byte(0xCC); // Skip ROM
+  70:..\ds18b20.c  ****     one_wire_write_byte(0xBE); // Read scratchpad
+  71:..\ds18b20.c  **** 
+  72:..\ds18b20.c  ****     return ds18b20_decode_temperature();
+  73:..\ds18b20.c  **** }
+  74:..\ds18b20.c  **** 
+  75:..\ds18b20.c  **** float ds18b20_read_temperature(one_wire_device device) 
+  76:..\ds18b20.c  **** {
+  77:..\ds18b20.c  ****     ds18b20_wait_for_conversion();
+  78:..\ds18b20.c  ****     one_wire_reset_pulse();
+  79:..\ds18b20.c  ****     one_wire_match_rom(device); // Match ROM
+  80:..\ds18b20.c  ****     one_wire_write_byte(0xBE); // Read scratchpad
+  81:..\ds18b20.c  **** 
+  82:..\ds18b20.c  ****     return ds18b20_decode_temperature();
+  83:..\ds18b20.c  **** }
+  84:..\ds18b20.c  **** 
+  85:..\ds18b20.c  **** simple_float* ds18b20_read_temperature_all(void) {
+  86:..\ds18b20.c  ****     uint8_t i = 0;
+  87:..\ds18b20.c  ****     simple_float *temperatures;
+  88:..\ds18b20.c  ****     temperatures = malloc(one_wire_devices_list_size * sizeof(simple_float));
+  89:..\ds18b20.c  **** 
+  90:..\ds18b20.c  ****     for (i = 0; i < one_wire_devices_list_size; ++i) 
+  91:..\ds18b20.c  ****     {
+  92:..\ds18b20.c  ****         temperatures[i].temperature = ds18b20_read_temperature(one_wire_list_of_devices[i]);
+  93:..\ds18b20.c  ****         temperatures[i].is_valid = 1;
+  94:..\ds18b20.c  ****     }
+  95:..\ds18b20.c  ****     return temperatures;
+  96:..\ds18b20.c  **** }
+  97:..\ds18b20.c  **** 
+  98:..\ds18b20.c  **** float ds18b20_decode_temperature(void) 
+  99:..\ds18b20.c  **** {
+ 280              		.loc 1 99 0
+ 281              		.cfi_startproc
+ 282              		@ args = 0, pretend = 0, frame = 16
+ 283              		@ frame_needed = 0, uses_anonymous_args = 0
+ 284 0000 30B5     		push	{r4, r5, lr}
+ 285              		.cfi_def_cfa_offset 12
+ 286              		.cfi_offset 4, -12
+ 287              		.cfi_offset 5, -8
+ 288              		.cfi_offset 14, -4
+ 289 0002 85B0     		sub	sp, sp, #20
+ 290              		.cfi_def_cfa_offset 32
+ 100:..\ds18b20.c  ****     int i;
+ 101:..\ds18b20.c  ****     uint8_t crc;
+ 102:..\ds18b20.c  ****     uint8_t data[9];
+ 103:..\ds18b20.c  ****     uint8_t temp_msb, temp_lsb;
+ 104:..\ds18b20.c  ****     float temp;
+ 105:..\ds18b20.c  ****     
+ 106:..\ds18b20.c  ****     one_wire_reset_crc();
+ 291              		.loc 1 106 0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 8
+
+
+ 292 0004 FFF7FEFF 		bl	one_wire_reset_crc
+ 293              	.LVL23:
+ 107:..\ds18b20.c  **** 
+ 108:..\ds18b20.c  ****     for (i = 0; i < 9; ++i) 
+ 294              		.loc 1 108 0
+ 295 0008 0024     		movs	r4, #0
+ 296 000a 09E0     		b	.L24
+ 297              	.LVL24:
+ 298              	.L25:
+ 109:..\ds18b20.c  ****     {
+ 110:..\ds18b20.c  ****         data[i] = one_wire_read_byte();
+ 299              		.loc 1 110 0 discriminator 3
+ 300 000c FFF7FEFF 		bl	one_wire_read_byte
+ 301              	.LVL25:
+ 302 0010 04AB     		add	r3, sp, #16
+ 303 0012 2344     		add	r3, r3, r4
+ 304 0014 03F80C0C 		strb	r0, [r3, #-12]
+ 111:..\ds18b20.c  ****         crc = one_wire_crc(data[i]);
+ 305              		.loc 1 111 0 discriminator 3
+ 306 0018 FFF7FEFF 		bl	one_wire_crc
+ 307              	.LVL26:
+ 308 001c 0546     		mov	r5, r0
+ 309              	.LVL27:
+ 108:..\ds18b20.c  ****     {
+ 310              		.loc 1 108 0 discriminator 3
+ 311 001e 0134     		adds	r4, r4, #1
+ 312              	.LVL28:
+ 313              	.L24:
+ 108:..\ds18b20.c  ****     {
+ 314              		.loc 1 108 0 is_stmt 0 discriminator 1
+ 315 0020 082C     		cmp	r4, #8
+ 316 0022 F3DD     		ble	.L25
+ 112:..\ds18b20.c  ****     }
+ 113:..\ds18b20.c  **** 
+ 114:..\ds18b20.c  ****     temp_msb = data[1]; // Sign byte + lsbit
+ 317              		.loc 1 114 0 is_stmt 1
+ 318 0024 9DF80530 		ldrb	r3, [sp, #5]	@ zero_extendqisi2
+ 319              	.LVL29:
+ 115:..\ds18b20.c  ****     temp_lsb = data[0]; // Temp data plus lsb
+ 320              		.loc 1 115 0
+ 321 0028 9DF80400 		ldrb	r0, [sp, #4]	@ zero_extendqisi2
+ 322              	.LVL30:
+ 116:..\ds18b20.c  **** 
+ 117:..\ds18b20.c  ****     if (crc != 0 || (!crc && !temp_msb && !temp_lsb)) 
+ 323              		.loc 1 117 0
+ 324 002c D5B9     		cbnz	r5, .L29
+ 325              		.loc 1 117 0 is_stmt 0 discriminator 1
+ 326 002e 03B9     		cbnz	r3, .L27
+ 327              		.loc 1 117 0 discriminator 2
+ 328 0030 D0B1     		cbz	r0, .L30
+ 329              	.L27:
+ 118:..\ds18b20.c  ****     {
+ 119:..\ds18b20.c  ****         return -100.0;
+ 120:..\ds18b20.c  ****     }
+ 121:..\ds18b20.c  **** 
+ 122:..\ds18b20.c  ****     if (temp_msb & 0x08)    // is it a negative number?
+ 330              		.loc 1 122 0 is_stmt 1
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 9
+
+
+ 331 0032 13F0080F 		tst	r3, #8
+ 332 0036 0CD0     		beq	.L28
+ 123:..\ds18b20.c  ****         temp = ((float)((0 - (temp_msb << 8 | temp_lsb)) & 0xffff) / 16.0) * -1;
+ 333              		.loc 1 123 0
+ 334 0038 40EA0320 		orr	r0, r0, r3, lsl #8
+ 335              	.LVL31:
+ 336 003c 4042     		negs	r0, r0
+ 337 003e 80B2     		uxth	r0, r0
+ 338 0040 FFF7FEFF 		bl	__aeabi_i2f
+ 339              	.LVL32:
+ 340 0044 4FF07651 		mov	r1, #1031798784
+ 341 0048 FFF7FEFF 		bl	__aeabi_fmul
+ 342              	.LVL33:
+ 343 004c 00F10040 		add	r0, r0, #-2147483648
+ 344              	.LVL34:
+ 345 0050 0BE0     		b	.L26
+ 346              	.LVL35:
+ 347              	.L28:
+ 124:..\ds18b20.c  ****     else
+ 125:..\ds18b20.c  ****         temp = (float)(temp_msb << 8 | temp_lsb) / 16.0;   // this is a positive number
+ 348              		.loc 1 125 0
+ 349 0052 40EA0320 		orr	r0, r0, r3, lsl #8
+ 350              	.LVL36:
+ 351 0056 FFF7FEFF 		bl	__aeabi_i2f
+ 352              	.LVL37:
+ 353 005a 4FF07651 		mov	r1, #1031798784
+ 354 005e FFF7FEFF 		bl	__aeabi_fmul
+ 355              	.LVL38:
+ 356 0062 02E0     		b	.L26
+ 357              	.LVL39:
+ 358              	.L29:
+ 119:..\ds18b20.c  ****     }
+ 359              		.loc 1 119 0
+ 360 0064 0248     		ldr	r0, .L32
+ 361              	.LVL40:
+ 362 0066 00E0     		b	.L26
+ 363              	.LVL41:
+ 364              	.L30:
+ 365 0068 0148     		ldr	r0, .L32
+ 366              	.LVL42:
+ 367              	.L26:
+ 126:..\ds18b20.c  ****     return temp;
+ 127:..\ds18b20.c  **** }
+ 368              		.loc 1 127 0
+ 369 006a 05B0     		add	sp, sp, #20
+ 370              		.cfi_def_cfa_offset 12
+ 371              		@ sp needed
+ 372 006c 30BD     		pop	{r4, r5, pc}
+ 373              	.LVL43:
+ 374              	.L33:
+ 375 006e 00BF     		.align	2
+ 376              	.L32:
+ 377 0070 0000C8C2 		.word	-1027080192
+ 378              		.cfi_endproc
+ 379              	.LFE73:
+ 380              		.size	ds18b20_decode_temperature, .-ds18b20_decode_temperature
+ 381              		.section	.text.ds18b20_read_temperature_simple,"ax",%progbits
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 10
+
+
+ 382              		.align	2
+ 383              		.global	ds18b20_read_temperature_simple
+ 384              		.thumb
+ 385              		.thumb_func
+ 386              		.type	ds18b20_read_temperature_simple, %function
+ 387              	ds18b20_read_temperature_simple:
+ 388              	.LFB70:
+  67:..\ds18b20.c  ****     one_wire_reset_pulse();
+ 389              		.loc 1 67 0
+ 390              		.cfi_startproc
+ 391              		@ args = 0, pretend = 0, frame = 0
+ 392              		@ frame_needed = 0, uses_anonymous_args = 0
+ 393 0000 08B5     		push	{r3, lr}
+ 394              		.cfi_def_cfa_offset 8
+ 395              		.cfi_offset 3, -8
+ 396              		.cfi_offset 14, -4
+  68:..\ds18b20.c  ****     one_wire_write_byte(0xCC); // Skip ROM
+ 397              		.loc 1 68 0
+ 398 0002 FFF7FEFF 		bl	one_wire_reset_pulse
+ 399              	.LVL44:
+  69:..\ds18b20.c  ****     one_wire_write_byte(0xBE); // Read scratchpad
+ 400              		.loc 1 69 0
+ 401 0006 CC20     		movs	r0, #204
+ 402 0008 FFF7FEFF 		bl	one_wire_write_byte
+ 403              	.LVL45:
+  70:..\ds18b20.c  **** 
+ 404              		.loc 1 70 0
+ 405 000c BE20     		movs	r0, #190
+ 406 000e FFF7FEFF 		bl	one_wire_write_byte
+ 407              	.LVL46:
+  72:..\ds18b20.c  **** }
+ 408              		.loc 1 72 0
+ 409 0012 FFF7FEFF 		bl	ds18b20_decode_temperature
+ 410              	.LVL47:
+  73:..\ds18b20.c  **** 
+ 411              		.loc 1 73 0
+ 412 0016 08BD     		pop	{r3, pc}
+ 413              		.cfi_endproc
+ 414              	.LFE70:
+ 415              		.size	ds18b20_read_temperature_simple, .-ds18b20_read_temperature_simple
+ 416              		.section	.text.ds18b20_wait_for_conversion,"ax",%progbits
+ 417              		.align	2
+ 418              		.global	ds18b20_wait_for_conversion
+ 419              		.thumb
+ 420              		.thumb_func
+ 421              		.type	ds18b20_wait_for_conversion, %function
+ 422              	ds18b20_wait_for_conversion:
+ 423              	.LFB74:
+ 128:..\ds18b20.c  **** 
+ 129:..\ds18b20.c  **** void ds18b20_wait_for_conversion(void) 
+ 130:..\ds18b20.c  **** {
+ 424              		.loc 1 130 0
+ 425              		.cfi_startproc
+ 426              		@ args = 0, pretend = 0, frame = 0
+ 427              		@ frame_needed = 0, uses_anonymous_args = 0
+ 428 0000 08B5     		push	{r3, lr}
+ 429              		.cfi_def_cfa_offset 8
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 11
+
+
+ 430              		.cfi_offset 3, -8
+ 431              		.cfi_offset 14, -4
+ 131:..\ds18b20.c  ****     if (precision == 0)
+ 432              		.loc 1 131 0
+ 433 0002 0D4B     		ldr	r3, .L42
+ 434 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 435 0006 1BB9     		cbnz	r3, .L37
+ 132:..\ds18b20.c  ****         CyDelay(95);
+ 436              		.loc 1 132 0
+ 437 0008 5F20     		movs	r0, #95
+ 438 000a FFF7FEFF 		bl	CyDelay
+ 439              	.LVL48:
+ 440 000e 08BD     		pop	{r3, pc}
+ 441              	.L37:
+ 133:..\ds18b20.c  ****     else if (precision == 1)
+ 442              		.loc 1 133 0
+ 443 0010 012B     		cmp	r3, #1
+ 444 0012 03D1     		bne	.L39
+ 134:..\ds18b20.c  ****         CyDelay(190);
+ 445              		.loc 1 134 0
+ 446 0014 BE20     		movs	r0, #190
+ 447 0016 FFF7FEFF 		bl	CyDelay
+ 448              	.LVL49:
+ 449 001a 08BD     		pop	{r3, pc}
+ 450              	.L39:
+ 135:..\ds18b20.c  ****     else if (precision == 2)
+ 451              		.loc 1 135 0
+ 452 001c 022B     		cmp	r3, #2
+ 453 001e 04D1     		bne	.L40
+ 136:..\ds18b20.c  ****         CyDelay(380);
+ 454              		.loc 1 136 0
+ 455 0020 4FF4BE70 		mov	r0, #380
+ 456 0024 FFF7FEFF 		bl	CyDelay
+ 457              	.LVL50:
+ 458 0028 08BD     		pop	{r3, pc}
+ 459              	.L40:
+ 137:..\ds18b20.c  ****     else if (precision == 3)
+ 460              		.loc 1 137 0
+ 461 002a 032B     		cmp	r3, #3
+ 462 002c 03D1     		bne	.L36
+ 138:..\ds18b20.c  ****         CyDelay(750);
+ 463              		.loc 1 138 0
+ 464 002e 40F2EE20 		movw	r0, #750
+ 465 0032 FFF7FEFF 		bl	CyDelay
+ 466              	.LVL51:
+ 467              	.L36:
+ 468 0036 08BD     		pop	{r3, pc}
+ 469              	.L43:
+ 470              		.align	2
+ 471              	.L42:
+ 472 0038 00000000 		.word	.LANCHOR0
+ 473              		.cfi_endproc
+ 474              	.LFE74:
+ 475              		.size	ds18b20_wait_for_conversion, .-ds18b20_wait_for_conversion
+ 476              		.section	.text.ds18b20_read_temperature,"ax",%progbits
+ 477              		.align	2
+ 478              		.global	ds18b20_read_temperature
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 12
+
+
+ 479              		.thumb
+ 480              		.thumb_func
+ 481              		.type	ds18b20_read_temperature, %function
+ 482              	ds18b20_read_temperature:
+ 483              	.LFB71:
+  76:..\ds18b20.c  ****     ds18b20_wait_for_conversion();
+ 484              		.loc 1 76 0
+ 485              		.cfi_startproc
+ 486              		@ args = 0, pretend = 0, frame = 8
+ 487              		@ frame_needed = 0, uses_anonymous_args = 0
+ 488 0000 10B5     		push	{r4, lr}
+ 489              		.cfi_def_cfa_offset 8
+ 490              		.cfi_offset 4, -8
+ 491              		.cfi_offset 14, -4
+ 492 0002 82B0     		sub	sp, sp, #8
+ 493              		.cfi_def_cfa_offset 16
+ 494 0004 8DE80300 		stmia	sp, {r0, r1}
+  77:..\ds18b20.c  ****     one_wire_reset_pulse();
+ 495              		.loc 1 77 0
+ 496 0008 FFF7FEFF 		bl	ds18b20_wait_for_conversion
+ 497              	.LVL52:
+  78:..\ds18b20.c  ****     one_wire_match_rom(device); // Match ROM
+ 498              		.loc 1 78 0
+ 499 000c FFF7FEFF 		bl	one_wire_reset_pulse
+ 500              	.LVL53:
+  79:..\ds18b20.c  ****     one_wire_write_byte(0xBE); // Read scratchpad
+ 501              		.loc 1 79 0
+ 502 0010 9DE80300 		ldmia	sp, {r0, r1}
+ 503 0014 FFF7FEFF 		bl	one_wire_match_rom
+ 504              	.LVL54:
+  80:..\ds18b20.c  **** 
+ 505              		.loc 1 80 0
+ 506 0018 BE20     		movs	r0, #190
+ 507 001a FFF7FEFF 		bl	one_wire_write_byte
+ 508              	.LVL55:
+  82:..\ds18b20.c  **** }
+ 509              		.loc 1 82 0
+ 510 001e FFF7FEFF 		bl	ds18b20_decode_temperature
+ 511              	.LVL56:
+  83:..\ds18b20.c  **** 
+ 512              		.loc 1 83 0
+ 513 0022 02B0     		add	sp, sp, #8
+ 514              		.cfi_def_cfa_offset 8
+ 515              		@ sp needed
+ 516 0024 10BD     		pop	{r4, pc}
+ 517              		.cfi_endproc
+ 518              	.LFE71:
+ 519              		.size	ds18b20_read_temperature, .-ds18b20_read_temperature
+ 520 0026 00BF     		.section	.text.ds18b20_read_temperature_all,"ax",%progbits
+ 521              		.align	2
+ 522              		.global	ds18b20_read_temperature_all
+ 523              		.thumb
+ 524              		.thumb_func
+ 525              		.type	ds18b20_read_temperature_all, %function
+ 526              	ds18b20_read_temperature_all:
+ 527              	.LFB72:
+  85:..\ds18b20.c  ****     uint8_t i = 0;
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 13
+
+
+ 528              		.loc 1 85 0
+ 529              		.cfi_startproc
+ 530              		@ args = 0, pretend = 0, frame = 0
+ 531              		@ frame_needed = 0, uses_anonymous_args = 0
+ 532 0000 70B5     		push	{r4, r5, r6, lr}
+ 533              		.cfi_def_cfa_offset 16
+ 534              		.cfi_offset 4, -16
+ 535              		.cfi_offset 5, -12
+ 536              		.cfi_offset 6, -8
+ 537              		.cfi_offset 14, -4
+ 538              	.LVL57:
+  88:..\ds18b20.c  **** 
+ 539              		.loc 1 88 0
+ 540 0002 0E4B     		ldr	r3, .L50
+ 541 0004 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 542 0006 C000     		lsls	r0, r0, #3
+ 543 0008 FFF7FEFF 		bl	malloc
+ 544              	.LVL58:
+ 545 000c 0546     		mov	r5, r0
+ 546              	.LVL59:
+  90:..\ds18b20.c  ****     {
+ 547              		.loc 1 90 0
+ 548 000e 0024     		movs	r4, #0
+ 549 0010 0EE0     		b	.L47
+ 550              	.LVL60:
+ 551              	.L48:
+  92:..\ds18b20.c  ****         temperatures[i].is_valid = 1;
+ 552              		.loc 1 92 0 discriminator 3
+ 553 0012 E300     		lsls	r3, r4, #3
+ 554 0014 EE18     		adds	r6, r5, r3
+ 555 0016 0A4A     		ldr	r2, .L50+4
+ 556 0018 1268     		ldr	r2, [r2]
+ 557 001a 1344     		add	r3, r3, r2
+ 558 001c 1868     		ldr	r0, [r3]	@ unaligned
+ 559 001e 5968     		ldr	r1, [r3, #4]	@ unaligned
+ 560 0020 FFF7FEFF 		bl	ds18b20_read_temperature
+ 561              	.LVL61:
+ 562 0024 45F83400 		str	r0, [r5, r4, lsl #3]	@ float
+  93:..\ds18b20.c  ****     }
+ 563              		.loc 1 93 0 discriminator 3
+ 564 0028 0123     		movs	r3, #1
+ 565 002a 3371     		strb	r3, [r6, #4]
+  90:..\ds18b20.c  ****     {
+ 566              		.loc 1 90 0 discriminator 3
+ 567 002c 1C44     		add	r4, r4, r3
+ 568              	.LVL62:
+ 569 002e E4B2     		uxtb	r4, r4
+ 570              	.LVL63:
+ 571              	.L47:
+  90:..\ds18b20.c  ****     {
+ 572              		.loc 1 90 0 is_stmt 0 discriminator 1
+ 573 0030 024B     		ldr	r3, .L50
+ 574 0032 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 575 0034 9C42     		cmp	r4, r3
+ 576 0036 ECD3     		bcc	.L48
+  96:..\ds18b20.c  **** 
+ 577              		.loc 1 96 0 is_stmt 1
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 14
+
+
+ 578 0038 2846     		mov	r0, r5
+ 579 003a 70BD     		pop	{r4, r5, r6, pc}
+ 580              	.LVL64:
+ 581              	.L51:
+ 582              		.align	2
+ 583              	.L50:
+ 584 003c 00000000 		.word	.LANCHOR0
+ 585 0040 00000000 		.word	.LANCHOR1
+ 586              		.cfi_endproc
+ 587              	.LFE72:
+ 588              		.size	ds18b20_read_temperature_all, .-ds18b20_read_temperature_all
+ 589              		.section	.text.ds18b20_get_temperature_simple,"ax",%progbits
+ 590              		.align	2
+ 591              		.global	ds18b20_get_temperature_simple
+ 592              		.thumb
+ 593              		.thumb_func
+ 594              		.type	ds18b20_get_temperature_simple, %function
+ 595              	ds18b20_get_temperature_simple:
+ 596              	.LFB75:
+ 139:..\ds18b20.c  **** }
+ 140:..\ds18b20.c  **** 
+ 141:..\ds18b20.c  **** 
+ 142:..\ds18b20.c  **** float ds18b20_get_temperature_simple(void) 
+ 143:..\ds18b20.c  **** {
+ 597              		.loc 1 143 0
+ 598              		.cfi_startproc
+ 599              		@ args = 0, pretend = 0, frame = 0
+ 600              		@ frame_needed = 0, uses_anonymous_args = 0
+ 601 0000 08B5     		push	{r3, lr}
+ 602              		.cfi_def_cfa_offset 8
+ 603              		.cfi_offset 3, -8
+ 604              		.cfi_offset 14, -4
+ 144:..\ds18b20.c  ****     ds18b20_convert_temperature_simple();  // we have only one device
+ 605              		.loc 1 144 0
+ 606 0002 FFF7FEFF 		bl	ds18b20_convert_temperature_simple
+ 607              	.LVL65:
+ 145:..\ds18b20.c  ****     ds18b20_wait_for_conversion();
+ 608              		.loc 1 145 0
+ 609 0006 FFF7FEFF 		bl	ds18b20_wait_for_conversion
+ 610              	.LVL66:
+ 146:..\ds18b20.c  ****     return ds18b20_read_temperature_simple();
+ 611              		.loc 1 146 0
+ 612 000a FFF7FEFF 		bl	ds18b20_read_temperature_simple
+ 613              	.LVL67:
+ 147:..\ds18b20.c  **** }
+ 614              		.loc 1 147 0
+ 615 000e 08BD     		pop	{r3, pc}
+ 616              		.cfi_endproc
+ 617              	.LFE75:
+ 618              		.size	ds18b20_get_temperature_simple, .-ds18b20_get_temperature_simple
+ 619              		.data
+ 620              		.set	.LANCHOR0,. + 0
+ 621              		.type	precision, %object
+ 622              		.size	precision, 1
+ 623              	precision:
+ 624 0000 02       		.byte	2
+ 625              		.type	one_wire_devices_list_size, %object
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 15
+
+
+ 626              		.size	one_wire_devices_list_size, 1
+ 627              	one_wire_devices_list_size:
+ 628 0001 0A       		.byte	10
+ 629              		.bss
+ 630              		.align	2
+ 631              		.set	.LANCHOR1,. + 0
+ 632              		.type	one_wire_list_of_devices, %object
+ 633              		.size	one_wire_list_of_devices, 4
+ 634              	one_wire_list_of_devices:
+ 635 0000 00000000 		.space	4
+ 636              		.text
+ 637              	.Letext0:
+ 638              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 639              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 640              		.file 4 "..\\one_wire.h"
+ 641              		.file 5 "..\\ds18b20.h"
+ 642              		.file 6 "Generated_Source\\PSoC5/CyLib.h"
+ 643              		.file 7 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 644              		.file 8 "Generated_Source\\PSoC5/core_cm3.h"
+ 645              		.section	.debug_info,"",%progbits
+ 646              	.Ldebug_info0:
+ 647 0000 BD050000 		.4byte	0x5bd
+ 648 0004 0400     		.2byte	0x4
+ 649 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 650 000a 04       		.byte	0x4
+ 651 000b 01       		.uleb128 0x1
+ 652 000c 89030000 		.4byte	.LASF56
+ 653 0010 0C       		.byte	0xc
+ 654 0011 4D000000 		.4byte	.LASF57
+ 655 0015 16030000 		.4byte	.LASF58
+ 656 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 657 001d 00000000 		.4byte	0
+ 658 0021 00000000 		.4byte	.Ldebug_line0
+ 659 0025 02       		.uleb128 0x2
+ 660 0026 01       		.byte	0x1
+ 661 0027 06       		.byte	0x6
+ 662 0028 37010000 		.4byte	.LASF0
+ 663 002c 03       		.uleb128 0x3
+ 664 002d DD000000 		.4byte	.LASF4
+ 665 0031 02       		.byte	0x2
+ 666 0032 1D       		.byte	0x1d
+ 667 0033 37000000 		.4byte	0x37
+ 668 0037 02       		.uleb128 0x2
+ 669 0038 01       		.byte	0x1
+ 670 0039 08       		.byte	0x8
+ 671 003a F4000000 		.4byte	.LASF1
+ 672 003e 02       		.uleb128 0x2
+ 673 003f 02       		.byte	0x2
+ 674 0040 05       		.byte	0x5
+ 675 0041 33000000 		.4byte	.LASF2
+ 676 0045 02       		.uleb128 0x2
+ 677 0046 02       		.byte	0x2
+ 678 0047 07       		.byte	0x7
+ 679 0048 AC010000 		.4byte	.LASF3
+ 680 004c 03       		.uleb128 0x3
+ 681 004d DE020000 		.4byte	.LASF5
+ 682 0051 02       		.byte	0x2
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 16
+
+
+ 683 0052 3F       		.byte	0x3f
+ 684 0053 57000000 		.4byte	0x57
+ 685 0057 02       		.uleb128 0x2
+ 686 0058 04       		.byte	0x4
+ 687 0059 05       		.byte	0x5
+ 688 005a B0000000 		.4byte	.LASF6
+ 689 005e 02       		.uleb128 0x2
+ 690 005f 04       		.byte	0x4
+ 691 0060 07       		.byte	0x7
+ 692 0061 75020000 		.4byte	.LASF7
+ 693 0065 02       		.uleb128 0x2
+ 694 0066 08       		.byte	0x8
+ 695 0067 05       		.byte	0x5
+ 696 0068 A2000000 		.4byte	.LASF8
+ 697 006c 02       		.uleb128 0x2
+ 698 006d 08       		.byte	0x8
+ 699 006e 07       		.byte	0x7
+ 700 006f 43010000 		.4byte	.LASF9
+ 701 0073 04       		.uleb128 0x4
+ 702 0074 04       		.byte	0x4
+ 703 0075 05       		.byte	0x5
+ 704 0076 696E7400 		.ascii	"int\000"
+ 705 007a 02       		.uleb128 0x2
+ 706 007b 04       		.byte	0x4
+ 707 007c 07       		.byte	0x7
+ 708 007d 5A010000 		.4byte	.LASF10
+ 709 0081 03       		.uleb128 0x3
+ 710 0082 88000000 		.4byte	.LASF11
+ 711 0086 03       		.byte	0x3
+ 712 0087 18       		.byte	0x18
+ 713 0088 2C000000 		.4byte	0x2c
+ 714 008c 03       		.uleb128 0x3
+ 715 008d E7010000 		.4byte	.LASF12
+ 716 0091 03       		.byte	0x3
+ 717 0092 2C       		.byte	0x2c
+ 718 0093 4C000000 		.4byte	0x4c
+ 719 0097 02       		.uleb128 0x2
+ 720 0098 04       		.byte	0x4
+ 721 0099 04       		.byte	0x4
+ 722 009a 97000000 		.4byte	.LASF13
+ 723 009e 02       		.uleb128 0x2
+ 724 009f 08       		.byte	0x8
+ 725 00a0 04       		.byte	0x4
+ 726 00a1 87020000 		.4byte	.LASF14
+ 727 00a5 02       		.uleb128 0x2
+ 728 00a6 01       		.byte	0x1
+ 729 00a7 08       		.byte	0x8
+ 730 00a8 E2010000 		.4byte	.LASF15
+ 731 00ac 02       		.uleb128 0x2
+ 732 00ad 08       		.byte	0x8
+ 733 00ae 04       		.byte	0x4
+ 734 00af 22010000 		.4byte	.LASF16
+ 735 00b3 02       		.uleb128 0x2
+ 736 00b4 04       		.byte	0x4
+ 737 00b5 07       		.byte	0x7
+ 738 00b6 44000000 		.4byte	.LASF17
+ 739 00ba 05       		.uleb128 0x5
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 17
+
+
+ 740 00bb 08       		.byte	0x8
+ 741 00bc 04       		.byte	0x4
+ 742 00bd 19       		.byte	0x19
+ 743 00be CF000000 		.4byte	0xcf
+ 744 00c2 06       		.uleb128 0x6
+ 745 00c3 B9000000 		.4byte	.LASF19
+ 746 00c7 04       		.byte	0x4
+ 747 00c8 1A       		.byte	0x1a
+ 748 00c9 CF000000 		.4byte	0xcf
+ 749 00cd 00       		.byte	0
+ 750 00ce 00       		.byte	0
+ 751 00cf 07       		.uleb128 0x7
+ 752 00d0 81000000 		.4byte	0x81
+ 753 00d4 DF000000 		.4byte	0xdf
+ 754 00d8 08       		.uleb128 0x8
+ 755 00d9 B3000000 		.4byte	0xb3
+ 756 00dd 07       		.byte	0x7
+ 757 00de 00       		.byte	0
+ 758 00df 03       		.uleb128 0x3
+ 759 00e0 A7020000 		.4byte	.LASF18
+ 760 00e4 04       		.byte	0x4
+ 761 00e5 1B       		.byte	0x1b
+ 762 00e6 BA000000 		.4byte	0xba
+ 763 00ea 05       		.uleb128 0x5
+ 764 00eb 08       		.byte	0x8
+ 765 00ec 05       		.byte	0x5
+ 766 00ed 11       		.byte	0x11
+ 767 00ee 0B010000 		.4byte	0x10b
+ 768 00f2 06       		.uleb128 0x6
+ 769 00f3 D2020000 		.4byte	.LASF20
+ 770 00f7 05       		.byte	0x5
+ 771 00f8 12       		.byte	0x12
+ 772 00f9 97000000 		.4byte	0x97
+ 773 00fd 00       		.byte	0
+ 774 00fe 06       		.uleb128 0x6
+ 775 00ff 1F040000 		.4byte	.LASF21
+ 776 0103 05       		.byte	0x5
+ 777 0104 13       		.byte	0x13
+ 778 0105 81000000 		.4byte	0x81
+ 779 0109 04       		.byte	0x4
+ 780 010a 00       		.byte	0
+ 781 010b 03       		.uleb128 0x3
+ 782 010c 40030000 		.4byte	.LASF22
+ 783 0110 05       		.byte	0x5
+ 784 0111 14       		.byte	0x14
+ 785 0112 EA000000 		.4byte	0xea
+ 786 0116 05       		.uleb128 0x5
+ 787 0117 08       		.byte	0x8
+ 788 0118 05       		.byte	0x5
+ 789 0119 17       		.byte	0x17
+ 790 011a 37010000 		.4byte	0x137
+ 791 011e 06       		.uleb128 0x6
+ 792 011f CD020000 		.4byte	.LASF23
+ 793 0123 05       		.byte	0x5
+ 794 0124 18       		.byte	0x18
+ 795 0125 81000000 		.4byte	0x81
+ 796 0129 00       		.byte	0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 18
+
+
+ 797 012a 06       		.uleb128 0x6
+ 798 012b DA010000 		.4byte	.LASF24
+ 799 012f 05       		.byte	0x5
+ 800 0130 19       		.byte	0x19
+ 801 0131 37010000 		.4byte	0x137
+ 802 0135 04       		.byte	0x4
+ 803 0136 00       		.byte	0
+ 804 0137 09       		.uleb128 0x9
+ 805 0138 04       		.byte	0x4
+ 806 0139 DF000000 		.4byte	0xdf
+ 807 013d 03       		.uleb128 0x3
+ 808 013e 12020000 		.4byte	.LASF25
+ 809 0142 05       		.byte	0x5
+ 810 0143 1A       		.byte	0x1a
+ 811 0144 16010000 		.4byte	0x116
+ 812 0148 0A       		.uleb128 0xa
+ 813 0149 B7020000 		.4byte	.LASF59
+ 814 014d 01       		.byte	0x1
+ 815 014e 0B       		.byte	0xb
+ 816 014f 81000000 		.4byte	0x81
+ 817 0153 00000000 		.4byte	.LFB64
+ 818 0157 0C000000 		.4byte	.LFE64-.LFB64
+ 819 015b 01       		.uleb128 0x1
+ 820 015c 9C       		.byte	0x9c
+ 821 015d 0B       		.uleb128 0xb
+ 822 015e 84010000 		.4byte	.LASF32
+ 823 0162 01       		.byte	0x1
+ 824 0163 10       		.byte	0x10
+ 825 0164 3D010000 		.4byte	0x13d
+ 826 0168 00000000 		.4byte	.LFB65
+ 827 016c 30000000 		.4byte	.LFE65-.LFB65
+ 828 0170 01       		.uleb128 0x1
+ 829 0171 9C       		.byte	0x9c
+ 830 0172 A8010000 		.4byte	0x1a8
+ 831 0176 0C       		.uleb128 0xc
+ 832 0177 4D030000 		.4byte	.LASF26
+ 833 017b 01       		.byte	0x1
+ 834 017c 10       		.byte	0x10
+ 835 017d 81000000 		.4byte	0x81
+ 836 0181 00000000 		.4byte	.LLST0
+ 837 0185 0D       		.uleb128 0xd
+ 838 0186 72657400 		.ascii	"ret\000"
+ 839 018a 01       		.byte	0x1
+ 840 018b 17       		.byte	0x17
+ 841 018c 3D010000 		.4byte	0x13d
+ 842 0190 21000000 		.4byte	.LLST1
+ 843 0194 0E       		.uleb128 0xe
+ 844 0195 12000000 		.4byte	.LVL2
+ 845 0199 5D050000 		.4byte	0x55d
+ 846 019d 0F       		.uleb128 0xf
+ 847 019e 01       		.uleb128 0x1
+ 848 019f 50       		.byte	0x50
+ 849 01a0 05       		.uleb128 0x5
+ 850 01a1 03       		.byte	0x3
+ 851 01a2 01000000 		.4byte	.LANCHOR0+1
+ 852 01a6 00       		.byte	0
+ 853 01a7 00       		.byte	0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 19
+
+
+ 854 01a8 10       		.uleb128 0x10
+ 855 01a9 32040000 		.4byte	.LASF27
+ 856 01ad 01       		.byte	0x1
+ 857 01ae 1D       		.byte	0x1d
+ 858 01af 00000000 		.4byte	.LFB66
+ 859 01b3 38000000 		.4byte	.LFE66-.LFB66
+ 860 01b7 01       		.uleb128 0x1
+ 861 01b8 9C       		.byte	0x9c
+ 862 01b9 2D020000 		.4byte	0x22d
+ 863 01bd 11       		.uleb128 0x11
+ 864 01be 7000     		.ascii	"p\000"
+ 865 01c0 01       		.byte	0x1
+ 866 01c1 1D       		.byte	0x1d
+ 867 01c2 81000000 		.4byte	0x81
+ 868 01c6 4D000000 		.4byte	.LLST2
+ 869 01ca 12       		.uleb128 0x12
+ 870 01cb 0A000000 		.4byte	.LVL5
+ 871 01cf 68050000 		.4byte	0x568
+ 872 01d3 13       		.uleb128 0x13
+ 873 01d4 10000000 		.4byte	.LVL6
+ 874 01d8 73050000 		.4byte	0x573
+ 875 01dc E7010000 		.4byte	0x1e7
+ 876 01e0 0F       		.uleb128 0xf
+ 877 01e1 01       		.uleb128 0x1
+ 878 01e2 50       		.byte	0x50
+ 879 01e3 02       		.uleb128 0x2
+ 880 01e4 09       		.byte	0x9
+ 881 01e5 CC       		.byte	0xcc
+ 882 01e6 00       		.byte	0
+ 883 01e7 13       		.uleb128 0x13
+ 884 01e8 16000000 		.4byte	.LVL7
+ 885 01ec 73050000 		.4byte	0x573
+ 886 01f0 FB010000 		.4byte	0x1fb
+ 887 01f4 0F       		.uleb128 0xf
+ 888 01f5 01       		.uleb128 0x1
+ 889 01f6 50       		.byte	0x50
+ 890 01f7 02       		.uleb128 0x2
+ 891 01f8 08       		.byte	0x8
+ 892 01f9 4E       		.byte	0x4e
+ 893 01fa 00       		.byte	0
+ 894 01fb 13       		.uleb128 0x13
+ 895 01fc 1C000000 		.4byte	.LVL8
+ 896 0200 73050000 		.4byte	0x573
+ 897 0204 0F020000 		.4byte	0x20f
+ 898 0208 0F       		.uleb128 0xf
+ 899 0209 01       		.uleb128 0x1
+ 900 020a 50       		.byte	0x50
+ 901 020b 02       		.uleb128 0x2
+ 902 020c 08       		.byte	0x8
+ 903 020d 4B       		.byte	0x4b
+ 904 020e 00       		.byte	0
+ 905 020f 13       		.uleb128 0x13
+ 906 0210 22000000 		.4byte	.LVL9
+ 907 0214 73050000 		.4byte	0x573
+ 908 0218 23020000 		.4byte	0x223
+ 909 021c 0F       		.uleb128 0xf
+ 910 021d 01       		.uleb128 0x1
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 20
+
+
+ 911 021e 50       		.byte	0x50
+ 912 021f 02       		.uleb128 0x2
+ 913 0220 08       		.byte	0x8
+ 914 0221 46       		.byte	0x46
+ 915 0222 00       		.byte	0
+ 916 0223 12       		.uleb128 0x12
+ 917 0224 30000000 		.4byte	.LVL10
+ 918 0228 73050000 		.4byte	0x573
+ 919 022c 00       		.byte	0
+ 920 022d 10       		.uleb128 0x10
+ 921 022e EF010000 		.4byte	.LASF28
+ 922 0232 01       		.byte	0x1
+ 923 0233 2B       		.byte	0x2b
+ 924 0234 00000000 		.4byte	.LFB67
+ 925 0238 14000000 		.4byte	.LFE67-.LFB67
+ 926 023c 01       		.uleb128 0x1
+ 927 023d 9C       		.byte	0x9c
+ 928 023e 70020000 		.4byte	0x270
+ 929 0242 12       		.uleb128 0x12
+ 930 0243 06000000 		.4byte	.LVL11
+ 931 0247 68050000 		.4byte	0x568
+ 932 024b 13       		.uleb128 0x13
+ 933 024c 0C000000 		.4byte	.LVL12
+ 934 0250 73050000 		.4byte	0x573
+ 935 0254 5F020000 		.4byte	0x25f
+ 936 0258 0F       		.uleb128 0xf
+ 937 0259 01       		.uleb128 0x1
+ 938 025a 50       		.byte	0x50
+ 939 025b 02       		.uleb128 0x2
+ 940 025c 09       		.byte	0x9
+ 941 025d CC       		.byte	0xcc
+ 942 025e 00       		.byte	0
+ 943 025f 0E       		.uleb128 0xe
+ 944 0260 12000000 		.4byte	.LVL13
+ 945 0264 73050000 		.4byte	0x573
+ 946 0268 0F       		.uleb128 0xf
+ 947 0269 01       		.uleb128 0x1
+ 948 026a 50       		.byte	0x50
+ 949 026b 02       		.uleb128 0x2
+ 950 026c 08       		.byte	0x8
+ 951 026d 44       		.byte	0x44
+ 952 026e 00       		.byte	0
+ 953 026f 00       		.byte	0
+ 954 0270 10       		.uleb128 0x10
+ 955 0271 C1000000 		.4byte	.LASF29
+ 956 0275 01       		.byte	0x1
+ 957 0276 32       		.byte	0x32
+ 958 0277 00000000 		.4byte	.LFB68
+ 959 027b 1E000000 		.4byte	.LFE68-.LFB68
+ 960 027f 01       		.uleb128 0x1
+ 961 0280 9C       		.byte	0x9c
+ 962 0281 B6020000 		.4byte	0x2b6
+ 963 0285 14       		.uleb128 0x14
+ 964 0286 90000000 		.4byte	.LASF30
+ 965 028a 01       		.byte	0x1
+ 966 028b 32       		.byte	0x32
+ 967 028c DF000000 		.4byte	0xdf
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 21
+
+
+ 968 0290 02       		.uleb128 0x2
+ 969 0291 91       		.byte	0x91
+ 970 0292 70       		.sleb128 -16
+ 971 0293 12       		.uleb128 0x12
+ 972 0294 0C000000 		.4byte	.LVL14
+ 973 0298 68050000 		.4byte	0x568
+ 974 029c 12       		.uleb128 0x12
+ 975 029d 14000000 		.4byte	.LVL15
+ 976 02a1 7E050000 		.4byte	0x57e
+ 977 02a5 0E       		.uleb128 0xe
+ 978 02a6 1A000000 		.4byte	.LVL16
+ 979 02aa 73050000 		.4byte	0x573
+ 980 02ae 0F       		.uleb128 0xf
+ 981 02af 01       		.uleb128 0x1
+ 982 02b0 50       		.byte	0x50
+ 983 02b1 02       		.uleb128 0x2
+ 984 02b2 08       		.byte	0x8
+ 985 02b3 44       		.byte	0x44
+ 986 02b4 00       		.byte	0
+ 987 02b5 00       		.byte	0
+ 988 02b6 10       		.uleb128 0x10
+ 989 02b7 02010000 		.4byte	.LASF31
+ 990 02bb 01       		.byte	0x1
+ 991 02bc 39       		.byte	0x39
+ 992 02bd 00000000 		.4byte	.LFB69
+ 993 02c1 2C000000 		.4byte	.LFE69-.LFB69
+ 994 02c5 01       		.uleb128 0x1
+ 995 02c6 9C       		.byte	0x9c
+ 996 02c7 E2020000 		.4byte	0x2e2
+ 997 02cb 0D       		.uleb128 0xd
+ 998 02cc 6900     		.ascii	"i\000"
+ 999 02ce 01       		.byte	0x1
+ 1000 02cf 3B       		.byte	0x3b
+ 1001 02d0 81000000 		.4byte	0x81
+ 1002 02d4 6E000000 		.4byte	.LLST3
+ 1003 02d8 12       		.uleb128 0x12
+ 1004 02d9 16000000 		.4byte	.LVL19
+ 1005 02dd 70020000 		.4byte	0x270
+ 1006 02e1 00       		.byte	0
+ 1007 02e2 15       		.uleb128 0x15
+ 1008 02e3 FB020000 		.4byte	.LASF33
+ 1009 02e7 01       		.byte	0x1
+ 1010 02e8 62       		.byte	0x62
+ 1011 02e9 97000000 		.4byte	0x97
+ 1012 02ed 00000000 		.4byte	.LFB73
+ 1013 02f1 74000000 		.4byte	.LFE73-.LFB73
+ 1014 02f5 01       		.uleb128 0x1
+ 1015 02f6 9C       		.byte	0x9c
+ 1016 02f7 6E030000 		.4byte	0x36e
+ 1017 02fb 0D       		.uleb128 0xd
+ 1018 02fc 6900     		.ascii	"i\000"
+ 1019 02fe 01       		.byte	0x1
+ 1020 02ff 64       		.byte	0x64
+ 1021 0300 73000000 		.4byte	0x73
+ 1022 0304 98000000 		.4byte	.LLST4
+ 1023 0308 0D       		.uleb128 0xd
+ 1024 0309 63726300 		.ascii	"crc\000"
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 22
+
+
+ 1025 030d 01       		.byte	0x1
+ 1026 030e 65       		.byte	0x65
+ 1027 030f 81000000 		.4byte	0x81
+ 1028 0313 B7000000 		.4byte	.LLST5
+ 1029 0317 16       		.uleb128 0x16
+ 1030 0318 51020000 		.4byte	.LASF34
+ 1031 031c 01       		.byte	0x1
+ 1032 031d 66       		.byte	0x66
+ 1033 031e 6E030000 		.4byte	0x36e
+ 1034 0322 02       		.uleb128 0x2
+ 1035 0323 91       		.byte	0x91
+ 1036 0324 64       		.sleb128 -28
+ 1037 0325 17       		.uleb128 0x17
+ 1038 0326 2E010000 		.4byte	.LASF35
+ 1039 032a 01       		.byte	0x1
+ 1040 032b 67       		.byte	0x67
+ 1041 032c 81000000 		.4byte	0x81
+ 1042 0330 CA000000 		.4byte	.LLST6
+ 1043 0334 17       		.uleb128 0x17
+ 1044 0335 67010000 		.4byte	.LASF36
+ 1045 0339 01       		.byte	0x1
+ 1046 033a 67       		.byte	0x67
+ 1047 033b 81000000 		.4byte	0x81
+ 1048 033f 23010000 		.4byte	.LLST7
+ 1049 0343 17       		.uleb128 0x17
+ 1050 0344 9D000000 		.4byte	.LASF37
+ 1051 0348 01       		.byte	0x1
+ 1052 0349 68       		.byte	0x68
+ 1053 034a 97000000 		.4byte	0x97
+ 1054 034e 93010000 		.4byte	.LLST8
+ 1055 0352 12       		.uleb128 0x12
+ 1056 0353 08000000 		.4byte	.LVL23
+ 1057 0357 89050000 		.4byte	0x589
+ 1058 035b 12       		.uleb128 0x12
+ 1059 035c 10000000 		.4byte	.LVL25
+ 1060 0360 94050000 		.4byte	0x594
+ 1061 0364 12       		.uleb128 0x12
+ 1062 0365 1C000000 		.4byte	.LVL26
+ 1063 0369 9F050000 		.4byte	0x59f
+ 1064 036d 00       		.byte	0
+ 1065 036e 07       		.uleb128 0x7
+ 1066 036f 81000000 		.4byte	0x81
+ 1067 0373 7E030000 		.4byte	0x37e
+ 1068 0377 08       		.uleb128 0x8
+ 1069 0378 B3000000 		.4byte	0xb3
+ 1070 037c 08       		.byte	0x8
+ 1071 037d 00       		.byte	0
+ 1072 037e 0B       		.uleb128 0xb
+ 1073 037f 13000000 		.4byte	.LASF38
+ 1074 0383 01       		.byte	0x1
+ 1075 0384 42       		.byte	0x42
+ 1076 0385 97000000 		.4byte	0x97
+ 1077 0389 00000000 		.4byte	.LFB70
+ 1078 038d 18000000 		.4byte	.LFE70-.LFB70
+ 1079 0391 01       		.uleb128 0x1
+ 1080 0392 9C       		.byte	0x9c
+ 1081 0393 D2030000 		.4byte	0x3d2
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 23
+
+
+ 1082 0397 12       		.uleb128 0x12
+ 1083 0398 06000000 		.4byte	.LVL44
+ 1084 039c 68050000 		.4byte	0x568
+ 1085 03a0 13       		.uleb128 0x13
+ 1086 03a1 0C000000 		.4byte	.LVL45
+ 1087 03a5 73050000 		.4byte	0x573
+ 1088 03a9 B4030000 		.4byte	0x3b4
+ 1089 03ad 0F       		.uleb128 0xf
+ 1090 03ae 01       		.uleb128 0x1
+ 1091 03af 50       		.byte	0x50
+ 1092 03b0 02       		.uleb128 0x2
+ 1093 03b1 09       		.byte	0x9
+ 1094 03b2 CC       		.byte	0xcc
+ 1095 03b3 00       		.byte	0
+ 1096 03b4 13       		.uleb128 0x13
+ 1097 03b5 12000000 		.4byte	.LVL46
+ 1098 03b9 73050000 		.4byte	0x573
+ 1099 03bd C8030000 		.4byte	0x3c8
+ 1100 03c1 0F       		.uleb128 0xf
+ 1101 03c2 01       		.uleb128 0x1
+ 1102 03c3 50       		.byte	0x50
+ 1103 03c4 02       		.uleb128 0x2
+ 1104 03c5 09       		.byte	0x9
+ 1105 03c6 BE       		.byte	0xbe
+ 1106 03c7 00       		.byte	0
+ 1107 03c8 12       		.uleb128 0x12
+ 1108 03c9 16000000 		.4byte	.LVL47
+ 1109 03cd E2020000 		.4byte	0x2e2
+ 1110 03d1 00       		.byte	0
+ 1111 03d2 10       		.uleb128 0x10
+ 1112 03d3 22020000 		.4byte	.LASF39
+ 1113 03d7 01       		.byte	0x1
+ 1114 03d8 81       		.byte	0x81
+ 1115 03d9 00000000 		.4byte	.LFB74
+ 1116 03dd 3C000000 		.4byte	.LFE74-.LFB74
+ 1117 03e1 01       		.uleb128 0x1
+ 1118 03e2 9C       		.byte	0x9c
+ 1119 03e3 36040000 		.4byte	0x436
+ 1120 03e7 13       		.uleb128 0x13
+ 1121 03e8 0E000000 		.4byte	.LVL48
+ 1122 03ec AA050000 		.4byte	0x5aa
+ 1123 03f0 FB030000 		.4byte	0x3fb
+ 1124 03f4 0F       		.uleb128 0xf
+ 1125 03f5 01       		.uleb128 0x1
+ 1126 03f6 50       		.byte	0x50
+ 1127 03f7 02       		.uleb128 0x2
+ 1128 03f8 08       		.byte	0x8
+ 1129 03f9 5F       		.byte	0x5f
+ 1130 03fa 00       		.byte	0
+ 1131 03fb 13       		.uleb128 0x13
+ 1132 03fc 1A000000 		.4byte	.LVL49
+ 1133 0400 AA050000 		.4byte	0x5aa
+ 1134 0404 0F040000 		.4byte	0x40f
+ 1135 0408 0F       		.uleb128 0xf
+ 1136 0409 01       		.uleb128 0x1
+ 1137 040a 50       		.byte	0x50
+ 1138 040b 02       		.uleb128 0x2
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 24
+
+
+ 1139 040c 08       		.byte	0x8
+ 1140 040d BE       		.byte	0xbe
+ 1141 040e 00       		.byte	0
+ 1142 040f 13       		.uleb128 0x13
+ 1143 0410 28000000 		.4byte	.LVL50
+ 1144 0414 AA050000 		.4byte	0x5aa
+ 1145 0418 24040000 		.4byte	0x424
+ 1146 041c 0F       		.uleb128 0xf
+ 1147 041d 01       		.uleb128 0x1
+ 1148 041e 50       		.byte	0x50
+ 1149 041f 03       		.uleb128 0x3
+ 1150 0420 0A       		.byte	0xa
+ 1151 0421 7C01     		.2byte	0x17c
+ 1152 0423 00       		.byte	0
+ 1153 0424 0E       		.uleb128 0xe
+ 1154 0425 36000000 		.4byte	.LVL51
+ 1155 0429 AA050000 		.4byte	0x5aa
+ 1156 042d 0F       		.uleb128 0xf
+ 1157 042e 01       		.uleb128 0x1
+ 1158 042f 50       		.byte	0x50
+ 1159 0430 03       		.uleb128 0x3
+ 1160 0431 0A       		.byte	0xa
+ 1161 0432 EE02     		.2byte	0x2ee
+ 1162 0434 00       		.byte	0
+ 1163 0435 00       		.byte	0
+ 1164 0436 0B       		.uleb128 0xb
+ 1165 0437 5A000000 		.4byte	.LASF40
+ 1166 043b 01       		.byte	0x1
+ 1167 043c 4B       		.byte	0x4b
+ 1168 043d 97000000 		.4byte	0x97
+ 1169 0441 00000000 		.4byte	.LFB71
+ 1170 0445 26000000 		.4byte	.LFE71-.LFB71
+ 1171 0449 01       		.uleb128 0x1
+ 1172 044a 9C       		.byte	0x9c
+ 1173 044b 96040000 		.4byte	0x496
+ 1174 044f 14       		.uleb128 0x14
+ 1175 0450 90000000 		.4byte	.LASF30
+ 1176 0454 01       		.byte	0x1
+ 1177 0455 4B       		.byte	0x4b
+ 1178 0456 DF000000 		.4byte	0xdf
+ 1179 045a 02       		.uleb128 0x2
+ 1180 045b 91       		.byte	0x91
+ 1181 045c 70       		.sleb128 -16
+ 1182 045d 12       		.uleb128 0x12
+ 1183 045e 0C000000 		.4byte	.LVL52
+ 1184 0462 D2030000 		.4byte	0x3d2
+ 1185 0466 12       		.uleb128 0x12
+ 1186 0467 10000000 		.4byte	.LVL53
+ 1187 046b 68050000 		.4byte	0x568
+ 1188 046f 12       		.uleb128 0x12
+ 1189 0470 18000000 		.4byte	.LVL54
+ 1190 0474 7E050000 		.4byte	0x57e
+ 1191 0478 13       		.uleb128 0x13
+ 1192 0479 1E000000 		.4byte	.LVL55
+ 1193 047d 73050000 		.4byte	0x573
+ 1194 0481 8C040000 		.4byte	0x48c
+ 1195 0485 0F       		.uleb128 0xf
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 25
+
+
+ 1196 0486 01       		.uleb128 0x1
+ 1197 0487 50       		.byte	0x50
+ 1198 0488 02       		.uleb128 0x2
+ 1199 0489 09       		.byte	0x9
+ 1200 048a BE       		.byte	0xbe
+ 1201 048b 00       		.byte	0
+ 1202 048c 12       		.uleb128 0x12
+ 1203 048d 22000000 		.4byte	.LVL56
+ 1204 0491 E2020000 		.4byte	0x2e2
+ 1205 0495 00       		.byte	0
+ 1206 0496 0B       		.uleb128 0xb
+ 1207 0497 52030000 		.4byte	.LASF41
+ 1208 049b 01       		.byte	0x1
+ 1209 049c 55       		.byte	0x55
+ 1210 049d DE040000 		.4byte	0x4de
+ 1211 04a1 00000000 		.4byte	.LFB72
+ 1212 04a5 44000000 		.4byte	.LFE72-.LFB72
+ 1213 04a9 01       		.uleb128 0x1
+ 1214 04aa 9C       		.byte	0x9c
+ 1215 04ab DE040000 		.4byte	0x4de
+ 1216 04af 0D       		.uleb128 0xd
+ 1217 04b0 6900     		.ascii	"i\000"
+ 1218 04b2 01       		.byte	0x1
+ 1219 04b3 56       		.byte	0x56
+ 1220 04b4 81000000 		.4byte	0x81
+ 1221 04b8 B1010000 		.4byte	.LLST9
+ 1222 04bc 17       		.uleb128 0x17
+ 1223 04bd E7000000 		.4byte	.LASF42
+ 1224 04c1 01       		.byte	0x1
+ 1225 04c2 57       		.byte	0x57
+ 1226 04c3 DE040000 		.4byte	0x4de
+ 1227 04c7 DB010000 		.4byte	.LLST10
+ 1228 04cb 12       		.uleb128 0x12
+ 1229 04cc 0C000000 		.4byte	.LVL58
+ 1230 04d0 B5050000 		.4byte	0x5b5
+ 1231 04d4 12       		.uleb128 0x12
+ 1232 04d5 24000000 		.4byte	.LVL61
+ 1233 04d9 36040000 		.4byte	0x436
+ 1234 04dd 00       		.byte	0
+ 1235 04de 09       		.uleb128 0x9
+ 1236 04df 04       		.byte	0x4
+ 1237 04e0 0B010000 		.4byte	0x10b
+ 1238 04e4 0B       		.uleb128 0xb
+ 1239 04e5 56020000 		.4byte	.LASF43
+ 1240 04e9 01       		.byte	0x1
+ 1241 04ea 8E       		.byte	0x8e
+ 1242 04eb 97000000 		.4byte	0x97
+ 1243 04ef 00000000 		.4byte	.LFB75
+ 1244 04f3 10000000 		.4byte	.LFE75-.LFB75
+ 1245 04f7 01       		.uleb128 0x1
+ 1246 04f8 9C       		.byte	0x9c
+ 1247 04f9 19050000 		.4byte	0x519
+ 1248 04fd 12       		.uleb128 0x12
+ 1249 04fe 06000000 		.4byte	.LVL65
+ 1250 0502 2D020000 		.4byte	0x22d
+ 1251 0506 12       		.uleb128 0x12
+ 1252 0507 0A000000 		.4byte	.LVL66
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 26
+
+
+ 1253 050b D2030000 		.4byte	0x3d2
+ 1254 050f 12       		.uleb128 0x12
+ 1255 0510 0E000000 		.4byte	.LVL67
+ 1256 0514 7E030000 		.4byte	0x37e
+ 1257 0518 00       		.byte	0
+ 1258 0519 16       		.uleb128 0x16
+ 1259 051a 28040000 		.4byte	.LASF44
+ 1260 051e 01       		.byte	0x1
+ 1261 051f 06       		.byte	0x6
+ 1262 0520 81000000 		.4byte	0x81
+ 1263 0524 05       		.uleb128 0x5
+ 1264 0525 03       		.byte	0x3
+ 1265 0526 00000000 		.4byte	precision
+ 1266 052a 16       		.uleb128 0x16
+ 1267 052b 8E020000 		.4byte	.LASF45
+ 1268 052f 01       		.byte	0x1
+ 1269 0530 07       		.byte	0x7
+ 1270 0531 37010000 		.4byte	0x137
+ 1271 0535 05       		.uleb128 0x5
+ 1272 0536 03       		.byte	0x3
+ 1273 0537 00000000 		.4byte	one_wire_list_of_devices
+ 1274 053b 16       		.uleb128 0x16
+ 1275 053c BF010000 		.4byte	.LASF46
+ 1276 0540 01       		.byte	0x1
+ 1277 0541 08       		.byte	0x8
+ 1278 0542 81000000 		.4byte	0x81
+ 1279 0546 05       		.uleb128 0x5
+ 1280 0547 03       		.byte	0x3
+ 1281 0548 01000000 		.4byte	one_wire_devices_list_size
+ 1282 054c 18       		.uleb128 0x18
+ 1283 054d 7C030000 		.4byte	.LASF60
+ 1284 0551 08       		.byte	0x8
+ 1285 0552 1207     		.2byte	0x712
+ 1286 0554 58050000 		.4byte	0x558
+ 1287 0558 19       		.uleb128 0x19
+ 1288 0559 8C000000 		.4byte	0x8c
+ 1289 055d 1A       		.uleb128 0x1a
+ 1290 055e 70010000 		.4byte	.LASF47
+ 1291 0562 70010000 		.4byte	.LASF47
+ 1292 0566 04       		.byte	0x4
+ 1293 0567 24       		.byte	0x24
+ 1294 0568 1A       		.uleb128 0x1a
+ 1295 0569 73000000 		.4byte	.LASF48
+ 1296 056d 73000000 		.4byte	.LASF48
+ 1297 0571 04       		.byte	0x4
+ 1298 0572 1D       		.byte	0x1d
+ 1299 0573 1A       		.uleb128 0x1a
+ 1300 0574 98010000 		.4byte	.LASF49
+ 1301 0578 98010000 		.4byte	.LASF49
+ 1302 057c 04       		.byte	0x4
+ 1303 057d 22       		.byte	0x22
+ 1304 057e 1A       		.uleb128 0x1a
+ 1305 057f E8020000 		.4byte	.LASF50
+ 1306 0583 E8020000 		.4byte	.LASF50
+ 1307 0587 04       		.byte	0x4
+ 1308 0588 25       		.byte	0x25
+ 1309 0589 1A       		.uleb128 0x1a
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 27
+
+
+ 1310 058a 00000000 		.4byte	.LASF51
+ 1311 058e 00000000 		.4byte	.LASF51
+ 1312 0592 04       		.byte	0x4
+ 1313 0593 28       		.byte	0x28
+ 1314 0594 1A       		.uleb128 0x1a
+ 1315 0595 3E020000 		.4byte	.LASF52
+ 1316 0599 3E020000 		.4byte	.LASF52
+ 1317 059d 04       		.byte	0x4
+ 1318 059e 23       		.byte	0x23
+ 1319 059f 1A       		.uleb128 0x1a
+ 1320 05a0 6F030000 		.4byte	.LASF53
+ 1321 05a4 6F030000 		.4byte	.LASF53
+ 1322 05a8 04       		.byte	0x4
+ 1323 05a9 27       		.byte	0x27
+ 1324 05aa 1A       		.uleb128 0x1a
+ 1325 05ab 17040000 		.4byte	.LASF54
+ 1326 05af 17040000 		.4byte	.LASF54
+ 1327 05b3 06       		.byte	0x6
+ 1328 05b4 76       		.byte	0x76
+ 1329 05b5 1A       		.uleb128 0x1a
+ 1330 05b6 3D000000 		.4byte	.LASF55
+ 1331 05ba 3D000000 		.4byte	.LASF55
+ 1332 05be 07       		.byte	0x7
+ 1333 05bf 64       		.byte	0x64
+ 1334 05c0 00       		.byte	0
+ 1335              		.section	.debug_abbrev,"",%progbits
+ 1336              	.Ldebug_abbrev0:
+ 1337 0000 01       		.uleb128 0x1
+ 1338 0001 11       		.uleb128 0x11
+ 1339 0002 01       		.byte	0x1
+ 1340 0003 25       		.uleb128 0x25
+ 1341 0004 0E       		.uleb128 0xe
+ 1342 0005 13       		.uleb128 0x13
+ 1343 0006 0B       		.uleb128 0xb
+ 1344 0007 03       		.uleb128 0x3
+ 1345 0008 0E       		.uleb128 0xe
+ 1346 0009 1B       		.uleb128 0x1b
+ 1347 000a 0E       		.uleb128 0xe
+ 1348 000b 55       		.uleb128 0x55
+ 1349 000c 17       		.uleb128 0x17
+ 1350 000d 11       		.uleb128 0x11
+ 1351 000e 01       		.uleb128 0x1
+ 1352 000f 10       		.uleb128 0x10
+ 1353 0010 17       		.uleb128 0x17
+ 1354 0011 00       		.byte	0
+ 1355 0012 00       		.byte	0
+ 1356 0013 02       		.uleb128 0x2
+ 1357 0014 24       		.uleb128 0x24
+ 1358 0015 00       		.byte	0
+ 1359 0016 0B       		.uleb128 0xb
+ 1360 0017 0B       		.uleb128 0xb
+ 1361 0018 3E       		.uleb128 0x3e
+ 1362 0019 0B       		.uleb128 0xb
+ 1363 001a 03       		.uleb128 0x3
+ 1364 001b 0E       		.uleb128 0xe
+ 1365 001c 00       		.byte	0
+ 1366 001d 00       		.byte	0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 28
+
+
+ 1367 001e 03       		.uleb128 0x3
+ 1368 001f 16       		.uleb128 0x16
+ 1369 0020 00       		.byte	0
+ 1370 0021 03       		.uleb128 0x3
+ 1371 0022 0E       		.uleb128 0xe
+ 1372 0023 3A       		.uleb128 0x3a
+ 1373 0024 0B       		.uleb128 0xb
+ 1374 0025 3B       		.uleb128 0x3b
+ 1375 0026 0B       		.uleb128 0xb
+ 1376 0027 49       		.uleb128 0x49
+ 1377 0028 13       		.uleb128 0x13
+ 1378 0029 00       		.byte	0
+ 1379 002a 00       		.byte	0
+ 1380 002b 04       		.uleb128 0x4
+ 1381 002c 24       		.uleb128 0x24
+ 1382 002d 00       		.byte	0
+ 1383 002e 0B       		.uleb128 0xb
+ 1384 002f 0B       		.uleb128 0xb
+ 1385 0030 3E       		.uleb128 0x3e
+ 1386 0031 0B       		.uleb128 0xb
+ 1387 0032 03       		.uleb128 0x3
+ 1388 0033 08       		.uleb128 0x8
+ 1389 0034 00       		.byte	0
+ 1390 0035 00       		.byte	0
+ 1391 0036 05       		.uleb128 0x5
+ 1392 0037 13       		.uleb128 0x13
+ 1393 0038 01       		.byte	0x1
+ 1394 0039 0B       		.uleb128 0xb
+ 1395 003a 0B       		.uleb128 0xb
+ 1396 003b 3A       		.uleb128 0x3a
+ 1397 003c 0B       		.uleb128 0xb
+ 1398 003d 3B       		.uleb128 0x3b
+ 1399 003e 0B       		.uleb128 0xb
+ 1400 003f 01       		.uleb128 0x1
+ 1401 0040 13       		.uleb128 0x13
+ 1402 0041 00       		.byte	0
+ 1403 0042 00       		.byte	0
+ 1404 0043 06       		.uleb128 0x6
+ 1405 0044 0D       		.uleb128 0xd
+ 1406 0045 00       		.byte	0
+ 1407 0046 03       		.uleb128 0x3
+ 1408 0047 0E       		.uleb128 0xe
+ 1409 0048 3A       		.uleb128 0x3a
+ 1410 0049 0B       		.uleb128 0xb
+ 1411 004a 3B       		.uleb128 0x3b
+ 1412 004b 0B       		.uleb128 0xb
+ 1413 004c 49       		.uleb128 0x49
+ 1414 004d 13       		.uleb128 0x13
+ 1415 004e 38       		.uleb128 0x38
+ 1416 004f 0B       		.uleb128 0xb
+ 1417 0050 00       		.byte	0
+ 1418 0051 00       		.byte	0
+ 1419 0052 07       		.uleb128 0x7
+ 1420 0053 01       		.uleb128 0x1
+ 1421 0054 01       		.byte	0x1
+ 1422 0055 49       		.uleb128 0x49
+ 1423 0056 13       		.uleb128 0x13
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 29
+
+
+ 1424 0057 01       		.uleb128 0x1
+ 1425 0058 13       		.uleb128 0x13
+ 1426 0059 00       		.byte	0
+ 1427 005a 00       		.byte	0
+ 1428 005b 08       		.uleb128 0x8
+ 1429 005c 21       		.uleb128 0x21
+ 1430 005d 00       		.byte	0
+ 1431 005e 49       		.uleb128 0x49
+ 1432 005f 13       		.uleb128 0x13
+ 1433 0060 2F       		.uleb128 0x2f
+ 1434 0061 0B       		.uleb128 0xb
+ 1435 0062 00       		.byte	0
+ 1436 0063 00       		.byte	0
+ 1437 0064 09       		.uleb128 0x9
+ 1438 0065 0F       		.uleb128 0xf
+ 1439 0066 00       		.byte	0
+ 1440 0067 0B       		.uleb128 0xb
+ 1441 0068 0B       		.uleb128 0xb
+ 1442 0069 49       		.uleb128 0x49
+ 1443 006a 13       		.uleb128 0x13
+ 1444 006b 00       		.byte	0
+ 1445 006c 00       		.byte	0
+ 1446 006d 0A       		.uleb128 0xa
+ 1447 006e 2E       		.uleb128 0x2e
+ 1448 006f 00       		.byte	0
+ 1449 0070 3F       		.uleb128 0x3f
+ 1450 0071 19       		.uleb128 0x19
+ 1451 0072 03       		.uleb128 0x3
+ 1452 0073 0E       		.uleb128 0xe
+ 1453 0074 3A       		.uleb128 0x3a
+ 1454 0075 0B       		.uleb128 0xb
+ 1455 0076 3B       		.uleb128 0x3b
+ 1456 0077 0B       		.uleb128 0xb
+ 1457 0078 27       		.uleb128 0x27
+ 1458 0079 19       		.uleb128 0x19
+ 1459 007a 49       		.uleb128 0x49
+ 1460 007b 13       		.uleb128 0x13
+ 1461 007c 11       		.uleb128 0x11
+ 1462 007d 01       		.uleb128 0x1
+ 1463 007e 12       		.uleb128 0x12
+ 1464 007f 06       		.uleb128 0x6
+ 1465 0080 40       		.uleb128 0x40
+ 1466 0081 18       		.uleb128 0x18
+ 1467 0082 9742     		.uleb128 0x2117
+ 1468 0084 19       		.uleb128 0x19
+ 1469 0085 00       		.byte	0
+ 1470 0086 00       		.byte	0
+ 1471 0087 0B       		.uleb128 0xb
+ 1472 0088 2E       		.uleb128 0x2e
+ 1473 0089 01       		.byte	0x1
+ 1474 008a 3F       		.uleb128 0x3f
+ 1475 008b 19       		.uleb128 0x19
+ 1476 008c 03       		.uleb128 0x3
+ 1477 008d 0E       		.uleb128 0xe
+ 1478 008e 3A       		.uleb128 0x3a
+ 1479 008f 0B       		.uleb128 0xb
+ 1480 0090 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 30
+
+
+ 1481 0091 0B       		.uleb128 0xb
+ 1482 0092 27       		.uleb128 0x27
+ 1483 0093 19       		.uleb128 0x19
+ 1484 0094 49       		.uleb128 0x49
+ 1485 0095 13       		.uleb128 0x13
+ 1486 0096 11       		.uleb128 0x11
+ 1487 0097 01       		.uleb128 0x1
+ 1488 0098 12       		.uleb128 0x12
+ 1489 0099 06       		.uleb128 0x6
+ 1490 009a 40       		.uleb128 0x40
+ 1491 009b 18       		.uleb128 0x18
+ 1492 009c 9742     		.uleb128 0x2117
+ 1493 009e 19       		.uleb128 0x19
+ 1494 009f 01       		.uleb128 0x1
+ 1495 00a0 13       		.uleb128 0x13
+ 1496 00a1 00       		.byte	0
+ 1497 00a2 00       		.byte	0
+ 1498 00a3 0C       		.uleb128 0xc
+ 1499 00a4 05       		.uleb128 0x5
+ 1500 00a5 00       		.byte	0
+ 1501 00a6 03       		.uleb128 0x3
+ 1502 00a7 0E       		.uleb128 0xe
+ 1503 00a8 3A       		.uleb128 0x3a
+ 1504 00a9 0B       		.uleb128 0xb
+ 1505 00aa 3B       		.uleb128 0x3b
+ 1506 00ab 0B       		.uleb128 0xb
+ 1507 00ac 49       		.uleb128 0x49
+ 1508 00ad 13       		.uleb128 0x13
+ 1509 00ae 02       		.uleb128 0x2
+ 1510 00af 17       		.uleb128 0x17
+ 1511 00b0 00       		.byte	0
+ 1512 00b1 00       		.byte	0
+ 1513 00b2 0D       		.uleb128 0xd
+ 1514 00b3 34       		.uleb128 0x34
+ 1515 00b4 00       		.byte	0
+ 1516 00b5 03       		.uleb128 0x3
+ 1517 00b6 08       		.uleb128 0x8
+ 1518 00b7 3A       		.uleb128 0x3a
+ 1519 00b8 0B       		.uleb128 0xb
+ 1520 00b9 3B       		.uleb128 0x3b
+ 1521 00ba 0B       		.uleb128 0xb
+ 1522 00bb 49       		.uleb128 0x49
+ 1523 00bc 13       		.uleb128 0x13
+ 1524 00bd 02       		.uleb128 0x2
+ 1525 00be 17       		.uleb128 0x17
+ 1526 00bf 00       		.byte	0
+ 1527 00c0 00       		.byte	0
+ 1528 00c1 0E       		.uleb128 0xe
+ 1529 00c2 898201   		.uleb128 0x4109
+ 1530 00c5 01       		.byte	0x1
+ 1531 00c6 11       		.uleb128 0x11
+ 1532 00c7 01       		.uleb128 0x1
+ 1533 00c8 31       		.uleb128 0x31
+ 1534 00c9 13       		.uleb128 0x13
+ 1535 00ca 00       		.byte	0
+ 1536 00cb 00       		.byte	0
+ 1537 00cc 0F       		.uleb128 0xf
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 31
+
+
+ 1538 00cd 8A8201   		.uleb128 0x410a
+ 1539 00d0 00       		.byte	0
+ 1540 00d1 02       		.uleb128 0x2
+ 1541 00d2 18       		.uleb128 0x18
+ 1542 00d3 9142     		.uleb128 0x2111
+ 1543 00d5 18       		.uleb128 0x18
+ 1544 00d6 00       		.byte	0
+ 1545 00d7 00       		.byte	0
+ 1546 00d8 10       		.uleb128 0x10
+ 1547 00d9 2E       		.uleb128 0x2e
+ 1548 00da 01       		.byte	0x1
+ 1549 00db 3F       		.uleb128 0x3f
+ 1550 00dc 19       		.uleb128 0x19
+ 1551 00dd 03       		.uleb128 0x3
+ 1552 00de 0E       		.uleb128 0xe
+ 1553 00df 3A       		.uleb128 0x3a
+ 1554 00e0 0B       		.uleb128 0xb
+ 1555 00e1 3B       		.uleb128 0x3b
+ 1556 00e2 0B       		.uleb128 0xb
+ 1557 00e3 27       		.uleb128 0x27
+ 1558 00e4 19       		.uleb128 0x19
+ 1559 00e5 11       		.uleb128 0x11
+ 1560 00e6 01       		.uleb128 0x1
+ 1561 00e7 12       		.uleb128 0x12
+ 1562 00e8 06       		.uleb128 0x6
+ 1563 00e9 40       		.uleb128 0x40
+ 1564 00ea 18       		.uleb128 0x18
+ 1565 00eb 9742     		.uleb128 0x2117
+ 1566 00ed 19       		.uleb128 0x19
+ 1567 00ee 01       		.uleb128 0x1
+ 1568 00ef 13       		.uleb128 0x13
+ 1569 00f0 00       		.byte	0
+ 1570 00f1 00       		.byte	0
+ 1571 00f2 11       		.uleb128 0x11
+ 1572 00f3 05       		.uleb128 0x5
+ 1573 00f4 00       		.byte	0
+ 1574 00f5 03       		.uleb128 0x3
+ 1575 00f6 08       		.uleb128 0x8
+ 1576 00f7 3A       		.uleb128 0x3a
+ 1577 00f8 0B       		.uleb128 0xb
+ 1578 00f9 3B       		.uleb128 0x3b
+ 1579 00fa 0B       		.uleb128 0xb
+ 1580 00fb 49       		.uleb128 0x49
+ 1581 00fc 13       		.uleb128 0x13
+ 1582 00fd 02       		.uleb128 0x2
+ 1583 00fe 17       		.uleb128 0x17
+ 1584 00ff 00       		.byte	0
+ 1585 0100 00       		.byte	0
+ 1586 0101 12       		.uleb128 0x12
+ 1587 0102 898201   		.uleb128 0x4109
+ 1588 0105 00       		.byte	0
+ 1589 0106 11       		.uleb128 0x11
+ 1590 0107 01       		.uleb128 0x1
+ 1591 0108 31       		.uleb128 0x31
+ 1592 0109 13       		.uleb128 0x13
+ 1593 010a 00       		.byte	0
+ 1594 010b 00       		.byte	0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 32
+
+
+ 1595 010c 13       		.uleb128 0x13
+ 1596 010d 898201   		.uleb128 0x4109
+ 1597 0110 01       		.byte	0x1
+ 1598 0111 11       		.uleb128 0x11
+ 1599 0112 01       		.uleb128 0x1
+ 1600 0113 31       		.uleb128 0x31
+ 1601 0114 13       		.uleb128 0x13
+ 1602 0115 01       		.uleb128 0x1
+ 1603 0116 13       		.uleb128 0x13
+ 1604 0117 00       		.byte	0
+ 1605 0118 00       		.byte	0
+ 1606 0119 14       		.uleb128 0x14
+ 1607 011a 05       		.uleb128 0x5
+ 1608 011b 00       		.byte	0
+ 1609 011c 03       		.uleb128 0x3
+ 1610 011d 0E       		.uleb128 0xe
+ 1611 011e 3A       		.uleb128 0x3a
+ 1612 011f 0B       		.uleb128 0xb
+ 1613 0120 3B       		.uleb128 0x3b
+ 1614 0121 0B       		.uleb128 0xb
+ 1615 0122 49       		.uleb128 0x49
+ 1616 0123 13       		.uleb128 0x13
+ 1617 0124 02       		.uleb128 0x2
+ 1618 0125 18       		.uleb128 0x18
+ 1619 0126 00       		.byte	0
+ 1620 0127 00       		.byte	0
+ 1621 0128 15       		.uleb128 0x15
+ 1622 0129 2E       		.uleb128 0x2e
+ 1623 012a 01       		.byte	0x1
+ 1624 012b 3F       		.uleb128 0x3f
+ 1625 012c 19       		.uleb128 0x19
+ 1626 012d 03       		.uleb128 0x3
+ 1627 012e 0E       		.uleb128 0xe
+ 1628 012f 3A       		.uleb128 0x3a
+ 1629 0130 0B       		.uleb128 0xb
+ 1630 0131 3B       		.uleb128 0x3b
+ 1631 0132 0B       		.uleb128 0xb
+ 1632 0133 27       		.uleb128 0x27
+ 1633 0134 19       		.uleb128 0x19
+ 1634 0135 49       		.uleb128 0x49
+ 1635 0136 13       		.uleb128 0x13
+ 1636 0137 11       		.uleb128 0x11
+ 1637 0138 01       		.uleb128 0x1
+ 1638 0139 12       		.uleb128 0x12
+ 1639 013a 06       		.uleb128 0x6
+ 1640 013b 40       		.uleb128 0x40
+ 1641 013c 18       		.uleb128 0x18
+ 1642 013d 9642     		.uleb128 0x2116
+ 1643 013f 19       		.uleb128 0x19
+ 1644 0140 01       		.uleb128 0x1
+ 1645 0141 13       		.uleb128 0x13
+ 1646 0142 00       		.byte	0
+ 1647 0143 00       		.byte	0
+ 1648 0144 16       		.uleb128 0x16
+ 1649 0145 34       		.uleb128 0x34
+ 1650 0146 00       		.byte	0
+ 1651 0147 03       		.uleb128 0x3
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 33
+
+
+ 1652 0148 0E       		.uleb128 0xe
+ 1653 0149 3A       		.uleb128 0x3a
+ 1654 014a 0B       		.uleb128 0xb
+ 1655 014b 3B       		.uleb128 0x3b
+ 1656 014c 0B       		.uleb128 0xb
+ 1657 014d 49       		.uleb128 0x49
+ 1658 014e 13       		.uleb128 0x13
+ 1659 014f 02       		.uleb128 0x2
+ 1660 0150 18       		.uleb128 0x18
+ 1661 0151 00       		.byte	0
+ 1662 0152 00       		.byte	0
+ 1663 0153 17       		.uleb128 0x17
+ 1664 0154 34       		.uleb128 0x34
+ 1665 0155 00       		.byte	0
+ 1666 0156 03       		.uleb128 0x3
+ 1667 0157 0E       		.uleb128 0xe
+ 1668 0158 3A       		.uleb128 0x3a
+ 1669 0159 0B       		.uleb128 0xb
+ 1670 015a 3B       		.uleb128 0x3b
+ 1671 015b 0B       		.uleb128 0xb
+ 1672 015c 49       		.uleb128 0x49
+ 1673 015d 13       		.uleb128 0x13
+ 1674 015e 02       		.uleb128 0x2
+ 1675 015f 17       		.uleb128 0x17
+ 1676 0160 00       		.byte	0
+ 1677 0161 00       		.byte	0
+ 1678 0162 18       		.uleb128 0x18
+ 1679 0163 34       		.uleb128 0x34
+ 1680 0164 00       		.byte	0
+ 1681 0165 03       		.uleb128 0x3
+ 1682 0166 0E       		.uleb128 0xe
+ 1683 0167 3A       		.uleb128 0x3a
+ 1684 0168 0B       		.uleb128 0xb
+ 1685 0169 3B       		.uleb128 0x3b
+ 1686 016a 05       		.uleb128 0x5
+ 1687 016b 49       		.uleb128 0x49
+ 1688 016c 13       		.uleb128 0x13
+ 1689 016d 3F       		.uleb128 0x3f
+ 1690 016e 19       		.uleb128 0x19
+ 1691 016f 3C       		.uleb128 0x3c
+ 1692 0170 19       		.uleb128 0x19
+ 1693 0171 00       		.byte	0
+ 1694 0172 00       		.byte	0
+ 1695 0173 19       		.uleb128 0x19
+ 1696 0174 35       		.uleb128 0x35
+ 1697 0175 00       		.byte	0
+ 1698 0176 49       		.uleb128 0x49
+ 1699 0177 13       		.uleb128 0x13
+ 1700 0178 00       		.byte	0
+ 1701 0179 00       		.byte	0
+ 1702 017a 1A       		.uleb128 0x1a
+ 1703 017b 2E       		.uleb128 0x2e
+ 1704 017c 00       		.byte	0
+ 1705 017d 3F       		.uleb128 0x3f
+ 1706 017e 19       		.uleb128 0x19
+ 1707 017f 3C       		.uleb128 0x3c
+ 1708 0180 19       		.uleb128 0x19
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 34
+
+
+ 1709 0181 6E       		.uleb128 0x6e
+ 1710 0182 0E       		.uleb128 0xe
+ 1711 0183 03       		.uleb128 0x3
+ 1712 0184 0E       		.uleb128 0xe
+ 1713 0185 3A       		.uleb128 0x3a
+ 1714 0186 0B       		.uleb128 0xb
+ 1715 0187 3B       		.uleb128 0x3b
+ 1716 0188 0B       		.uleb128 0xb
+ 1717 0189 00       		.byte	0
+ 1718 018a 00       		.byte	0
+ 1719 018b 00       		.byte	0
+ 1720              		.section	.debug_loc,"",%progbits
+ 1721              	.Ldebug_loc0:
+ 1722              	.LLST0:
+ 1723 0000 00000000 		.4byte	.LVL0
+ 1724 0004 11000000 		.4byte	.LVL2-1
+ 1725 0008 0100     		.2byte	0x1
+ 1726 000a 51       		.byte	0x51
+ 1727 000b 11000000 		.4byte	.LVL2-1
+ 1728 000f 30000000 		.4byte	.LFE65
+ 1729 0013 0400     		.2byte	0x4
+ 1730 0015 F3       		.byte	0xf3
+ 1731 0016 01       		.uleb128 0x1
+ 1732 0017 51       		.byte	0x51
+ 1733 0018 9F       		.byte	0x9f
+ 1734 0019 00000000 		.4byte	0
+ 1735 001d 00000000 		.4byte	0
+ 1736              	.LLST1:
+ 1737 0021 00000000 		.4byte	.LVL0
+ 1738 0025 08000000 		.4byte	.LVL1
+ 1739 0029 0200     		.2byte	0x2
+ 1740 002b 70       		.byte	0x70
+ 1741 002c 00       		.sleb128 0
+ 1742 002d 08000000 		.4byte	.LVL1
+ 1743 0031 26000000 		.4byte	.LVL3
+ 1744 0035 0200     		.2byte	0x2
+ 1745 0037 74       		.byte	0x74
+ 1746 0038 00       		.sleb128 0
+ 1747 0039 26000000 		.4byte	.LVL3
+ 1748 003d 30000000 		.4byte	.LFE65
+ 1749 0041 0200     		.2byte	0x2
+ 1750 0043 70       		.byte	0x70
+ 1751 0044 00       		.sleb128 0
+ 1752 0045 00000000 		.4byte	0
+ 1753 0049 00000000 		.4byte	0
+ 1754              	.LLST2:
+ 1755 004d 00000000 		.4byte	.LVL4
+ 1756 0051 09000000 		.4byte	.LVL5-1
+ 1757 0055 0100     		.2byte	0x1
+ 1758 0057 50       		.byte	0x50
+ 1759 0058 09000000 		.4byte	.LVL5-1
+ 1760 005c 38000000 		.4byte	.LFE66
+ 1761 0060 0400     		.2byte	0x4
+ 1762 0062 F3       		.byte	0xf3
+ 1763 0063 01       		.uleb128 0x1
+ 1764 0064 50       		.byte	0x50
+ 1765 0065 9F       		.byte	0x9f
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 35
+
+
+ 1766 0066 00000000 		.4byte	0
+ 1767 006a 00000000 		.4byte	0
+ 1768              	.LLST3:
+ 1769 006e 02000000 		.4byte	.LVL17
+ 1770 0072 06000000 		.4byte	.LVL18
+ 1771 0076 0200     		.2byte	0x2
+ 1772 0078 30       		.byte	0x30
+ 1773 0079 9F       		.byte	0x9f
+ 1774 007a 06000000 		.4byte	.LVL18
+ 1775 007e 18000000 		.4byte	.LVL20
+ 1776 0082 0100     		.2byte	0x1
+ 1777 0084 54       		.byte	0x54
+ 1778 0085 1A000000 		.4byte	.LVL21
+ 1779 0089 24000000 		.4byte	.LVL22
+ 1780 008d 0100     		.2byte	0x1
+ 1781 008f 54       		.byte	0x54
+ 1782 0090 00000000 		.4byte	0
+ 1783 0094 00000000 		.4byte	0
+ 1784              	.LLST4:
+ 1785 0098 08000000 		.4byte	.LVL23
+ 1786 009c 0C000000 		.4byte	.LVL24
+ 1787 00a0 0200     		.2byte	0x2
+ 1788 00a2 30       		.byte	0x30
+ 1789 00a3 9F       		.byte	0x9f
+ 1790 00a4 0C000000 		.4byte	.LVL24
+ 1791 00a8 6E000000 		.4byte	.LVL43
+ 1792 00ac 0100     		.2byte	0x1
+ 1793 00ae 54       		.byte	0x54
+ 1794 00af 00000000 		.4byte	0
+ 1795 00b3 00000000 		.4byte	0
+ 1796              	.LLST5:
+ 1797 00b7 0C000000 		.4byte	.LVL24
+ 1798 00bb 6E000000 		.4byte	.LVL43
+ 1799 00bf 0100     		.2byte	0x1
+ 1800 00c1 55       		.byte	0x55
+ 1801 00c2 00000000 		.4byte	0
+ 1802 00c6 00000000 		.4byte	0
+ 1803              	.LLST6:
+ 1804 00ca 28000000 		.4byte	.LVL29
+ 1805 00ce 43000000 		.4byte	.LVL32-1
+ 1806 00d2 0100     		.2byte	0x1
+ 1807 00d4 53       		.byte	0x53
+ 1808 00d5 43000000 		.4byte	.LVL32-1
+ 1809 00d9 52000000 		.4byte	.LVL35
+ 1810 00dd 0200     		.2byte	0x2
+ 1811 00df 91       		.byte	0x91
+ 1812 00e0 65       		.sleb128 -27
+ 1813 00e1 52000000 		.4byte	.LVL35
+ 1814 00e5 59000000 		.4byte	.LVL37-1
+ 1815 00e9 0100     		.2byte	0x1
+ 1816 00eb 53       		.byte	0x53
+ 1817 00ec 59000000 		.4byte	.LVL37-1
+ 1818 00f0 64000000 		.4byte	.LVL39
+ 1819 00f4 0200     		.2byte	0x2
+ 1820 00f6 91       		.byte	0x91
+ 1821 00f7 65       		.sleb128 -27
+ 1822 00f8 64000000 		.4byte	.LVL39
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 36
+
+
+ 1823 00fc 6A000000 		.4byte	.LVL42
+ 1824 0100 0100     		.2byte	0x1
+ 1825 0102 53       		.byte	0x53
+ 1826 0103 6A000000 		.4byte	.LVL42
+ 1827 0107 6E000000 		.4byte	.LVL43
+ 1828 010b 0200     		.2byte	0x2
+ 1829 010d 91       		.byte	0x91
+ 1830 010e 65       		.sleb128 -27
+ 1831 010f 6E000000 		.4byte	.LVL43
+ 1832 0113 74000000 		.4byte	.LFE73
+ 1833 0117 0200     		.2byte	0x2
+ 1834 0119 7D       		.byte	0x7d
+ 1835 011a 65       		.sleb128 -27
+ 1836 011b 00000000 		.4byte	0
+ 1837 011f 00000000 		.4byte	0
+ 1838              	.LLST7:
+ 1839 0123 2C000000 		.4byte	.LVL30
+ 1840 0127 3C000000 		.4byte	.LVL31
+ 1841 012b 0100     		.2byte	0x1
+ 1842 012d 50       		.byte	0x50
+ 1843 012e 3C000000 		.4byte	.LVL31
+ 1844 0132 52000000 		.4byte	.LVL35
+ 1845 0136 0200     		.2byte	0x2
+ 1846 0138 91       		.byte	0x91
+ 1847 0139 64       		.sleb128 -28
+ 1848 013a 52000000 		.4byte	.LVL35
+ 1849 013e 56000000 		.4byte	.LVL36
+ 1850 0142 0100     		.2byte	0x1
+ 1851 0144 50       		.byte	0x50
+ 1852 0145 56000000 		.4byte	.LVL36
+ 1853 0149 64000000 		.4byte	.LVL39
+ 1854 014d 0200     		.2byte	0x2
+ 1855 014f 91       		.byte	0x91
+ 1856 0150 64       		.sleb128 -28
+ 1857 0151 64000000 		.4byte	.LVL39
+ 1858 0155 66000000 		.4byte	.LVL40
+ 1859 0159 0100     		.2byte	0x1
+ 1860 015b 50       		.byte	0x50
+ 1861 015c 66000000 		.4byte	.LVL40
+ 1862 0160 68000000 		.4byte	.LVL41
+ 1863 0164 0200     		.2byte	0x2
+ 1864 0166 91       		.byte	0x91
+ 1865 0167 64       		.sleb128 -28
+ 1866 0168 68000000 		.4byte	.LVL41
+ 1867 016c 6A000000 		.4byte	.LVL42
+ 1868 0170 0100     		.2byte	0x1
+ 1869 0172 50       		.byte	0x50
+ 1870 0173 6A000000 		.4byte	.LVL42
+ 1871 0177 6E000000 		.4byte	.LVL43
+ 1872 017b 0200     		.2byte	0x2
+ 1873 017d 91       		.byte	0x91
+ 1874 017e 64       		.sleb128 -28
+ 1875 017f 6E000000 		.4byte	.LVL43
+ 1876 0183 74000000 		.4byte	.LFE73
+ 1877 0187 0200     		.2byte	0x2
+ 1878 0189 7D       		.byte	0x7d
+ 1879 018a 64       		.sleb128 -28
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 37
+
+
+ 1880 018b 00000000 		.4byte	0
+ 1881 018f 00000000 		.4byte	0
+ 1882              	.LLST8:
+ 1883 0193 50000000 		.4byte	.LVL34
+ 1884 0197 52000000 		.4byte	.LVL35
+ 1885 019b 0100     		.2byte	0x1
+ 1886 019d 50       		.byte	0x50
+ 1887 019e 62000000 		.4byte	.LVL38
+ 1888 01a2 64000000 		.4byte	.LVL39
+ 1889 01a6 0100     		.2byte	0x1
+ 1890 01a8 50       		.byte	0x50
+ 1891 01a9 00000000 		.4byte	0
+ 1892 01ad 00000000 		.4byte	0
+ 1893              	.LLST9:
+ 1894 01b1 02000000 		.4byte	.LVL57
+ 1895 01b5 12000000 		.4byte	.LVL60
+ 1896 01b9 0200     		.2byte	0x2
+ 1897 01bb 30       		.byte	0x30
+ 1898 01bc 9F       		.byte	0x9f
+ 1899 01bd 12000000 		.4byte	.LVL60
+ 1900 01c1 2E000000 		.4byte	.LVL62
+ 1901 01c5 0100     		.2byte	0x1
+ 1902 01c7 54       		.byte	0x54
+ 1903 01c8 30000000 		.4byte	.LVL63
+ 1904 01cc 3C000000 		.4byte	.LVL64
+ 1905 01d0 0100     		.2byte	0x1
+ 1906 01d2 54       		.byte	0x54
+ 1907 01d3 00000000 		.4byte	0
+ 1908 01d7 00000000 		.4byte	0
+ 1909              	.LLST10:
+ 1910 01db 0E000000 		.4byte	.LVL59
+ 1911 01df 12000000 		.4byte	.LVL60
+ 1912 01e3 0100     		.2byte	0x1
+ 1913 01e5 50       		.byte	0x50
+ 1914 01e6 12000000 		.4byte	.LVL60
+ 1915 01ea 3C000000 		.4byte	.LVL64
+ 1916 01ee 0100     		.2byte	0x1
+ 1917 01f0 55       		.byte	0x55
+ 1918 01f1 3C000000 		.4byte	.LVL64
+ 1919 01f5 44000000 		.4byte	.LFE72
+ 1920 01f9 0100     		.2byte	0x1
+ 1921 01fb 50       		.byte	0x50
+ 1922 01fc 00000000 		.4byte	0
+ 1923 0200 00000000 		.4byte	0
+ 1924              		.section	.debug_aranges,"",%progbits
+ 1925 0000 74000000 		.4byte	0x74
+ 1926 0004 0200     		.2byte	0x2
+ 1927 0006 00000000 		.4byte	.Ldebug_info0
+ 1928 000a 04       		.byte	0x4
+ 1929 000b 00       		.byte	0
+ 1930 000c 0000     		.2byte	0
+ 1931 000e 0000     		.2byte	0
+ 1932 0010 00000000 		.4byte	.LFB64
+ 1933 0014 0C000000 		.4byte	.LFE64-.LFB64
+ 1934 0018 00000000 		.4byte	.LFB65
+ 1935 001c 30000000 		.4byte	.LFE65-.LFB65
+ 1936 0020 00000000 		.4byte	.LFB66
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 38
+
+
+ 1937 0024 38000000 		.4byte	.LFE66-.LFB66
+ 1938 0028 00000000 		.4byte	.LFB67
+ 1939 002c 14000000 		.4byte	.LFE67-.LFB67
+ 1940 0030 00000000 		.4byte	.LFB68
+ 1941 0034 1E000000 		.4byte	.LFE68-.LFB68
+ 1942 0038 00000000 		.4byte	.LFB69
+ 1943 003c 2C000000 		.4byte	.LFE69-.LFB69
+ 1944 0040 00000000 		.4byte	.LFB73
+ 1945 0044 74000000 		.4byte	.LFE73-.LFB73
+ 1946 0048 00000000 		.4byte	.LFB70
+ 1947 004c 18000000 		.4byte	.LFE70-.LFB70
+ 1948 0050 00000000 		.4byte	.LFB74
+ 1949 0054 3C000000 		.4byte	.LFE74-.LFB74
+ 1950 0058 00000000 		.4byte	.LFB71
+ 1951 005c 26000000 		.4byte	.LFE71-.LFB71
+ 1952 0060 00000000 		.4byte	.LFB72
+ 1953 0064 44000000 		.4byte	.LFE72-.LFB72
+ 1954 0068 00000000 		.4byte	.LFB75
+ 1955 006c 10000000 		.4byte	.LFE75-.LFB75
+ 1956 0070 00000000 		.4byte	0
+ 1957 0074 00000000 		.4byte	0
+ 1958              		.section	.debug_ranges,"",%progbits
+ 1959              	.Ldebug_ranges0:
+ 1960 0000 00000000 		.4byte	.LFB64
+ 1961 0004 0C000000 		.4byte	.LFE64
+ 1962 0008 00000000 		.4byte	.LFB65
+ 1963 000c 30000000 		.4byte	.LFE65
+ 1964 0010 00000000 		.4byte	.LFB66
+ 1965 0014 38000000 		.4byte	.LFE66
+ 1966 0018 00000000 		.4byte	.LFB67
+ 1967 001c 14000000 		.4byte	.LFE67
+ 1968 0020 00000000 		.4byte	.LFB68
+ 1969 0024 1E000000 		.4byte	.LFE68
+ 1970 0028 00000000 		.4byte	.LFB69
+ 1971 002c 2C000000 		.4byte	.LFE69
+ 1972 0030 00000000 		.4byte	.LFB73
+ 1973 0034 74000000 		.4byte	.LFE73
+ 1974 0038 00000000 		.4byte	.LFB70
+ 1975 003c 18000000 		.4byte	.LFE70
+ 1976 0040 00000000 		.4byte	.LFB74
+ 1977 0044 3C000000 		.4byte	.LFE74
+ 1978 0048 00000000 		.4byte	.LFB71
+ 1979 004c 26000000 		.4byte	.LFE71
+ 1980 0050 00000000 		.4byte	.LFB72
+ 1981 0054 44000000 		.4byte	.LFE72
+ 1982 0058 00000000 		.4byte	.LFB75
+ 1983 005c 10000000 		.4byte	.LFE75
+ 1984 0060 00000000 		.4byte	0
+ 1985 0064 00000000 		.4byte	0
+ 1986              		.section	.debug_line,"",%progbits
+ 1987              	.Ldebug_line0:
+ 1988 0000 2B030000 		.section	.debug_str,"MS",%progbits,1
+ 1988      0200E501 
+ 1988      00000201 
+ 1988      FB0E0D00 
+ 1988      01010101 
+ 1989              	.LASF51:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 39
+
+
+ 1990 0000 6F6E655F 		.ascii	"one_wire_reset_crc\000"
+ 1990      77697265 
+ 1990      5F726573 
+ 1990      65745F63 
+ 1990      726300
+ 1991              	.LASF38:
+ 1992 0013 64733138 		.ascii	"ds18b20_read_temperature_simple\000"
+ 1992      6232305F 
+ 1992      72656164 
+ 1992      5F74656D 
+ 1992      70657261 
+ 1993              	.LASF2:
+ 1994 0033 73686F72 		.ascii	"short int\000"
+ 1994      7420696E 
+ 1994      7400
+ 1995              	.LASF55:
+ 1996 003d 6D616C6C 		.ascii	"malloc\000"
+ 1996      6F6300
+ 1997              	.LASF17:
+ 1998 0044 73697A65 		.ascii	"sizetype\000"
+ 1998      74797065 
+ 1998      00
+ 1999              	.LASF57:
+ 2000 004d 2E2E5C64 		.ascii	"..\\ds18b20.c\000"
+ 2000      73313862 
+ 2000      32302E63 
+ 2000      00
+ 2001              	.LASF40:
+ 2002 005a 64733138 		.ascii	"ds18b20_read_temperature\000"
+ 2002      6232305F 
+ 2002      72656164 
+ 2002      5F74656D 
+ 2002      70657261 
+ 2003              	.LASF48:
+ 2004 0073 6F6E655F 		.ascii	"one_wire_reset_pulse\000"
+ 2004      77697265 
+ 2004      5F726573 
+ 2004      65745F70 
+ 2004      756C7365 
+ 2005              	.LASF11:
+ 2006 0088 75696E74 		.ascii	"uint8_t\000"
+ 2006      385F7400 
+ 2007              	.LASF30:
+ 2008 0090 64657669 		.ascii	"device\000"
+ 2008      636500
+ 2009              	.LASF13:
+ 2010 0097 666C6F61 		.ascii	"float\000"
+ 2010      7400
+ 2011              	.LASF37:
+ 2012 009d 74656D70 		.ascii	"temp\000"
+ 2012      00
+ 2013              	.LASF8:
+ 2014 00a2 6C6F6E67 		.ascii	"long long int\000"
+ 2014      206C6F6E 
+ 2014      6720696E 
+ 2014      7400
+ 2015              	.LASF6:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 40
+
+
+ 2016 00b0 6C6F6E67 		.ascii	"long int\000"
+ 2016      20696E74 
+ 2016      00
+ 2017              	.LASF19:
+ 2018 00b9 61646472 		.ascii	"address\000"
+ 2018      65737300 
+ 2019              	.LASF29:
+ 2020 00c1 64733138 		.ascii	"ds18b20_convert_temperature\000"
+ 2020      6232305F 
+ 2020      636F6E76 
+ 2020      6572745F 
+ 2020      74656D70 
+ 2021              	.LASF4:
+ 2022 00dd 5F5F7569 		.ascii	"__uint8_t\000"
+ 2022      6E74385F 
+ 2022      7400
+ 2023              	.LASF42:
+ 2024 00e7 74656D70 		.ascii	"temperatures\000"
+ 2024      65726174 
+ 2024      75726573 
+ 2024      00
+ 2025              	.LASF1:
+ 2026 00f4 756E7369 		.ascii	"unsigned char\000"
+ 2026      676E6564 
+ 2026      20636861 
+ 2026      7200
+ 2027              	.LASF31:
+ 2028 0102 64733138 		.ascii	"ds18b20_convert_temperature_all\000"
+ 2028      6232305F 
+ 2028      636F6E76 
+ 2028      6572745F 
+ 2028      74656D70 
+ 2029              	.LASF16:
+ 2030 0122 6C6F6E67 		.ascii	"long double\000"
+ 2030      20646F75 
+ 2030      626C6500 
+ 2031              	.LASF35:
+ 2032 012e 74656D70 		.ascii	"temp_msb\000"
+ 2032      5F6D7362 
+ 2032      00
+ 2033              	.LASF0:
+ 2034 0137 7369676E 		.ascii	"signed char\000"
+ 2034      65642063 
+ 2034      68617200 
+ 2035              	.LASF9:
+ 2036 0143 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2036      206C6F6E 
+ 2036      6720756E 
+ 2036      7369676E 
+ 2036      65642069 
+ 2037              	.LASF10:
+ 2038 015a 756E7369 		.ascii	"unsigned int\000"
+ 2038      676E6564 
+ 2038      20696E74 
+ 2038      00
+ 2039              	.LASF36:
+ 2040 0167 74656D70 		.ascii	"temp_lsb\000"
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 41
+
+
+ 2040      5F6C7362 
+ 2040      00
+ 2041              	.LASF47:
+ 2042 0170 6F6E655F 		.ascii	"one_wire_search_rom\000"
+ 2042      77697265 
+ 2042      5F736561 
+ 2042      7263685F 
+ 2042      726F6D00 
+ 2043              	.LASF32:
+ 2044 0184 64733138 		.ascii	"ds18b20_get_devices\000"
+ 2044      6232305F 
+ 2044      6765745F 
+ 2044      64657669 
+ 2044      63657300 
+ 2045              	.LASF49:
+ 2046 0198 6F6E655F 		.ascii	"one_wire_write_byte\000"
+ 2046      77697265 
+ 2046      5F777269 
+ 2046      74655F62 
+ 2046      79746500 
+ 2047              	.LASF3:
+ 2048 01ac 73686F72 		.ascii	"short unsigned int\000"
+ 2048      7420756E 
+ 2048      7369676E 
+ 2048      65642069 
+ 2048      6E7400
+ 2049              	.LASF46:
+ 2050 01bf 6F6E655F 		.ascii	"one_wire_devices_list_size\000"
+ 2050      77697265 
+ 2050      5F646576 
+ 2050      69636573 
+ 2050      5F6C6973 
+ 2051              	.LASF24:
+ 2052 01da 64657669 		.ascii	"devices\000"
+ 2052      63657300 
+ 2053              	.LASF15:
+ 2054 01e2 63686172 		.ascii	"char\000"
+ 2054      00
+ 2055              	.LASF12:
+ 2056 01e7 696E7433 		.ascii	"int32_t\000"
+ 2056      325F7400 
+ 2057              	.LASF28:
+ 2058 01ef 64733138 		.ascii	"ds18b20_convert_temperature_simple\000"
+ 2058      6232305F 
+ 2058      636F6E76 
+ 2058      6572745F 
+ 2058      74656D70 
+ 2059              	.LASF25:
+ 2060 0212 64733138 		.ascii	"ds18b20_devices\000"
+ 2060      6232305F 
+ 2060      64657669 
+ 2060      63657300 
+ 2061              	.LASF39:
+ 2062 0222 64733138 		.ascii	"ds18b20_wait_for_conversion\000"
+ 2062      6232305F 
+ 2062      77616974 
+ 2062      5F666F72 
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 42
+
+
+ 2062      5F636F6E 
+ 2063              	.LASF52:
+ 2064 023e 6F6E655F 		.ascii	"one_wire_read_byte\000"
+ 2064      77697265 
+ 2064      5F726561 
+ 2064      645F6279 
+ 2064      746500
+ 2065              	.LASF34:
+ 2066 0251 64617461 		.ascii	"data\000"
+ 2066      00
+ 2067              	.LASF43:
+ 2068 0256 64733138 		.ascii	"ds18b20_get_temperature_simple\000"
+ 2068      6232305F 
+ 2068      6765745F 
+ 2068      74656D70 
+ 2068      65726174 
+ 2069              	.LASF7:
+ 2070 0275 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2070      20756E73 
+ 2070      69676E65 
+ 2070      6420696E 
+ 2070      7400
+ 2071              	.LASF14:
+ 2072 0287 646F7562 		.ascii	"double\000"
+ 2072      6C6500
+ 2073              	.LASF45:
+ 2074 028e 6F6E655F 		.ascii	"one_wire_list_of_devices\000"
+ 2074      77697265 
+ 2074      5F6C6973 
+ 2074      745F6F66 
+ 2074      5F646576 
+ 2075              	.LASF18:
+ 2076 02a7 6F6E655F 		.ascii	"one_wire_device\000"
+ 2076      77697265 
+ 2076      5F646576 
+ 2076      69636500 
+ 2077              	.LASF59:
+ 2078 02b7 64733138 		.ascii	"ds18b20_get_precision\000"
+ 2078      6232305F 
+ 2078      6765745F 
+ 2078      70726563 
+ 2078      6973696F 
+ 2079              	.LASF23:
+ 2080 02cd 73697A65 		.ascii	"size\000"
+ 2080      00
+ 2081              	.LASF20:
+ 2082 02d2 74656D70 		.ascii	"temperature\000"
+ 2082      65726174 
+ 2082      75726500 
+ 2083              	.LASF5:
+ 2084 02de 5F5F696E 		.ascii	"__int32_t\000"
+ 2084      7433325F 
+ 2084      7400
+ 2085              	.LASF50:
+ 2086 02e8 6F6E655F 		.ascii	"one_wire_match_rom\000"
+ 2086      77697265 
+ 2086      5F6D6174 
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 43
+
+
+ 2086      63685F72 
+ 2086      6F6D00
+ 2087              	.LASF33:
+ 2088 02fb 64733138 		.ascii	"ds18b20_decode_temperature\000"
+ 2088      6232305F 
+ 2088      6465636F 
+ 2088      64655F74 
+ 2088      656D7065 
+ 2089              	.LASF58:
+ 2090 0316 583A5C70 		.ascii	"X:\\projects\\PVCC-Air-Handlers\\AHU_1.cydsn\000"
+ 2090      726F6A65 
+ 2090      6374735C 
+ 2090      50564343 
+ 2090      2D416972 
+ 2091              	.LASF22:
+ 2092 0340 73696D70 		.ascii	"simple_float\000"
+ 2092      6C655F66 
+ 2092      6C6F6174 
+ 2092      00
+ 2093              	.LASF26:
+ 2094 034d 7363616E 		.ascii	"scan\000"
+ 2094      00
+ 2095              	.LASF41:
+ 2096 0352 64733138 		.ascii	"ds18b20_read_temperature_all\000"
+ 2096      6232305F 
+ 2096      72656164 
+ 2096      5F74656D 
+ 2096      70657261 
+ 2097              	.LASF53:
+ 2098 036f 6F6E655F 		.ascii	"one_wire_crc\000"
+ 2098      77697265 
+ 2098      5F637263 
+ 2098      00
+ 2099              	.LASF60:
+ 2100 037c 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 2100      52784275 
+ 2100      66666572 
+ 2100      00
+ 2101              	.LASF56:
+ 2102 0389 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 2102      43313120 
+ 2102      352E342E 
+ 2102      31203230 
+ 2102      31363036 
+ 2103 03bc 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 2103      20726576 
+ 2103      6973696F 
+ 2103      6E203233 
+ 2103      37373135 
+ 2104 03ef 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 2104      66756E63 
+ 2104      74696F6E 
+ 2104      2D736563 
+ 2104      74696F6E 
+ 2105              	.LASF54:
+ 2106 0417 43794465 		.ascii	"CyDelay\000"
+ 2106      6C617900 
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccqAC3xe.s 			page 44
+
+
+ 2107              	.LASF21:
+ 2108 041f 69735F76 		.ascii	"is_valid\000"
+ 2108      616C6964 
+ 2108      00
+ 2109              	.LASF44:
+ 2110 0428 70726563 		.ascii	"precision\000"
+ 2110      6973696F 
+ 2110      6E00
+ 2111              	.LASF27:
+ 2112 0432 64733138 		.ascii	"ds18b20_set_precision\000"
+ 2112      6232305F 
+ 2112      7365745F 
+ 2112      70726563 
+ 2112      6973696F 
+ 2113              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

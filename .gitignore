@@ -1,0 +1,12 @@
+# Generated Assets and Resources for PSoC Creator
+Debug/
+Release/
+Export/
+*/codegentemp
+*/Generated_Source
+*_datasheet.pdf
+*_timing.html
+*.cycdx
+*.cyfit
+*.rpt
+*.svd

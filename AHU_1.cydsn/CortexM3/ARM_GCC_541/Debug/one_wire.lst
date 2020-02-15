@@ -1,0 +1,3909 @@
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"one_wire.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.one_wire_reset_pulse,"ax",%progbits
+  20              		.align	2
+  21              		.global	one_wire_reset_pulse
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	one_wire_reset_pulse, %function
+  25              	one_wire_reset_pulse:
+  26              	.LFB64:
+  27              		.file 1 "..\\one_wire.c"
+   1:..\one_wire.c **** #include "one_wire.h"
+   2:..\one_wire.c **** // This code came from https://github.com/ppkt, mostly.  Some changes
+   3:..\one_wire.c **** // were made for the Cypress hardware.
+   4:..\one_wire.c **** 
+   5:..\one_wire.c **** one_wire_device one_wire_devices[10];
+   6:..\one_wire.c **** uint8_t one_wire_device_count = 0;
+   7:..\one_wire.c **** 
+   8:..\one_wire.c **** one_wire_state state;
+   9:..\one_wire.c **** 
+  10:..\one_wire.c **** // global search state
+  11:..\one_wire.c **** uint8_t last_mismatch;
+  12:..\one_wire.c **** uint8_t last_device_flag;
+  13:..\one_wire.c **** uint8_t crc8;
+  14:..\one_wire.c **** uint8_t ROM_NO[8];
+  15:..\one_wire.c **** 
+  16:..\one_wire.c **** const unsigned char crc_table[] = {
+  17:..\one_wire.c ****     0, 94, 188, 226, 97, 63, 221, 131, 194, 156, 126, 32, 163, 253, 31, 65,
+  18:..\one_wire.c ****     157, 195, 33, 127, 252, 162, 64, 30, 95, 1, 227, 189, 62, 96, 130, 220,
+  19:..\one_wire.c ****     35, 125, 159, 193, 66, 28, 254, 160, 225, 191, 93, 3, 128, 222, 60, 98,
+  20:..\one_wire.c ****     190, 224, 2, 92, 223, 129, 99, 61, 124, 34, 192, 158, 29, 67, 161, 255,
+  21:..\one_wire.c ****     70, 24, 250, 164, 39, 121, 155, 197, 132, 218, 56, 102, 229, 187, 89, 7,
+  22:..\one_wire.c ****     219, 133, 103, 57, 186, 228, 6, 88, 25, 71, 165, 251, 120, 38, 196, 154,
+  23:..\one_wire.c ****     101, 59, 217, 135, 4, 90, 184, 230, 167, 249, 27, 69, 198, 152, 122, 36,
+  24:..\one_wire.c ****     248, 166, 68, 26, 153, 199, 37, 123, 58, 100, 134, 216, 91, 5, 231, 185,
+  25:..\one_wire.c ****     140, 210, 48, 110, 237, 179, 81, 15, 78, 16, 242, 172, 47, 113, 147, 205,
+  26:..\one_wire.c ****     17, 79, 173, 243, 112, 46, 204, 146, 211, 141, 111, 49, 178, 236, 14, 80,
+  27:..\one_wire.c ****     175, 241, 19, 77, 206, 144, 114, 44, 109, 51, 209, 143, 12, 82, 176, 238,
+  28:..\one_wire.c ****     50, 108, 142, 208, 83, 13, 239, 177, 240, 174, 76, 18, 145, 207, 45, 115,
+  29:..\one_wire.c ****     202, 148, 118, 40, 171, 245, 23, 73, 8, 86, 180, 234, 105, 55, 213, 139,
+  30:..\one_wire.c ****     87, 9, 235, 181, 54, 104, 138, 212, 149, 203, 41, 119, 244, 170, 72, 22,
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 2
+
+
+  31:..\one_wire.c ****     233, 183, 85, 11, 136, 214, 52, 106, 43, 117, 151, 201, 74, 20, 246, 168,
+  32:..\one_wire.c ****     116, 42, 200, 150, 21, 75, 169, 247, 182, 232, 10, 84, 215, 137, 107, 53
+  33:..\one_wire.c **** };
+  34:..\one_wire.c **** 
+  35:..\one_wire.c **** 
+  36:..\one_wire.c **** uint8_t one_wire_reset_pulse() {
+  28              		.loc 1 36 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 08B5     		push	{r3, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 3, -8
+  35              		.cfi_offset 14, -4
+  37:..\one_wire.c ****     // Pull bus down for 500 us (min. 480 us)
+  38:..\one_wire.c ****     Wire1_Write(0);     // do the gpio operation to bring the Wire1 pin low
+  36              		.loc 1 38 0
+  37 0002 0020     		movs	r0, #0
+  38 0004 FFF7FEFF 		bl	Wire1_Write
+  39              	.LVL0:
+  39:..\one_wire.c ****     CyDelayUs(RST_TIME);     // Cypress delays are fairly accurate, even at the microsecond level
+  40              		.loc 1 39 0
+  41 0008 4FF4F070 		mov	r0, #480
+  42 000c FFF7FEFF 		bl	CyDelayUs
+  43              	.LVL1:
+  40:..\one_wire.c ****     Wire1_Write(1);     // bring the Wire1 pin back high
+  44              		.loc 1 40 0
+  45 0010 0120     		movs	r0, #1
+  46 0012 FFF7FEFF 		bl	Wire1_Write
+  47              	.LVL2:
+  41:..\one_wire.c **** 
+  42:..\one_wire.c ****     // Wait 70 us, bus should be pulled up by resistor and then
+  43:..\one_wire.c ****     // pulled down by slave (15-60 us after detecting rising edge)
+  44:..\one_wire.c ****     CyDelayUs(70);
+  48              		.loc 1 44 0
+  49 0016 4620     		movs	r0, #70
+  50 0018 FFF7FEFF 		bl	CyDelayUs
+  51              	.LVL3:
+  45:..\one_wire.c ****     uint8_t bit = Wire1_Read();     // read the input of the Wire1 pin
+  52              		.loc 1 45 0
+  53 001c FFF7FEFF 		bl	Wire1_Read
+  54              	.LVL4:
+  46:..\one_wire.c ****     if (bit == 0) {
+  55              		.loc 1 46 0
+  56 0020 40B9     		cbnz	r0, .L2
+  47:..\one_wire.c ****         state = ONE_WIRE_SLAVE_PRESENT;
+  57              		.loc 1 47 0
+  58 0022 0022     		movs	r2, #0
+  59 0024 064B     		ldr	r3, .L5
+  60 0026 1A70     		strb	r2, [r3]
+  48:..\one_wire.c ****     } else {
+  49:..\one_wire.c ****         state = ONE_WIRE_ERROR;
+  50:..\one_wire.c ****         return 0;
+  51:..\one_wire.c ****     }
+  52:..\one_wire.c **** 
+  53:..\one_wire.c ****     // Wait additional 430 us until slave keeps bus down (total 500 us, min. 480 us)
+  54:..\one_wire.c ****     CyDelayUs(430);
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 3
+
+
+  61              		.loc 1 54 0
+  62 0028 4FF4D770 		mov	r0, #430
+  63              	.LVL5:
+  64 002c FFF7FEFF 		bl	CyDelayUs
+  65              	.LVL6:
+  55:..\one_wire.c ****     return 1;
+  66              		.loc 1 55 0
+  67 0030 0120     		movs	r0, #1
+  68 0032 08BD     		pop	{r3, pc}
+  69              	.LVL7:
+  70              	.L2:
+  49:..\one_wire.c ****         return 0;
+  71              		.loc 1 49 0
+  72 0034 0122     		movs	r2, #1
+  73 0036 024B     		ldr	r3, .L5
+  74 0038 1A70     		strb	r2, [r3]
+  50:..\one_wire.c ****     }
+  75              		.loc 1 50 0
+  76 003a 0020     		movs	r0, #0
+  77              	.LVL8:
+  56:..\one_wire.c **** }
+  78              		.loc 1 56 0
+  79 003c 08BD     		pop	{r3, pc}
+  80              	.L6:
+  81 003e 00BF     		.align	2
+  82              	.L5:
+  83 0040 00000000 		.word	state
+  84              		.cfi_endproc
+  85              	.LFE64:
+  86              		.size	one_wire_reset_pulse, .-one_wire_reset_pulse
+  87              		.section	.text.one_wire_write_1,"ax",%progbits
+  88              		.align	2
+  89              		.global	one_wire_write_1
+  90              		.thumb
+  91              		.thumb_func
+  92              		.type	one_wire_write_1, %function
+  93              	one_wire_write_1:
+  94              	.LFB65:
+  57:..\one_wire.c **** 
+  58:..\one_wire.c **** void one_wire_write_1() {
+  95              		.loc 1 58 0
+  96              		.cfi_startproc
+  97              		@ args = 0, pretend = 0, frame = 0
+  98              		@ frame_needed = 0, uses_anonymous_args = 0
+  99 0000 08B5     		push	{r3, lr}
+ 100              		.cfi_def_cfa_offset 8
+ 101              		.cfi_offset 3, -8
+ 102              		.cfi_offset 14, -4
+  59:..\one_wire.c ****     // Pull bus down for 15 us
+  60:..\one_wire.c ****     Wire1_Write(0);
+ 103              		.loc 1 60 0
+ 104 0002 0020     		movs	r0, #0
+ 105 0004 FFF7FEFF 		bl	Wire1_Write
+ 106              	.LVL9:
+  61:..\one_wire.c ****     CyDelayUs(WRITE_1_TIME);
+ 107              		.loc 1 61 0
+ 108 0008 0F20     		movs	r0, #15
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 4
+
+
+ 109 000a FFF7FEFF 		bl	CyDelayUs
+ 110              	.LVL10:
+  62:..\one_wire.c ****     Wire1_Write(1);
+ 111              		.loc 1 62 0
+ 112 000e 0120     		movs	r0, #1
+ 113 0010 FFF7FEFF 		bl	Wire1_Write
+ 114              	.LVL11:
+  63:..\one_wire.c **** 
+  64:..\one_wire.c ****     // Wait until end of timeslot (60 us) + 5 us for recovery
+  65:..\one_wire.c ****     CyDelayUs(50);
+ 115              		.loc 1 65 0
+ 116 0014 3220     		movs	r0, #50
+ 117 0016 FFF7FEFF 		bl	CyDelayUs
+ 118              	.LVL12:
+ 119 001a 08BD     		pop	{r3, pc}
+ 120              		.cfi_endproc
+ 121              	.LFE65:
+ 122              		.size	one_wire_write_1, .-one_wire_write_1
+ 123              		.section	.text.one_wire_write_0,"ax",%progbits
+ 124              		.align	2
+ 125              		.global	one_wire_write_0
+ 126              		.thumb
+ 127              		.thumb_func
+ 128              		.type	one_wire_write_0, %function
+ 129              	one_wire_write_0:
+ 130              	.LFB66:
+  66:..\one_wire.c **** }
+  67:..\one_wire.c **** 
+  68:..\one_wire.c **** void one_wire_write_0() {
+ 131              		.loc 1 68 0
+ 132              		.cfi_startproc
+ 133              		@ args = 0, pretend = 0, frame = 0
+ 134              		@ frame_needed = 0, uses_anonymous_args = 0
+ 135 0000 08B5     		push	{r3, lr}
+ 136              		.cfi_def_cfa_offset 8
+ 137              		.cfi_offset 3, -8
+ 138              		.cfi_offset 14, -4
+  69:..\one_wire.c ****     // Pull bus down for 60 us
+  70:..\one_wire.c ****     Wire1_Write(0);
+ 139              		.loc 1 70 0
+ 140 0002 0020     		movs	r0, #0
+ 141 0004 FFF7FEFF 		bl	Wire1_Write
+ 142              	.LVL13:
+  71:..\one_wire.c ****     CyDelayUs(WRITE_0_TIME);
+ 143              		.loc 1 71 0
+ 144 0008 3C20     		movs	r0, #60
+ 145 000a FFF7FEFF 		bl	CyDelayUs
+ 146              	.LVL14:
+  72:..\one_wire.c ****     Wire1_Write(1);
+ 147              		.loc 1 72 0
+ 148 000e 0120     		movs	r0, #1
+ 149 0010 FFF7FEFF 		bl	Wire1_Write
+ 150              	.LVL15:
+  73:..\one_wire.c **** 
+  74:..\one_wire.c ****     // Wait until end of timeslot (60 us) + 5 us for recovery
+  75:..\one_wire.c ****     CyDelayUs(5);
+ 151              		.loc 1 75 0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 5
+
+
+ 152 0014 0520     		movs	r0, #5
+ 153 0016 FFF7FEFF 		bl	CyDelayUs
+ 154              	.LVL16:
+ 155 001a 08BD     		pop	{r3, pc}
+ 156              		.cfi_endproc
+ 157              	.LFE66:
+ 158              		.size	one_wire_write_0, .-one_wire_write_0
+ 159              		.section	.text.one_wire_write_bit,"ax",%progbits
+ 160              		.align	2
+ 161              		.global	one_wire_write_bit
+ 162              		.thumb
+ 163              		.thumb_func
+ 164              		.type	one_wire_write_bit, %function
+ 165              	one_wire_write_bit:
+ 166              	.LFB67:
+  76:..\one_wire.c **** }
+  77:..\one_wire.c **** 
+  78:..\one_wire.c **** void one_wire_write_bit(uint8_t bit) {
+ 167              		.loc 1 78 0
+ 168              		.cfi_startproc
+ 169              		@ args = 0, pretend = 0, frame = 0
+ 170              		@ frame_needed = 0, uses_anonymous_args = 0
+ 171              	.LVL17:
+ 172 0000 08B5     		push	{r3, lr}
+ 173              		.cfi_def_cfa_offset 8
+ 174              		.cfi_offset 3, -8
+ 175              		.cfi_offset 14, -4
+  79:..\one_wire.c ****     if (bit) {
+ 176              		.loc 1 79 0
+ 177 0002 10B1     		cbz	r0, .L12
+  80:..\one_wire.c ****         one_wire_write_1();
+ 178              		.loc 1 80 0
+ 179 0004 FFF7FEFF 		bl	one_wire_write_1
+ 180              	.LVL18:
+ 181 0008 08BD     		pop	{r3, pc}
+ 182              	.LVL19:
+ 183              	.L12:
+  81:..\one_wire.c ****     } else {
+  82:..\one_wire.c ****         one_wire_write_0();
+ 184              		.loc 1 82 0
+ 185 000a FFF7FEFF 		bl	one_wire_write_0
+ 186              	.LVL20:
+ 187 000e 08BD     		pop	{r3, pc}
+ 188              		.cfi_endproc
+ 189              	.LFE67:
+ 190              		.size	one_wire_write_bit, .-one_wire_write_bit
+ 191              		.section	.text.one_wire_read_bit,"ax",%progbits
+ 192              		.align	2
+ 193              		.global	one_wire_read_bit
+ 194              		.thumb
+ 195              		.thumb_func
+ 196              		.type	one_wire_read_bit, %function
+ 197              	one_wire_read_bit:
+ 198              	.LFB68:
+  83:..\one_wire.c ****     }
+  84:..\one_wire.c **** }
+  85:..\one_wire.c **** 
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 6
+
+
+  86:..\one_wire.c **** uint8_t one_wire_read_bit() {
+ 199              		.loc 1 86 0
+ 200              		.cfi_startproc
+ 201              		@ args = 0, pretend = 0, frame = 0
+ 202              		@ frame_needed = 0, uses_anonymous_args = 0
+ 203 0000 10B5     		push	{r4, lr}
+ 204              		.cfi_def_cfa_offset 8
+ 205              		.cfi_offset 4, -8
+ 206              		.cfi_offset 14, -4
+  87:..\one_wire.c ****     // Pull bus down for 5 us
+  88:..\one_wire.c ****     Wire1_Write(0);
+ 207              		.loc 1 88 0
+ 208 0002 0020     		movs	r0, #0
+ 209 0004 FFF7FEFF 		bl	Wire1_Write
+ 210              	.LVL21:
+  89:..\one_wire.c ****     CyDelayUs(5);
+ 211              		.loc 1 89 0
+ 212 0008 0520     		movs	r0, #5
+ 213 000a FFF7FEFF 		bl	CyDelayUs
+ 214              	.LVL22:
+  90:..\one_wire.c ****     Wire1_Write(1);
+ 215              		.loc 1 90 0
+ 216 000e 0120     		movs	r0, #1
+ 217 0010 FFF7FEFF 		bl	Wire1_Write
+ 218              	.LVL23:
+  91:..\one_wire.c **** 
+  92:..\one_wire.c ****     // Wait 5 us and check bus state
+  93:..\one_wire.c ****     CyDelayUs(5);
+ 219              		.loc 1 93 0
+ 220 0014 0520     		movs	r0, #5
+ 221 0016 FFF7FEFF 		bl	CyDelayUs
+ 222              	.LVL24:
+  94:..\one_wire.c **** 
+  95:..\one_wire.c ****     uint8_t bit;
+  96:..\one_wire.c ****     bit = Wire1_Read();
+ 223              		.loc 1 96 0
+ 224 001a FFF7FEFF 		bl	Wire1_Read
+ 225              	.LVL25:
+ 226 001e 0446     		mov	r4, r0
+ 227              	.LVL26:
+  97:..\one_wire.c **** 
+  98:..\one_wire.c ****     // Wait until end of timeslot (60 us) + 5 us for recovery
+  99:..\one_wire.c ****     CyDelayUs(TIME_SLOT);
+ 228              		.loc 1 99 0
+ 229 0020 3C20     		movs	r0, #60
+ 230 0022 FFF7FEFF 		bl	CyDelayUs
+ 231              	.LVL27:
+ 100:..\one_wire.c **** 
+ 101:..\one_wire.c ****     return bit;
+ 102:..\one_wire.c **** }
+ 232              		.loc 1 102 0
+ 233 0026 2046     		mov	r0, r4
+ 234 0028 10BD     		pop	{r4, pc}
+ 235              		.cfi_endproc
+ 236              	.LFE68:
+ 237              		.size	one_wire_read_bit, .-one_wire_read_bit
+ 238              		.section	.text.one_wire_write_byte,"ax",%progbits
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 7
+
+
+ 239              		.align	2
+ 240              		.global	one_wire_write_byte
+ 241              		.thumb
+ 242              		.thumb_func
+ 243              		.type	one_wire_write_byte, %function
+ 244              	one_wire_write_byte:
+ 245              	.LFB69:
+ 103:..\one_wire.c **** 
+ 104:..\one_wire.c **** void one_wire_write_byte(uint8_t data) {
+ 246              		.loc 1 104 0
+ 247              		.cfi_startproc
+ 248              		@ args = 0, pretend = 0, frame = 0
+ 249              		@ frame_needed = 0, uses_anonymous_args = 0
+ 250              	.LVL28:
+ 251 0000 38B5     		push	{r3, r4, r5, lr}
+ 252              		.cfi_def_cfa_offset 16
+ 253              		.cfi_offset 3, -16
+ 254              		.cfi_offset 4, -12
+ 255              		.cfi_offset 5, -8
+ 256              		.cfi_offset 14, -4
+ 257 0002 0546     		mov	r5, r0
+ 258              	.LVL29:
+ 105:..\one_wire.c ****     uint8_t i;
+ 106:..\one_wire.c ****     for (i = 0; i < 8; ++i) {
+ 259              		.loc 1 106 0
+ 260 0004 0024     		movs	r4, #0
+ 261 0006 0BE0     		b	.L18
+ 262              	.LVL30:
+ 263              	.L21:
+ 107:..\one_wire.c ****         if ((data >> i) & 1) {
+ 264              		.loc 1 107 0
+ 265 0008 45FA04F3 		asr	r3, r5, r4
+ 266 000c 13F0010F 		tst	r3, #1
+ 267 0010 02D0     		beq	.L19
+ 108:..\one_wire.c ****             one_wire_write_1();
+ 268              		.loc 1 108 0
+ 269 0012 FFF7FEFF 		bl	one_wire_write_1
+ 270              	.LVL31:
+ 271 0016 01E0     		b	.L20
+ 272              	.L19:
+ 109:..\one_wire.c ****         } else {
+ 110:..\one_wire.c ****             one_wire_write_0();
+ 273              		.loc 1 110 0
+ 274 0018 FFF7FEFF 		bl	one_wire_write_0
+ 275              	.LVL32:
+ 276              	.L20:
+ 106:..\one_wire.c ****         if ((data >> i) & 1) {
+ 277              		.loc 1 106 0 discriminator 2
+ 278 001c 0134     		adds	r4, r4, #1
+ 279              	.LVL33:
+ 280 001e E4B2     		uxtb	r4, r4
+ 281              	.LVL34:
+ 282              	.L18:
+ 106:..\one_wire.c ****         if ((data >> i) & 1) {
+ 283              		.loc 1 106 0 is_stmt 0 discriminator 1
+ 284 0020 072C     		cmp	r4, #7
+ 285 0022 F1D9     		bls	.L21
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 8
+
+
+ 111:..\one_wire.c ****         }
+ 112:..\one_wire.c ****     }
+ 113:..\one_wire.c **** }
+ 286              		.loc 1 113 0 is_stmt 1
+ 287 0024 38BD     		pop	{r3, r4, r5, pc}
+ 288              		.cfi_endproc
+ 289              	.LFE69:
+ 290              		.size	one_wire_write_byte, .-one_wire_write_byte
+ 291 0026 00BF     		.section	.text.one_wire_read_byte,"ax",%progbits
+ 292              		.align	2
+ 293              		.global	one_wire_read_byte
+ 294              		.thumb
+ 295              		.thumb_func
+ 296              		.type	one_wire_read_byte, %function
+ 297              	one_wire_read_byte:
+ 298              	.LFB70:
+ 114:..\one_wire.c **** 
+ 115:..\one_wire.c **** uint8_t one_wire_read_byte() {
+ 299              		.loc 1 115 0
+ 300              		.cfi_startproc
+ 301              		@ args = 0, pretend = 0, frame = 0
+ 302              		@ frame_needed = 0, uses_anonymous_args = 0
+ 303 0000 38B5     		push	{r3, r4, r5, lr}
+ 304              		.cfi_def_cfa_offset 16
+ 305              		.cfi_offset 3, -16
+ 306              		.cfi_offset 4, -12
+ 307              		.cfi_offset 5, -8
+ 308              		.cfi_offset 14, -4
+ 309              	.LVL35:
+ 116:..\one_wire.c ****     uint8_t i;
+ 117:..\one_wire.c ****     uint8_t data = 0;
+ 310              		.loc 1 117 0
+ 311 0002 0025     		movs	r5, #0
+ 118:..\one_wire.c ****     uint8_t bit;
+ 119:..\one_wire.c ****     for (i = 0; i < 8; ++i) {
+ 312              		.loc 1 119 0
+ 313 0004 2C46     		mov	r4, r5
+ 314 0006 06E0     		b	.L24
+ 315              	.LVL36:
+ 316              	.L25:
+ 120:..\one_wire.c ****         bit = one_wire_read_bit();
+ 317              		.loc 1 120 0 discriminator 3
+ 318 0008 FFF7FEFF 		bl	one_wire_read_bit
+ 319              	.LVL37:
+ 121:..\one_wire.c ****         data |= bit << i;
+ 320              		.loc 1 121 0 discriminator 3
+ 321 000c A040     		lsls	r0, r0, r4
+ 322              	.LVL38:
+ 323 000e 0543     		orrs	r5, r5, r0
+ 324              	.LVL39:
+ 325 0010 EDB2     		uxtb	r5, r5
+ 326              	.LVL40:
+ 119:..\one_wire.c ****         bit = one_wire_read_bit();
+ 327              		.loc 1 119 0 discriminator 3
+ 328 0012 0134     		adds	r4, r4, #1
+ 329              	.LVL41:
+ 330 0014 E4B2     		uxtb	r4, r4
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 9
+
+
+ 331              	.LVL42:
+ 332              	.L24:
+ 119:..\one_wire.c ****         bit = one_wire_read_bit();
+ 333              		.loc 1 119 0 is_stmt 0 discriminator 1
+ 334 0016 072C     		cmp	r4, #7
+ 335 0018 F6D9     		bls	.L25
+ 122:..\one_wire.c ****     }
+ 123:..\one_wire.c ****     return data;
+ 124:..\one_wire.c **** }
+ 336              		.loc 1 124 0 is_stmt 1
+ 337 001a 2846     		mov	r0, r5
+ 338 001c 38BD     		pop	{r3, r4, r5, pc}
+ 339              		.cfi_endproc
+ 340              	.LFE70:
+ 341              		.size	one_wire_read_byte, .-one_wire_read_byte
+ 342 001e 00BF     		.section	.text.one_wire_reset_crc,"ax",%progbits
+ 343              		.align	2
+ 344              		.global	one_wire_reset_crc
+ 345              		.thumb
+ 346              		.thumb_func
+ 347              		.type	one_wire_reset_crc, %function
+ 348              	one_wire_reset_crc:
+ 349              	.LFB71:
+ 125:..\one_wire.c **** 
+ 126:..\one_wire.c **** void one_wire_reset_crc() {
+ 350              		.loc 1 126 0
+ 351              		.cfi_startproc
+ 352              		@ args = 0, pretend = 0, frame = 0
+ 353              		@ frame_needed = 0, uses_anonymous_args = 0
+ 354              		@ link register save eliminated.
+ 127:..\one_wire.c ****     crc8 = 0;
+ 355              		.loc 1 127 0
+ 356 0000 0022     		movs	r2, #0
+ 357 0002 014B     		ldr	r3, .L28
+ 358 0004 1A70     		strb	r2, [r3]
+ 359 0006 7047     		bx	lr
+ 360              	.L29:
+ 361              		.align	2
+ 362              	.L28:
+ 363 0008 00000000 		.word	crc8
+ 364              		.cfi_endproc
+ 365              	.LFE71:
+ 366              		.size	one_wire_reset_crc, .-one_wire_reset_crc
+ 367              		.section	.text.one_wire_get_crc,"ax",%progbits
+ 368              		.align	2
+ 369              		.global	one_wire_get_crc
+ 370              		.thumb
+ 371              		.thumb_func
+ 372              		.type	one_wire_get_crc, %function
+ 373              	one_wire_get_crc:
+ 374              	.LFB72:
+ 128:..\one_wire.c **** }
+ 129:..\one_wire.c **** 
+ 130:..\one_wire.c **** uint8_t one_wire_get_crc() {
+ 375              		.loc 1 130 0
+ 376              		.cfi_startproc
+ 377              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 10
+
+
+ 378              		@ frame_needed = 0, uses_anonymous_args = 0
+ 379              		@ link register save eliminated.
+ 131:..\one_wire.c ****     return crc8;
+ 132:..\one_wire.c **** }
+ 380              		.loc 1 132 0
+ 381 0000 014B     		ldr	r3, .L31
+ 382 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 383 0004 7047     		bx	lr
+ 384              	.L32:
+ 385 0006 00BF     		.align	2
+ 386              	.L31:
+ 387 0008 00000000 		.word	crc8
+ 388              		.cfi_endproc
+ 389              	.LFE72:
+ 390              		.size	one_wire_get_crc, .-one_wire_get_crc
+ 391              		.section	.text.one_wire_crc,"ax",%progbits
+ 392              		.align	2
+ 393              		.global	one_wire_crc
+ 394              		.thumb
+ 395              		.thumb_func
+ 396              		.type	one_wire_crc, %function
+ 397              	one_wire_crc:
+ 398              	.LFB73:
+ 133:..\one_wire.c **** 
+ 134:..\one_wire.c **** uint8_t one_wire_crc(uint8_t data) {
+ 399              		.loc 1 134 0
+ 400              		.cfi_startproc
+ 401              		@ args = 0, pretend = 0, frame = 0
+ 402              		@ frame_needed = 0, uses_anonymous_args = 0
+ 403              		@ link register save eliminated.
+ 404              	.LVL43:
+ 135:..\one_wire.c ****     crc8 = crc_table[crc8 ^ data];
+ 405              		.loc 1 135 0
+ 406 0000 034A     		ldr	r2, .L34
+ 407 0002 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 408 0004 5840     		eors	r0, r0, r3
+ 409              	.LVL44:
+ 410 0006 034B     		ldr	r3, .L34+4
+ 411 0008 185C     		ldrb	r0, [r3, r0]	@ zero_extendqisi2
+ 412 000a 1070     		strb	r0, [r2]
+ 136:..\one_wire.c ****     return crc8;
+ 137:..\one_wire.c **** }
+ 413              		.loc 1 137 0
+ 414 000c 7047     		bx	lr
+ 415              	.L35:
+ 416 000e 00BF     		.align	2
+ 417              	.L34:
+ 418 0010 00000000 		.word	crc8
+ 419 0014 00000000 		.word	.LANCHOR0
+ 420              		.cfi_endproc
+ 421              	.LFE73:
+ 422              		.size	one_wire_crc, .-one_wire_crc
+ 423              		.section	.text.one_wire_read_rom,"ax",%progbits
+ 424              		.align	2
+ 425              		.global	one_wire_read_rom
+ 426              		.thumb
+ 427              		.thumb_func
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 11
+
+
+ 428              		.type	one_wire_read_rom, %function
+ 429              	one_wire_read_rom:
+ 430              	.LFB74:
+ 138:..\one_wire.c **** 
+ 139:..\one_wire.c **** // I don't know why nothing is done with the bytes read...
+ 140:..\one_wire.c **** // it never seems to get used anyway
+ 141:..\one_wire.c **** void one_wire_read_rom() {
+ 431              		.loc 1 141 0
+ 432              		.cfi_startproc
+ 433              		@ args = 0, pretend = 0, frame = 0
+ 434              		@ frame_needed = 0, uses_anonymous_args = 0
+ 435 0000 08B5     		push	{r3, lr}
+ 436              		.cfi_def_cfa_offset 8
+ 437              		.cfi_offset 3, -8
+ 438              		.cfi_offset 14, -4
+ 142:..\one_wire.c ****     one_wire_reset_pulse();
+ 439              		.loc 1 142 0
+ 440 0002 FFF7FEFF 		bl	one_wire_reset_pulse
+ 441              	.LVL45:
+ 143:..\one_wire.c ****     one_wire_write_byte(READ_ROM_CMD);
+ 442              		.loc 1 143 0
+ 443 0006 3320     		movs	r0, #51
+ 444 0008 FFF7FEFF 		bl	one_wire_write_byte
+ 445              	.LVL46:
+ 144:..\one_wire.c ****     one_wire_read_byte();
+ 446              		.loc 1 144 0
+ 447 000c FFF7FEFF 		bl	one_wire_read_byte
+ 448              	.LVL47:
+ 145:..\one_wire.c ****     one_wire_read_byte();
+ 449              		.loc 1 145 0
+ 450 0010 FFF7FEFF 		bl	one_wire_read_byte
+ 451              	.LVL48:
+ 146:..\one_wire.c ****     one_wire_read_byte();
+ 452              		.loc 1 146 0
+ 453 0014 FFF7FEFF 		bl	one_wire_read_byte
+ 454              	.LVL49:
+ 147:..\one_wire.c ****     one_wire_read_byte();
+ 455              		.loc 1 147 0
+ 456 0018 FFF7FEFF 		bl	one_wire_read_byte
+ 457              	.LVL50:
+ 148:..\one_wire.c ****     one_wire_read_byte();
+ 458              		.loc 1 148 0
+ 459 001c FFF7FEFF 		bl	one_wire_read_byte
+ 460              	.LVL51:
+ 149:..\one_wire.c ****     one_wire_read_byte();
+ 461              		.loc 1 149 0
+ 462 0020 FFF7FEFF 		bl	one_wire_read_byte
+ 463              	.LVL52:
+ 150:..\one_wire.c ****     one_wire_read_byte();
+ 464              		.loc 1 150 0
+ 465 0024 FFF7FEFF 		bl	one_wire_read_byte
+ 466              	.LVL53:
+ 151:..\one_wire.c ****     one_wire_read_byte();
+ 467              		.loc 1 151 0
+ 468 0028 FFF7FEFF 		bl	one_wire_read_byte
+ 469              	.LVL54:
+ 470 002c 08BD     		pop	{r3, pc}
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 12
+
+
+ 471              		.cfi_endproc
+ 472              	.LFE74:
+ 473              		.size	one_wire_read_rom, .-one_wire_read_rom
+ 474 002e 00BF     		.section	.text.one_wire_search,"ax",%progbits
+ 475              		.align	2
+ 476              		.global	one_wire_search
+ 477              		.thumb
+ 478              		.thumb_func
+ 479              		.type	one_wire_search, %function
+ 480              	one_wire_search:
+ 481              	.LFB75:
+ 152:..\one_wire.c **** }
+ 153:..\one_wire.c **** 
+ 154:..\one_wire.c **** int one_wire_search()
+ 155:..\one_wire.c **** {
+ 482              		.loc 1 155 0
+ 483              		.cfi_startproc
+ 484              		@ args = 0, pretend = 0, frame = 0
+ 485              		@ frame_needed = 0, uses_anonymous_args = 0
+ 486 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 487              		.cfi_def_cfa_offset 24
+ 488              		.cfi_offset 4, -24
+ 489              		.cfi_offset 5, -20
+ 490              		.cfi_offset 6, -16
+ 491              		.cfi_offset 7, -12
+ 492              		.cfi_offset 8, -8
+ 493              		.cfi_offset 14, -4
+ 494              	.LVL55:
+ 156:..\one_wire.c ****     uint8_t id_bit_number;
+ 157:..\one_wire.c ****     int last_zero, rom_byte_number, search_result;
+ 158:..\one_wire.c ****     uint8_t id_bit, cmp_id_bit;
+ 159:..\one_wire.c ****     uint8_t rom_byte_mask, search_direction;
+ 160:..\one_wire.c **** 
+ 161:..\one_wire.c ****     // initialize for search
+ 162:..\one_wire.c ****     id_bit_number = 1;
+ 163:..\one_wire.c ****     last_zero = 0;
+ 164:..\one_wire.c ****     rom_byte_number = 0;
+ 165:..\one_wire.c ****     rom_byte_mask = 1;
+ 166:..\one_wire.c ****     search_result = 0;
+ 167:..\one_wire.c ****     crc8 = 0;
+ 495              		.loc 1 167 0
+ 496 0004 0022     		movs	r2, #0
+ 497 0006 374B     		ldr	r3, .L58
+ 498 0008 1A70     		strb	r2, [r3]
+ 168:..\one_wire.c ****     // if the last call was not the last one
+ 169:..\one_wire.c ****     if (!last_device_flag)
+ 499              		.loc 1 169 0
+ 500 000a 374B     		ldr	r3, .L58+4
+ 501 000c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 502 000e 002B     		cmp	r3, #0
+ 503 0010 56D1     		bne	.L52
+ 170:..\one_wire.c ****     {
+ 171:..\one_wire.c ****         // 1-Wire reset
+ 172:..\one_wire.c ****         if (!one_wire_reset_pulse()) {
+ 504              		.loc 1 172 0
+ 505 0012 FFF7FEFF 		bl	one_wire_reset_pulse
+ 506              	.LVL56:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 13
+
+
+ 507 0016 28B9     		cbnz	r0, .L40
+ 173:..\one_wire.c ****             // reset the search
+ 174:..\one_wire.c ****             last_mismatch = 0;
+ 508              		.loc 1 174 0
+ 509 0018 344B     		ldr	r3, .L58+8
+ 510 001a 1870     		strb	r0, [r3]
+ 175:..\one_wire.c ****             last_device_flag = 0;
+ 511              		.loc 1 175 0
+ 512 001c 324B     		ldr	r3, .L58+4
+ 513 001e 1870     		strb	r0, [r3]
+ 176:..\one_wire.c ****             return 0;
+ 514              		.loc 1 176 0
+ 515 0020 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 516              	.L40:
+ 177:..\one_wire.c ****         }
+ 178:..\one_wire.c ****         // issue the search command
+ 179:..\one_wire.c ****         one_wire_write_byte(SEARCH_CMD);
+ 517              		.loc 1 179 0
+ 518 0024 F020     		movs	r0, #240
+ 519 0026 FFF7FEFF 		bl	one_wire_write_byte
+ 520              	.LVL57:
+ 165:..\one_wire.c ****     search_result = 0;
+ 521              		.loc 1 165 0
+ 522 002a 0124     		movs	r4, #1
+ 164:..\one_wire.c ****     rom_byte_mask = 1;
+ 523              		.loc 1 164 0
+ 524 002c 0027     		movs	r7, #0
+ 163:..\one_wire.c ****     rom_byte_number = 0;
+ 525              		.loc 1 163 0
+ 526 002e B846     		mov	r8, r7
+ 162:..\one_wire.c ****     last_zero = 0;
+ 527              		.loc 1 162 0
+ 528 0030 2646     		mov	r6, r4
+ 529              	.LVL58:
+ 530              	.L50:
+ 180:..\one_wire.c ****         // loop to do the search
+ 181:..\one_wire.c ****         do
+ 182:..\one_wire.c ****         {
+ 183:..\one_wire.c ****             // read a bit and its complement
+ 184:..\one_wire.c ****             id_bit = one_wire_read_bit();
+ 531              		.loc 1 184 0
+ 532 0032 FFF7FEFF 		bl	one_wire_read_bit
+ 533              	.LVL59:
+ 534 0036 0546     		mov	r5, r0
+ 535              	.LVL60:
+ 185:..\one_wire.c ****             cmp_id_bit = one_wire_read_bit();
+ 536              		.loc 1 185 0
+ 537 0038 FFF7FEFF 		bl	one_wire_read_bit
+ 538              	.LVL61:
+ 186:..\one_wire.c ****             // check for no devices on 1-wire
+ 187:..\one_wire.c ****             if ((id_bit == 1) && (cmp_id_bit == 1))
+ 539              		.loc 1 187 0
+ 540 003c 012D     		cmp	r5, #1
+ 541 003e 01D1     		bne	.L42
+ 542              		.loc 1 187 0 is_stmt 0 discriminator 1
+ 543 0040 0128     		cmp	r0, #1
+ 544 0042 2FD0     		beq	.L43
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 14
+
+
+ 545              	.L42:
+ 188:..\one_wire.c ****                 break; // no devices
+ 189:..\one_wire.c **** 
+ 190:..\one_wire.c ****             // all devices coupled have 0 or 1
+ 191:..\one_wire.c ****             if (id_bit != cmp_id_bit)
+ 546              		.loc 1 191 0 is_stmt 1
+ 547 0044 8542     		cmp	r5, r0
+ 548 0046 10D1     		bne	.L44
+ 192:..\one_wire.c ****                 search_direction = id_bit; // bit write value for search
+ 193:..\one_wire.c ****             else
+ 194:..\one_wire.c ****             {
+ 195:..\one_wire.c ****                 // if this discrepancy if before the Last Discrepancy
+ 196:..\one_wire.c ****                 // on a previous next then pick the same as last time
+ 197:..\one_wire.c ****                 if (id_bit_number < last_mismatch)
+ 549              		.loc 1 197 0
+ 550 0048 284B     		ldr	r3, .L58+8
+ 551 004a 1D78     		ldrb	r5, [r3]	@ zero_extendqisi2
+ 552              	.LVL62:
+ 553 004c AE42     		cmp	r6, r5
+ 554 004e 06D2     		bcs	.L45
+ 198:..\one_wire.c ****                     search_direction = ((ROM_NO[rom_byte_number] & rom_byte_mask) > 0);
+ 555              		.loc 1 198 0
+ 556 0050 274B     		ldr	r3, .L58+12
+ 557 0052 DB5D     		ldrb	r3, [r3, r7]	@ zero_extendqisi2
+ 558 0054 1C42     		tst	r4, r3
+ 559 0056 14BF     		ite	ne
+ 560 0058 0125     		movne	r5, #1
+ 561 005a 0025     		moveq	r5, #0
+ 562              	.LVL63:
+ 563 005c 03E0     		b	.L46
+ 564              	.LVL64:
+ 565              	.L45:
+ 199:..\one_wire.c ****                 else
+ 200:..\one_wire.c ****                     // if equal to last pick 1, if not then pick 0
+ 201:..\one_wire.c ****                     search_direction = (id_bit_number == last_mismatch);
+ 566              		.loc 1 201 0
+ 567 005e AE42     		cmp	r6, r5
+ 568 0060 14BF     		ite	ne
+ 569 0062 0025     		movne	r5, #0
+ 570 0064 0125     		moveq	r5, #1
+ 571              	.LVL65:
+ 572              	.L46:
+ 202:..\one_wire.c ****                 // if 0 was picked then record its position in LastZero
+ 203:..\one_wire.c ****                 if (search_direction == 0)
+ 573              		.loc 1 203 0
+ 574 0066 05B9     		cbnz	r5, .L44
+ 204:..\one_wire.c ****                 {
+ 205:..\one_wire.c ****                     last_zero = id_bit_number;
+ 575              		.loc 1 205 0
+ 576 0068 B046     		mov	r8, r6
+ 577              	.LVL66:
+ 578              	.L44:
+ 206:..\one_wire.c ****                 }
+ 207:..\one_wire.c ****             }
+ 208:..\one_wire.c ****             // set or clear the bit in the ROM byte rom_byte_number
+ 209:..\one_wire.c ****             // with mask rom_byte_mask
+ 210:..\one_wire.c ****             if (search_direction == 1)
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 15
+
+
+ 579              		.loc 1 210 0
+ 580 006a 012D     		cmp	r5, #1
+ 581 006c 04D1     		bne	.L47
+ 211:..\one_wire.c ****                 ROM_NO[rom_byte_number] |= rom_byte_mask;
+ 582              		.loc 1 211 0
+ 583 006e 204A     		ldr	r2, .L58+12
+ 584 0070 D35D     		ldrb	r3, [r2, r7]	@ zero_extendqisi2
+ 585 0072 2343     		orrs	r3, r3, r4
+ 586 0074 D355     		strb	r3, [r2, r7]
+ 587 0076 04E0     		b	.L48
+ 588              	.L47:
+ 212:..\one_wire.c ****             else
+ 213:..\one_wire.c ****                 ROM_NO[rom_byte_number] &= ~rom_byte_mask;
+ 589              		.loc 1 213 0
+ 590 0078 1D4A     		ldr	r2, .L58+12
+ 591 007a D35D     		ldrb	r3, [r2, r7]	@ zero_extendqisi2
+ 592 007c 23EA0403 		bic	r3, r3, r4
+ 593 0080 D355     		strb	r3, [r2, r7]
+ 594              	.L48:
+ 214:..\one_wire.c ****             // serial number search direction write bit
+ 215:..\one_wire.c ****             one_wire_write_bit(search_direction);
+ 595              		.loc 1 215 0
+ 596 0082 2846     		mov	r0, r5
+ 597              	.LVL67:
+ 598 0084 FFF7FEFF 		bl	one_wire_write_bit
+ 599              	.LVL68:
+ 216:..\one_wire.c ****             // increment the byte counter id_bit_number
+ 217:..\one_wire.c ****             // and shift the mask rom_byte_mask
+ 218:..\one_wire.c ****             id_bit_number++;
+ 600              		.loc 1 218 0
+ 601 0088 0136     		adds	r6, r6, #1
+ 602              	.LVL69:
+ 603 008a F6B2     		uxtb	r6, r6
+ 604              	.LVL70:
+ 219:..\one_wire.c ****             rom_byte_mask <<= 1;
+ 605              		.loc 1 219 0
+ 606 008c 6400     		lsls	r4, r4, #1
+ 607              	.LVL71:
+ 220:..\one_wire.c ****             // if the mask is 0 then go to new SerialNum byte rom_byte_number and reset mask
+ 221:..\one_wire.c ****             if (rom_byte_mask == 0)
+ 608              		.loc 1 221 0
+ 609 008e 14F0FF04 		ands	r4, r4, #255
+ 610              	.LVL72:
+ 611 0092 05D1     		bne	.L49
+ 222:..\one_wire.c ****             {
+ 223:..\one_wire.c ****                 one_wire_crc(ROM_NO[rom_byte_number]); // accumulate the CRC
+ 612              		.loc 1 223 0
+ 613 0094 164B     		ldr	r3, .L58+12
+ 614 0096 D85D     		ldrb	r0, [r3, r7]	@ zero_extendqisi2
+ 615 0098 FFF7FEFF 		bl	one_wire_crc
+ 616              	.LVL73:
+ 224:..\one_wire.c ****                 rom_byte_number++;
+ 617              		.loc 1 224 0
+ 618 009c 0137     		adds	r7, r7, #1
+ 619              	.LVL74:
+ 225:..\one_wire.c ****                 rom_byte_mask = 1;
+ 620              		.loc 1 225 0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 16
+
+
+ 621 009e 0124     		movs	r4, #1
+ 622              	.LVL75:
+ 623              	.L49:
+ 226:..\one_wire.c ****             }
+ 227:..\one_wire.c **** 
+ 228:..\one_wire.c ****         }
+ 229:..\one_wire.c ****         while(rom_byte_number < 8); // loop until through all ROM bytes 0-7
+ 624              		.loc 1 229 0
+ 625 00a0 072F     		cmp	r7, #7
+ 626 00a2 C6DD     		ble	.L50
+ 627              	.LVL76:
+ 628              	.L43:
+ 230:..\one_wire.c ****         // if the search was successful then
+ 231:..\one_wire.c ****         if (!((id_bit_number < 65) || (crc8 != 0)))
+ 629              		.loc 1 231 0
+ 630 00a4 402E     		cmp	r6, #64
+ 631 00a6 0DD9     		bls	.L53
+ 632              		.loc 1 231 0 is_stmt 0 discriminator 1
+ 633 00a8 0E4B     		ldr	r3, .L58
+ 634 00aa 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 635 00ac 63B9     		cbnz	r3, .L54
+ 232:..\one_wire.c ****         {
+ 233:..\one_wire.c ****             // search successful so set last_mismatch, last_device_flag, search_result
+ 234:..\one_wire.c ****             last_mismatch = last_zero;
+ 636              		.loc 1 234 0 is_stmt 1
+ 637 00ae 5FFA88F3 		uxtb	r3, r8
+ 638 00b2 0E4A     		ldr	r2, .L58+8
+ 639 00b4 1370     		strb	r3, [r2]
+ 235:..\one_wire.c ****             // check for last device
+ 236:..\one_wire.c ****             if (last_mismatch == 0)
+ 640              		.loc 1 236 0
+ 641 00b6 4BB9     		cbnz	r3, .L55
+ 237:..\one_wire.c ****                 last_device_flag = 1;
+ 642              		.loc 1 237 0
+ 643 00b8 0120     		movs	r0, #1
+ 644 00ba 0B4B     		ldr	r3, .L58+4
+ 645 00bc 1870     		strb	r0, [r3]
+ 646 00be 06E0     		b	.L39
+ 647              	.LVL77:
+ 648              	.L52:
+ 166:..\one_wire.c ****     crc8 = 0;
+ 649              		.loc 1 166 0
+ 650 00c0 0020     		movs	r0, #0
+ 651 00c2 04E0     		b	.L39
+ 652              	.LVL78:
+ 653              	.L53:
+ 654 00c4 0020     		movs	r0, #0
+ 655 00c6 02E0     		b	.L39
+ 656              	.L54:
+ 657 00c8 0020     		movs	r0, #0
+ 658 00ca 00E0     		b	.L39
+ 659              	.L55:
+ 238:..\one_wire.c **** 
+ 239:..\one_wire.c ****             search_result = 1;
+ 660              		.loc 1 239 0
+ 661 00cc 0120     		movs	r0, #1
+ 662              	.LVL79:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 17
+
+
+ 663              	.L39:
+ 240:..\one_wire.c ****         }
+ 241:..\one_wire.c ****     }
+ 242:..\one_wire.c ****     // if no device found then reset counters so next 'search' will be like a first
+ 243:..\one_wire.c ****     if (!search_result || !ROM_NO[0])
+ 664              		.loc 1 243 0
+ 665 00ce 10B1     		cbz	r0, .L51
+ 666              		.loc 1 243 0 is_stmt 0 discriminator 1
+ 667 00d0 074B     		ldr	r3, .L58+12
+ 668 00d2 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 669 00d4 23B9     		cbnz	r3, .L41
+ 670              	.L51:
+ 244:..\one_wire.c ****     {
+ 245:..\one_wire.c ****         last_mismatch = 0;
+ 671              		.loc 1 245 0 is_stmt 1
+ 672 00d6 0020     		movs	r0, #0
+ 673              	.LVL80:
+ 674 00d8 044B     		ldr	r3, .L58+8
+ 675 00da 1870     		strb	r0, [r3]
+ 246:..\one_wire.c ****         last_device_flag = 0;
+ 676              		.loc 1 246 0
+ 677 00dc 024B     		ldr	r3, .L58+4
+ 678 00de 1870     		strb	r0, [r3]
+ 679              	.LVL81:
+ 680              	.L41:
+ 247:..\one_wire.c ****         search_result = 0;
+ 248:..\one_wire.c ****     }
+ 249:..\one_wire.c ****     return search_result;
+ 250:..\one_wire.c **** }
+ 681              		.loc 1 250 0
+ 682 00e0 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 683              	.L59:
+ 684              		.align	2
+ 685              	.L58:
+ 686 00e4 00000000 		.word	crc8
+ 687 00e8 00000000 		.word	last_device_flag
+ 688 00ec 00000000 		.word	last_mismatch
+ 689 00f0 00000000 		.word	ROM_NO
+ 690              		.cfi_endproc
+ 691              	.LFE75:
+ 692              		.size	one_wire_search, .-one_wire_search
+ 693              		.section	.text.one_wire_match_rom,"ax",%progbits
+ 694              		.align	2
+ 695              		.global	one_wire_match_rom
+ 696              		.thumb
+ 697              		.thumb_func
+ 698              		.type	one_wire_match_rom, %function
+ 699              	one_wire_match_rom:
+ 700              	.LFB76:
+ 251:..\one_wire.c **** 
+ 252:..\one_wire.c **** uint8_t one_wire_match_rom(one_wire_device device) {
+ 701              		.loc 1 252 0
+ 702              		.cfi_startproc
+ 703              		@ args = 0, pretend = 0, frame = 8
+ 704              		@ frame_needed = 0, uses_anonymous_args = 0
+ 705 0000 10B5     		push	{r4, lr}
+ 706              		.cfi_def_cfa_offset 8
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 18
+
+
+ 707              		.cfi_offset 4, -8
+ 708              		.cfi_offset 14, -4
+ 709 0002 82B0     		sub	sp, sp, #8
+ 710              		.cfi_def_cfa_offset 16
+ 711 0004 02AB     		add	r3, sp, #8
+ 712 0006 03E90300 		stmdb	r3, {r0, r1}
+ 253:..\one_wire.c ****     int i;
+ 254:..\one_wire.c ****     one_wire_reset_pulse();
+ 713              		.loc 1 254 0
+ 714 000a FFF7FEFF 		bl	one_wire_reset_pulse
+ 715              	.LVL82:
+ 255:..\one_wire.c ****     one_wire_write_byte(MATCH_ROM_CMD); // Match ROM command
+ 716              		.loc 1 255 0
+ 717 000e 5520     		movs	r0, #85
+ 718 0010 FFF7FEFF 		bl	one_wire_write_byte
+ 719              	.LVL83:
+ 256:..\one_wire.c ****     for (i = 0; i < 8; ++i) {
+ 720              		.loc 1 256 0
+ 721 0014 0024     		movs	r4, #0
+ 722 0016 06E0     		b	.L61
+ 723              	.LVL84:
+ 724              	.L62:
+ 257:..\one_wire.c ****         one_wire_write_byte(device.address[i]);
+ 725              		.loc 1 257 0 discriminator 3
+ 726 0018 02AB     		add	r3, sp, #8
+ 727 001a 2344     		add	r3, r3, r4
+ 728 001c 13F8080C 		ldrb	r0, [r3, #-8]	@ zero_extendqisi2
+ 729 0020 FFF7FEFF 		bl	one_wire_write_byte
+ 730              	.LVL85:
+ 256:..\one_wire.c ****     for (i = 0; i < 8; ++i) {
+ 731              		.loc 1 256 0 discriminator 3
+ 732 0024 0134     		adds	r4, r4, #1
+ 733              	.LVL86:
+ 734              	.L61:
+ 256:..\one_wire.c ****     for (i = 0; i < 8; ++i) {
+ 735              		.loc 1 256 0 is_stmt 0 discriminator 1
+ 736 0026 072C     		cmp	r4, #7
+ 737 0028 F6DD     		ble	.L62
+ 258:..\one_wire.c ****     }
+ 259:..\one_wire.c **** 
+ 260:..\one_wire.c ****     return 0;
+ 261:..\one_wire.c **** }
+ 738              		.loc 1 261 0 is_stmt 1
+ 739 002a 0020     		movs	r0, #0
+ 740 002c 02B0     		add	sp, sp, #8
+ 741              		.cfi_def_cfa_offset 8
+ 742              		@ sp needed
+ 743 002e 10BD     		pop	{r4, pc}
+ 744              		.cfi_endproc
+ 745              	.LFE76:
+ 746              		.size	one_wire_match_rom, .-one_wire_match_rom
+ 747              		.section	.text.one_wire_first,"ax",%progbits
+ 748              		.align	2
+ 749              		.global	one_wire_first
+ 750              		.thumb
+ 751              		.thumb_func
+ 752              		.type	one_wire_first, %function
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 19
+
+
+ 753              	one_wire_first:
+ 754              	.LFB77:
+ 262:..\one_wire.c **** 
+ 263:..\one_wire.c **** int one_wire_first()
+ 264:..\one_wire.c **** {
+ 755              		.loc 1 264 0
+ 756              		.cfi_startproc
+ 757              		@ args = 0, pretend = 0, frame = 0
+ 758              		@ frame_needed = 0, uses_anonymous_args = 0
+ 759 0000 08B5     		push	{r3, lr}
+ 760              		.cfi_def_cfa_offset 8
+ 761              		.cfi_offset 3, -8
+ 762              		.cfi_offset 14, -4
+ 265:..\one_wire.c ****     // reset the search state
+ 266:..\one_wire.c ****     last_mismatch = 0;
+ 763              		.loc 1 266 0
+ 764 0002 0023     		movs	r3, #0
+ 765 0004 034A     		ldr	r2, .L66
+ 766 0006 1370     		strb	r3, [r2]
+ 267:..\one_wire.c ****     last_device_flag = 0;
+ 767              		.loc 1 267 0
+ 768 0008 034A     		ldr	r2, .L66+4
+ 769 000a 1370     		strb	r3, [r2]
+ 268:..\one_wire.c ****     return one_wire_search();
+ 770              		.loc 1 268 0
+ 771 000c FFF7FEFF 		bl	one_wire_search
+ 772              	.LVL87:
+ 269:..\one_wire.c **** }
+ 773              		.loc 1 269 0
+ 774 0010 08BD     		pop	{r3, pc}
+ 775              	.L67:
+ 776 0012 00BF     		.align	2
+ 777              	.L66:
+ 778 0014 00000000 		.word	last_mismatch
+ 779 0018 00000000 		.word	last_device_flag
+ 780              		.cfi_endproc
+ 781              	.LFE77:
+ 782              		.size	one_wire_first, .-one_wire_first
+ 783              		.section	.text.one_wire_next,"ax",%progbits
+ 784              		.align	2
+ 785              		.global	one_wire_next
+ 786              		.thumb
+ 787              		.thumb_func
+ 788              		.type	one_wire_next, %function
+ 789              	one_wire_next:
+ 790              	.LFB78:
+ 270:..\one_wire.c **** 
+ 271:..\one_wire.c **** int one_wire_next()
+ 272:..\one_wire.c **** {
+ 791              		.loc 1 272 0
+ 792              		.cfi_startproc
+ 793              		@ args = 0, pretend = 0, frame = 0
+ 794              		@ frame_needed = 0, uses_anonymous_args = 0
+ 795 0000 08B5     		push	{r3, lr}
+ 796              		.cfi_def_cfa_offset 8
+ 797              		.cfi_offset 3, -8
+ 798              		.cfi_offset 14, -4
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 20
+
+
+ 273:..\one_wire.c ****     // leave the search state alone
+ 274:..\one_wire.c ****     return one_wire_search();
+ 799              		.loc 1 274 0
+ 800 0002 FFF7FEFF 		bl	one_wire_search
+ 801              	.LVL88:
+ 275:..\one_wire.c **** }
+ 802              		.loc 1 275 0
+ 803 0006 08BD     		pop	{r3, pc}
+ 804              		.cfi_endproc
+ 805              	.LFE78:
+ 806              		.size	one_wire_next, .-one_wire_next
+ 807              		.section	.text.one_wire_search_rom,"ax",%progbits
+ 808              		.align	2
+ 809              		.global	one_wire_search_rom
+ 810              		.thumb
+ 811              		.thumb_func
+ 812              		.type	one_wire_search_rom, %function
+ 813              	one_wire_search_rom:
+ 814              	.LFB79:
+ 276:..\one_wire.c **** 
+ 277:..\one_wire.c **** one_wire_device* one_wire_search_rom(uint8_t *devices) {
+ 815              		.loc 1 277 0
+ 816              		.cfi_startproc
+ 817              		@ args = 0, pretend = 0, frame = 8
+ 818              		@ frame_needed = 0, uses_anonymous_args = 0
+ 819              	.LVL89:
+ 820 0000 70B5     		push	{r4, r5, r6, lr}
+ 821              		.cfi_def_cfa_offset 16
+ 822              		.cfi_offset 4, -16
+ 823              		.cfi_offset 5, -12
+ 824              		.cfi_offset 6, -8
+ 825              		.cfi_offset 14, -4
+ 826 0002 82B0     		sub	sp, sp, #8
+ 827              		.cfi_def_cfa_offset 24
+ 828 0004 0446     		mov	r4, r0
+ 278:..\one_wire.c ****     int result, i;
+ 279:..\one_wire.c ****     one_wire_device_count = 0;
+ 829              		.loc 1 279 0
+ 830 0006 0022     		movs	r2, #0
+ 831 0008 154B     		ldr	r3, .L78
+ 832 000a 1A70     		strb	r2, [r3]
+ 280:..\one_wire.c ****     result = one_wire_first();
+ 833              		.loc 1 280 0
+ 834 000c FFF7FEFF 		bl	one_wire_first
+ 835              	.LVL90:
+ 281:..\one_wire.c ****     while (result)
+ 836              		.loc 1 281 0
+ 837 0010 1DE0     		b	.L71
+ 838              	.LVL91:
+ 839              	.L72:
+ 840              	.LBB2:
+ 282:..\one_wire.c ****     {
+ 283:..\one_wire.c ****         one_wire_device device;
+ 284:..\one_wire.c ****         for (i = 7; i >= 0; i--) {
+ 841              		.loc 1 284 0 discriminator 3
+ 842 0012 013B     		subs	r3, r3, #1
+ 843              	.LVL92:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 21
+
+
+ 844 0014 00E0     		b	.L75
+ 845              	.LVL93:
+ 846              	.L76:
+ 847              	.LBE2:
+ 848 0016 0723     		movs	r3, #7
+ 849              	.L75:
+ 850              	.LVL94:
+ 851              	.LBB3:
+ 852              		.loc 1 284 0 is_stmt 0 discriminator 1
+ 853 0018 002B     		cmp	r3, #0
+ 854 001a FADA     		bge	.L72
+ 855 001c 0723     		movs	r3, #7
+ 856              	.LVL95:
+ 857 001e 06E0     		b	.L73
+ 858              	.LVL96:
+ 859              	.L74:
+ 285:..\one_wire.c ****         }
+ 286:..\one_wire.c **** 
+ 287:..\one_wire.c ****         for (i = 7; i >= 0; i--) {
+ 288:..\one_wire.c ****             device.address[i] = ROM_NO[i];
+ 860              		.loc 1 288 0 is_stmt 1 discriminator 3
+ 861 0020 104A     		ldr	r2, .L78+4
+ 862 0022 D15C     		ldrb	r1, [r2, r3]	@ zero_extendqisi2
+ 863 0024 02AA     		add	r2, sp, #8
+ 864 0026 1A44     		add	r2, r2, r3
+ 865 0028 02F8081C 		strb	r1, [r2, #-8]
+ 287:..\one_wire.c ****             device.address[i] = ROM_NO[i];
+ 866              		.loc 1 287 0 discriminator 3
+ 867 002c 013B     		subs	r3, r3, #1
+ 868              	.LVL97:
+ 869              	.L73:
+ 287:..\one_wire.c ****             device.address[i] = ROM_NO[i];
+ 870              		.loc 1 287 0 is_stmt 0 discriminator 1
+ 871 002e 002B     		cmp	r3, #0
+ 872 0030 F6DA     		bge	.L74
+ 289:..\one_wire.c ****         }
+ 290:..\one_wire.c **** 
+ 291:..\one_wire.c ****         one_wire_devices[one_wire_device_count++] = device;
+ 873              		.loc 1 291 0 is_stmt 1
+ 874 0032 0B4B     		ldr	r3, .L78
+ 875              	.LVL98:
+ 876 0034 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 877 0036 511C     		adds	r1, r2, #1
+ 878 0038 1970     		strb	r1, [r3]
+ 879 003a 0B4D     		ldr	r5, .L78+8
+ 880 003c 05EBC206 		add	r6, r5, r2, lsl #3
+ 881 0040 6B46     		mov	r3, sp
+ 882 0042 03CB     		ldmia	r3!, {r0, r1}
+ 883              	.LVL99:
+ 884 0044 45F83200 		str	r0, [r5, r2, lsl #3]	@ unaligned
+ 885 0048 7160     		str	r1, [r6, #4]	@ unaligned
+ 292:..\one_wire.c **** 
+ 293:..\one_wire.c ****         result = one_wire_next();
+ 886              		.loc 1 293 0
+ 887 004a FFF7FEFF 		bl	one_wire_next
+ 888              	.LVL100:
+ 889              	.L71:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 22
+
+
+ 890              	.LBE3:
+ 281:..\one_wire.c ****     {
+ 891              		.loc 1 281 0
+ 892 004e 0028     		cmp	r0, #0
+ 893 0050 E1D1     		bne	.L76
+ 294:..\one_wire.c ****     }
+ 295:..\one_wire.c ****     *devices = one_wire_device_count;
+ 894              		.loc 1 295 0
+ 895 0052 034B     		ldr	r3, .L78
+ 896 0054 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 897 0056 2370     		strb	r3, [r4]
+ 296:..\one_wire.c ****     return one_wire_devices;
+ 297:..\one_wire.c **** }
+ 898              		.loc 1 297 0
+ 899 0058 0348     		ldr	r0, .L78+8
+ 900              	.LVL101:
+ 901 005a 02B0     		add	sp, sp, #8
+ 902              		.cfi_def_cfa_offset 16
+ 903              		@ sp needed
+ 904 005c 70BD     		pop	{r4, r5, r6, pc}
+ 905              	.LVL102:
+ 906              	.L79:
+ 907 005e 00BF     		.align	2
+ 908              	.L78:
+ 909 0060 00000000 		.word	.LANCHOR1
+ 910 0064 00000000 		.word	ROM_NO
+ 911 0068 00000000 		.word	one_wire_devices
+ 912              		.cfi_endproc
+ 913              	.LFE79:
+ 914              		.size	one_wire_search_rom, .-one_wire_search_rom
+ 915              		.global	crc_table
+ 916              		.comm	ROM_NO,8,4
+ 917              		.comm	crc8,1,1
+ 918              		.comm	last_device_flag,1,1
+ 919              		.comm	last_mismatch,1,1
+ 920              		.comm	state,1,1
+ 921              		.global	one_wire_device_count
+ 922              		.comm	one_wire_devices,80,4
+ 923              		.section	.rodata
+ 924              		.align	2
+ 925              		.set	.LANCHOR0,. + 0
+ 926              		.type	crc_table, %object
+ 927              		.size	crc_table, 256
+ 928              	crc_table:
+ 929 0000 00       		.byte	0
+ 930 0001 5E       		.byte	94
+ 931 0002 BC       		.byte	-68
+ 932 0003 E2       		.byte	-30
+ 933 0004 61       		.byte	97
+ 934 0005 3F       		.byte	63
+ 935 0006 DD       		.byte	-35
+ 936 0007 83       		.byte	-125
+ 937 0008 C2       		.byte	-62
+ 938 0009 9C       		.byte	-100
+ 939 000a 7E       		.byte	126
+ 940 000b 20       		.byte	32
+ 941 000c A3       		.byte	-93
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 23
+
+
+ 942 000d FD       		.byte	-3
+ 943 000e 1F       		.byte	31
+ 944 000f 41       		.byte	65
+ 945 0010 9D       		.byte	-99
+ 946 0011 C3       		.byte	-61
+ 947 0012 21       		.byte	33
+ 948 0013 7F       		.byte	127
+ 949 0014 FC       		.byte	-4
+ 950 0015 A2       		.byte	-94
+ 951 0016 40       		.byte	64
+ 952 0017 1E       		.byte	30
+ 953 0018 5F       		.byte	95
+ 954 0019 01       		.byte	1
+ 955 001a E3       		.byte	-29
+ 956 001b BD       		.byte	-67
+ 957 001c 3E       		.byte	62
+ 958 001d 60       		.byte	96
+ 959 001e 82       		.byte	-126
+ 960 001f DC       		.byte	-36
+ 961 0020 23       		.byte	35
+ 962 0021 7D       		.byte	125
+ 963 0022 9F       		.byte	-97
+ 964 0023 C1       		.byte	-63
+ 965 0024 42       		.byte	66
+ 966 0025 1C       		.byte	28
+ 967 0026 FE       		.byte	-2
+ 968 0027 A0       		.byte	-96
+ 969 0028 E1       		.byte	-31
+ 970 0029 BF       		.byte	-65
+ 971 002a 5D       		.byte	93
+ 972 002b 03       		.byte	3
+ 973 002c 80       		.byte	-128
+ 974 002d DE       		.byte	-34
+ 975 002e 3C       		.byte	60
+ 976 002f 62       		.byte	98
+ 977 0030 BE       		.byte	-66
+ 978 0031 E0       		.byte	-32
+ 979 0032 02       		.byte	2
+ 980 0033 5C       		.byte	92
+ 981 0034 DF       		.byte	-33
+ 982 0035 81       		.byte	-127
+ 983 0036 63       		.byte	99
+ 984 0037 3D       		.byte	61
+ 985 0038 7C       		.byte	124
+ 986 0039 22       		.byte	34
+ 987 003a C0       		.byte	-64
+ 988 003b 9E       		.byte	-98
+ 989 003c 1D       		.byte	29
+ 990 003d 43       		.byte	67
+ 991 003e A1       		.byte	-95
+ 992 003f FF       		.byte	-1
+ 993 0040 46       		.byte	70
+ 994 0041 18       		.byte	24
+ 995 0042 FA       		.byte	-6
+ 996 0043 A4       		.byte	-92
+ 997 0044 27       		.byte	39
+ 998 0045 79       		.byte	121
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 24
+
+
+ 999 0046 9B       		.byte	-101
+ 1000 0047 C5       		.byte	-59
+ 1001 0048 84       		.byte	-124
+ 1002 0049 DA       		.byte	-38
+ 1003 004a 38       		.byte	56
+ 1004 004b 66       		.byte	102
+ 1005 004c E5       		.byte	-27
+ 1006 004d BB       		.byte	-69
+ 1007 004e 59       		.byte	89
+ 1008 004f 07       		.byte	7
+ 1009 0050 DB       		.byte	-37
+ 1010 0051 85       		.byte	-123
+ 1011 0052 67       		.byte	103
+ 1012 0053 39       		.byte	57
+ 1013 0054 BA       		.byte	-70
+ 1014 0055 E4       		.byte	-28
+ 1015 0056 06       		.byte	6
+ 1016 0057 58       		.byte	88
+ 1017 0058 19       		.byte	25
+ 1018 0059 47       		.byte	71
+ 1019 005a A5       		.byte	-91
+ 1020 005b FB       		.byte	-5
+ 1021 005c 78       		.byte	120
+ 1022 005d 26       		.byte	38
+ 1023 005e C4       		.byte	-60
+ 1024 005f 9A       		.byte	-102
+ 1025 0060 65       		.byte	101
+ 1026 0061 3B       		.byte	59
+ 1027 0062 D9       		.byte	-39
+ 1028 0063 87       		.byte	-121
+ 1029 0064 04       		.byte	4
+ 1030 0065 5A       		.byte	90
+ 1031 0066 B8       		.byte	-72
+ 1032 0067 E6       		.byte	-26
+ 1033 0068 A7       		.byte	-89
+ 1034 0069 F9       		.byte	-7
+ 1035 006a 1B       		.byte	27
+ 1036 006b 45       		.byte	69
+ 1037 006c C6       		.byte	-58
+ 1038 006d 98       		.byte	-104
+ 1039 006e 7A       		.byte	122
+ 1040 006f 24       		.byte	36
+ 1041 0070 F8       		.byte	-8
+ 1042 0071 A6       		.byte	-90
+ 1043 0072 44       		.byte	68
+ 1044 0073 1A       		.byte	26
+ 1045 0074 99       		.byte	-103
+ 1046 0075 C7       		.byte	-57
+ 1047 0076 25       		.byte	37
+ 1048 0077 7B       		.byte	123
+ 1049 0078 3A       		.byte	58
+ 1050 0079 64       		.byte	100
+ 1051 007a 86       		.byte	-122
+ 1052 007b D8       		.byte	-40
+ 1053 007c 5B       		.byte	91
+ 1054 007d 05       		.byte	5
+ 1055 007e E7       		.byte	-25
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 25
+
+
+ 1056 007f B9       		.byte	-71
+ 1057 0080 8C       		.byte	-116
+ 1058 0081 D2       		.byte	-46
+ 1059 0082 30       		.byte	48
+ 1060 0083 6E       		.byte	110
+ 1061 0084 ED       		.byte	-19
+ 1062 0085 B3       		.byte	-77
+ 1063 0086 51       		.byte	81
+ 1064 0087 0F       		.byte	15
+ 1065 0088 4E       		.byte	78
+ 1066 0089 10       		.byte	16
+ 1067 008a F2       		.byte	-14
+ 1068 008b AC       		.byte	-84
+ 1069 008c 2F       		.byte	47
+ 1070 008d 71       		.byte	113
+ 1071 008e 93       		.byte	-109
+ 1072 008f CD       		.byte	-51
+ 1073 0090 11       		.byte	17
+ 1074 0091 4F       		.byte	79
+ 1075 0092 AD       		.byte	-83
+ 1076 0093 F3       		.byte	-13
+ 1077 0094 70       		.byte	112
+ 1078 0095 2E       		.byte	46
+ 1079 0096 CC       		.byte	-52
+ 1080 0097 92       		.byte	-110
+ 1081 0098 D3       		.byte	-45
+ 1082 0099 8D       		.byte	-115
+ 1083 009a 6F       		.byte	111
+ 1084 009b 31       		.byte	49
+ 1085 009c B2       		.byte	-78
+ 1086 009d EC       		.byte	-20
+ 1087 009e 0E       		.byte	14
+ 1088 009f 50       		.byte	80
+ 1089 00a0 AF       		.byte	-81
+ 1090 00a1 F1       		.byte	-15
+ 1091 00a2 13       		.byte	19
+ 1092 00a3 4D       		.byte	77
+ 1093 00a4 CE       		.byte	-50
+ 1094 00a5 90       		.byte	-112
+ 1095 00a6 72       		.byte	114
+ 1096 00a7 2C       		.byte	44
+ 1097 00a8 6D       		.byte	109
+ 1098 00a9 33       		.byte	51
+ 1099 00aa D1       		.byte	-47
+ 1100 00ab 8F       		.byte	-113
+ 1101 00ac 0C       		.byte	12
+ 1102 00ad 52       		.byte	82
+ 1103 00ae B0       		.byte	-80
+ 1104 00af EE       		.byte	-18
+ 1105 00b0 32       		.byte	50
+ 1106 00b1 6C       		.byte	108
+ 1107 00b2 8E       		.byte	-114
+ 1108 00b3 D0       		.byte	-48
+ 1109 00b4 53       		.byte	83
+ 1110 00b5 0D       		.byte	13
+ 1111 00b6 EF       		.byte	-17
+ 1112 00b7 B1       		.byte	-79
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 26
+
+
+ 1113 00b8 F0       		.byte	-16
+ 1114 00b9 AE       		.byte	-82
+ 1115 00ba 4C       		.byte	76
+ 1116 00bb 12       		.byte	18
+ 1117 00bc 91       		.byte	-111
+ 1118 00bd CF       		.byte	-49
+ 1119 00be 2D       		.byte	45
+ 1120 00bf 73       		.byte	115
+ 1121 00c0 CA       		.byte	-54
+ 1122 00c1 94       		.byte	-108
+ 1123 00c2 76       		.byte	118
+ 1124 00c3 28       		.byte	40
+ 1125 00c4 AB       		.byte	-85
+ 1126 00c5 F5       		.byte	-11
+ 1127 00c6 17       		.byte	23
+ 1128 00c7 49       		.byte	73
+ 1129 00c8 08       		.byte	8
+ 1130 00c9 56       		.byte	86
+ 1131 00ca B4       		.byte	-76
+ 1132 00cb EA       		.byte	-22
+ 1133 00cc 69       		.byte	105
+ 1134 00cd 37       		.byte	55
+ 1135 00ce D5       		.byte	-43
+ 1136 00cf 8B       		.byte	-117
+ 1137 00d0 57       		.byte	87
+ 1138 00d1 09       		.byte	9
+ 1139 00d2 EB       		.byte	-21
+ 1140 00d3 B5       		.byte	-75
+ 1141 00d4 36       		.byte	54
+ 1142 00d5 68       		.byte	104
+ 1143 00d6 8A       		.byte	-118
+ 1144 00d7 D4       		.byte	-44
+ 1145 00d8 95       		.byte	-107
+ 1146 00d9 CB       		.byte	-53
+ 1147 00da 29       		.byte	41
+ 1148 00db 77       		.byte	119
+ 1149 00dc F4       		.byte	-12
+ 1150 00dd AA       		.byte	-86
+ 1151 00de 48       		.byte	72
+ 1152 00df 16       		.byte	22
+ 1153 00e0 E9       		.byte	-23
+ 1154 00e1 B7       		.byte	-73
+ 1155 00e2 55       		.byte	85
+ 1156 00e3 0B       		.byte	11
+ 1157 00e4 88       		.byte	-120
+ 1158 00e5 D6       		.byte	-42
+ 1159 00e6 34       		.byte	52
+ 1160 00e7 6A       		.byte	106
+ 1161 00e8 2B       		.byte	43
+ 1162 00e9 75       		.byte	117
+ 1163 00ea 97       		.byte	-105
+ 1164 00eb C9       		.byte	-55
+ 1165 00ec 4A       		.byte	74
+ 1166 00ed 14       		.byte	20
+ 1167 00ee F6       		.byte	-10
+ 1168 00ef A8       		.byte	-88
+ 1169 00f0 74       		.byte	116
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 27
+
+
+ 1170 00f1 2A       		.byte	42
+ 1171 00f2 C8       		.byte	-56
+ 1172 00f3 96       		.byte	-106
+ 1173 00f4 15       		.byte	21
+ 1174 00f5 4B       		.byte	75
+ 1175 00f6 A9       		.byte	-87
+ 1176 00f7 F7       		.byte	-9
+ 1177 00f8 B6       		.byte	-74
+ 1178 00f9 E8       		.byte	-24
+ 1179 00fa 0A       		.byte	10
+ 1180 00fb 54       		.byte	84
+ 1181 00fc D7       		.byte	-41
+ 1182 00fd 89       		.byte	-119
+ 1183 00fe 6B       		.byte	107
+ 1184 00ff 35       		.byte	53
+ 1185              		.bss
+ 1186              		.set	.LANCHOR1,. + 0
+ 1187              		.type	one_wire_device_count, %object
+ 1188              		.size	one_wire_device_count, 1
+ 1189              	one_wire_device_count:
+ 1190 0000 00       		.space	1
+ 1191              		.text
+ 1192              	.Letext0:
+ 1193              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1194              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1195              		.file 4 "..\\one_wire.h"
+ 1196              		.file 5 "Generated_Source\\PSoC5/core_cm3.h"
+ 1197              		.file 6 "Generated_Source\\PSoC5/Wire1.h"
+ 1198              		.file 7 "Generated_Source\\PSoC5/CyLib.h"
+ 1199              		.section	.debug_info,"",%progbits
+ 1200              	.Ldebug_info0:
+ 1201 0000 6D070000 		.4byte	0x76d
+ 1202 0004 0400     		.2byte	0x4
+ 1203 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 1204 000a 04       		.byte	0x4
+ 1205 000b 01       		.uleb128 0x1
+ 1206 000c 41030000 		.4byte	.LASF59
+ 1207 0010 0C       		.byte	0xc
+ 1208 0011 D6030000 		.4byte	.LASF60
+ 1209 0015 E4030000 		.4byte	.LASF61
+ 1210 0019 18000000 		.4byte	.Ldebug_ranges0+0x18
+ 1211 001d 00000000 		.4byte	0
+ 1212 0021 00000000 		.4byte	.Ldebug_line0
+ 1213 0025 02       		.uleb128 0x2
+ 1214 0026 01       		.byte	0x1
+ 1215 0027 06       		.byte	0x6
+ 1216 0028 B1010000 		.4byte	.LASF0
+ 1217 002c 03       		.uleb128 0x3
+ 1218 002d 74010000 		.4byte	.LASF4
+ 1219 0031 02       		.byte	0x2
+ 1220 0032 1D       		.byte	0x1d
+ 1221 0033 37000000 		.4byte	0x37
+ 1222 0037 02       		.uleb128 0x2
+ 1223 0038 01       		.byte	0x1
+ 1224 0039 08       		.byte	0x8
+ 1225 003a A3010000 		.4byte	.LASF1
+ 1226 003e 02       		.uleb128 0x2
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 28
+
+
+ 1227 003f 02       		.byte	0x2
+ 1228 0040 05       		.byte	0x5
+ 1229 0041 64000000 		.4byte	.LASF2
+ 1230 0045 02       		.uleb128 0x2
+ 1231 0046 02       		.byte	0x2
+ 1232 0047 07       		.byte	0x7
+ 1233 0048 25020000 		.4byte	.LASF3
+ 1234 004c 03       		.uleb128 0x3
+ 1235 004d D7020000 		.4byte	.LASF5
+ 1236 0051 02       		.byte	0x2
+ 1237 0052 3F       		.byte	0x3f
+ 1238 0053 57000000 		.4byte	0x57
+ 1239 0057 02       		.uleb128 0x2
+ 1240 0058 04       		.byte	0x4
+ 1241 0059 05       		.byte	0x5
+ 1242 005a 3B010000 		.4byte	.LASF6
+ 1243 005e 02       		.uleb128 0x2
+ 1244 005f 04       		.byte	0x4
+ 1245 0060 07       		.byte	0x7
+ 1246 0061 83020000 		.4byte	.LASF7
+ 1247 0065 02       		.uleb128 0x2
+ 1248 0066 08       		.byte	0x8
+ 1249 0067 05       		.byte	0x5
+ 1250 0068 2D010000 		.4byte	.LASF8
+ 1251 006c 02       		.uleb128 0x2
+ 1252 006d 08       		.byte	0x8
+ 1253 006e 07       		.byte	0x7
+ 1254 006f BD010000 		.4byte	.LASF9
+ 1255 0073 04       		.uleb128 0x4
+ 1256 0074 04       		.byte	0x4
+ 1257 0075 05       		.byte	0x5
+ 1258 0076 696E7400 		.ascii	"int\000"
+ 1259 007a 02       		.uleb128 0x2
+ 1260 007b 04       		.byte	0x4
+ 1261 007c 07       		.byte	0x7
+ 1262 007d D4010000 		.4byte	.LASF10
+ 1263 0081 03       		.uleb128 0x3
+ 1264 0082 E7000000 		.4byte	.LASF11
+ 1265 0086 03       		.byte	0x3
+ 1266 0087 18       		.byte	0x18
+ 1267 0088 2C000000 		.4byte	0x2c
+ 1268 008c 03       		.uleb128 0x3
+ 1269 008d 45020000 		.4byte	.LASF12
+ 1270 0091 03       		.byte	0x3
+ 1271 0092 2C       		.byte	0x2c
+ 1272 0093 4C000000 		.4byte	0x4c
+ 1273 0097 02       		.uleb128 0x2
+ 1274 0098 04       		.byte	0x4
+ 1275 0099 04       		.byte	0x4
+ 1276 009a 16010000 		.4byte	.LASF13
+ 1277 009e 02       		.uleb128 0x2
+ 1278 009f 08       		.byte	0x8
+ 1279 00a0 04       		.byte	0x4
+ 1280 00a1 20030000 		.4byte	.LASF14
+ 1281 00a5 02       		.uleb128 0x2
+ 1282 00a6 01       		.byte	0x1
+ 1283 00a7 08       		.byte	0x8
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 29
+
+
+ 1284 00a8 40020000 		.4byte	.LASF15
+ 1285 00ac 02       		.uleb128 0x2
+ 1286 00ad 08       		.byte	0x8
+ 1287 00ae 04       		.byte	0x4
+ 1288 00af 7E010000 		.4byte	.LASF16
+ 1289 00b3 02       		.uleb128 0x2
+ 1290 00b4 04       		.byte	0x4
+ 1291 00b5 07       		.byte	0x7
+ 1292 00b6 6E000000 		.4byte	.LASF17
+ 1293 00ba 05       		.uleb128 0x5
+ 1294 00bb 01       		.byte	0x1
+ 1295 00bc 37000000 		.4byte	0x37
+ 1296 00c0 04       		.byte	0x4
+ 1297 00c1 14       		.byte	0x14
+ 1298 00c2 D3000000 		.4byte	0xd3
+ 1299 00c6 06       		.uleb128 0x6
+ 1300 00c7 4C010000 		.4byte	.LASF18
+ 1301 00cb 00       		.byte	0
+ 1302 00cc 06       		.uleb128 0x6
+ 1303 00cd 00000000 		.4byte	.LASF19
+ 1304 00d1 01       		.byte	0x1
+ 1305 00d2 00       		.byte	0
+ 1306 00d3 03       		.uleb128 0x3
+ 1307 00d4 8A010000 		.4byte	.LASF20
+ 1308 00d8 04       		.byte	0x4
+ 1309 00d9 17       		.byte	0x17
+ 1310 00da BA000000 		.4byte	0xba
+ 1311 00de 07       		.uleb128 0x7
+ 1312 00df 08       		.byte	0x8
+ 1313 00e0 04       		.byte	0x4
+ 1314 00e1 19       		.byte	0x19
+ 1315 00e2 F3000000 		.4byte	0xf3
+ 1316 00e6 08       		.uleb128 0x8
+ 1317 00e7 44010000 		.4byte	.LASF62
+ 1318 00eb 04       		.byte	0x4
+ 1319 00ec 1A       		.byte	0x1a
+ 1320 00ed F3000000 		.4byte	0xf3
+ 1321 00f1 00       		.byte	0
+ 1322 00f2 00       		.byte	0
+ 1323 00f3 09       		.uleb128 0x9
+ 1324 00f4 81000000 		.4byte	0x81
+ 1325 00f8 03010000 		.4byte	0x103
+ 1326 00fc 0A       		.uleb128 0xa
+ 1327 00fd B3000000 		.4byte	0xb3
+ 1328 0101 07       		.byte	0x7
+ 1329 0102 00       		.byte	0
+ 1330 0103 03       		.uleb128 0x3
+ 1331 0104 A5020000 		.4byte	.LASF21
+ 1332 0108 04       		.byte	0x4
+ 1333 0109 1B       		.byte	0x1b
+ 1334 010a DE000000 		.4byte	0xde
+ 1335 010e 0B       		.uleb128 0xb
+ 1336 010f CB000000 		.4byte	.LASF25
+ 1337 0113 01       		.byte	0x1
+ 1338 0114 24       		.byte	0x24
+ 1339 0115 81000000 		.4byte	0x81
+ 1340 0119 00000000 		.4byte	.LFB64
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 30
+
+
+ 1341 011d 44000000 		.4byte	.LFE64-.LFB64
+ 1342 0121 01       		.uleb128 0x1
+ 1343 0122 9C       		.byte	0x9c
+ 1344 0123 A0010000 		.4byte	0x1a0
+ 1345 0127 0C       		.uleb128 0xc
+ 1346 0128 62697400 		.ascii	"bit\000"
+ 1347 012c 01       		.byte	0x1
+ 1348 012d 2D       		.byte	0x2d
+ 1349 012e 81000000 		.4byte	0x81
+ 1350 0132 00000000 		.4byte	.LLST0
+ 1351 0136 0D       		.uleb128 0xd
+ 1352 0137 08000000 		.4byte	.LVL0
+ 1353 013b 4F070000 		.4byte	0x74f
+ 1354 013f 49010000 		.4byte	0x149
+ 1355 0143 0E       		.uleb128 0xe
+ 1356 0144 01       		.uleb128 0x1
+ 1357 0145 50       		.byte	0x50
+ 1358 0146 01       		.uleb128 0x1
+ 1359 0147 30       		.byte	0x30
+ 1360 0148 00       		.byte	0
+ 1361 0149 0D       		.uleb128 0xd
+ 1362 014a 10000000 		.4byte	.LVL1
+ 1363 014e 5A070000 		.4byte	0x75a
+ 1364 0152 5E010000 		.4byte	0x15e
+ 1365 0156 0E       		.uleb128 0xe
+ 1366 0157 01       		.uleb128 0x1
+ 1367 0158 50       		.byte	0x50
+ 1368 0159 03       		.uleb128 0x3
+ 1369 015a 0A       		.byte	0xa
+ 1370 015b E001     		.2byte	0x1e0
+ 1371 015d 00       		.byte	0
+ 1372 015e 0D       		.uleb128 0xd
+ 1373 015f 16000000 		.4byte	.LVL2
+ 1374 0163 4F070000 		.4byte	0x74f
+ 1375 0167 71010000 		.4byte	0x171
+ 1376 016b 0E       		.uleb128 0xe
+ 1377 016c 01       		.uleb128 0x1
+ 1378 016d 50       		.byte	0x50
+ 1379 016e 01       		.uleb128 0x1
+ 1380 016f 31       		.byte	0x31
+ 1381 0170 00       		.byte	0
+ 1382 0171 0D       		.uleb128 0xd
+ 1383 0172 1C000000 		.4byte	.LVL3
+ 1384 0176 5A070000 		.4byte	0x75a
+ 1385 017a 85010000 		.4byte	0x185
+ 1386 017e 0E       		.uleb128 0xe
+ 1387 017f 01       		.uleb128 0x1
+ 1388 0180 50       		.byte	0x50
+ 1389 0181 02       		.uleb128 0x2
+ 1390 0182 08       		.byte	0x8
+ 1391 0183 46       		.byte	0x46
+ 1392 0184 00       		.byte	0
+ 1393 0185 0F       		.uleb128 0xf
+ 1394 0186 20000000 		.4byte	.LVL4
+ 1395 018a 65070000 		.4byte	0x765
+ 1396 018e 10       		.uleb128 0x10
+ 1397 018f 30000000 		.4byte	.LVL6
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 31
+
+
+ 1398 0193 5A070000 		.4byte	0x75a
+ 1399 0197 0E       		.uleb128 0xe
+ 1400 0198 01       		.uleb128 0x1
+ 1401 0199 50       		.byte	0x50
+ 1402 019a 03       		.uleb128 0x3
+ 1403 019b 0A       		.byte	0xa
+ 1404 019c AE01     		.2byte	0x1ae
+ 1405 019e 00       		.byte	0
+ 1406 019f 00       		.byte	0
+ 1407 01a0 11       		.uleb128 0x11
+ 1408 01a1 C6020000 		.4byte	.LASF22
+ 1409 01a5 01       		.byte	0x1
+ 1410 01a6 3A       		.byte	0x3a
+ 1411 01a7 00000000 		.4byte	.LFB65
+ 1412 01ab 1C000000 		.4byte	.LFE65-.LFB65
+ 1413 01af 01       		.uleb128 0x1
+ 1414 01b0 9C       		.byte	0x9c
+ 1415 01b1 FF010000 		.4byte	0x1ff
+ 1416 01b5 0D       		.uleb128 0xd
+ 1417 01b6 08000000 		.4byte	.LVL9
+ 1418 01ba 4F070000 		.4byte	0x74f
+ 1419 01be C8010000 		.4byte	0x1c8
+ 1420 01c2 0E       		.uleb128 0xe
+ 1421 01c3 01       		.uleb128 0x1
+ 1422 01c4 50       		.byte	0x50
+ 1423 01c5 01       		.uleb128 0x1
+ 1424 01c6 30       		.byte	0x30
+ 1425 01c7 00       		.byte	0
+ 1426 01c8 0D       		.uleb128 0xd
+ 1427 01c9 0E000000 		.4byte	.LVL10
+ 1428 01cd 5A070000 		.4byte	0x75a
+ 1429 01d1 DB010000 		.4byte	0x1db
+ 1430 01d5 0E       		.uleb128 0xe
+ 1431 01d6 01       		.uleb128 0x1
+ 1432 01d7 50       		.byte	0x50
+ 1433 01d8 01       		.uleb128 0x1
+ 1434 01d9 3F       		.byte	0x3f
+ 1435 01da 00       		.byte	0
+ 1436 01db 0D       		.uleb128 0xd
+ 1437 01dc 14000000 		.4byte	.LVL11
+ 1438 01e0 4F070000 		.4byte	0x74f
+ 1439 01e4 EE010000 		.4byte	0x1ee
+ 1440 01e8 0E       		.uleb128 0xe
+ 1441 01e9 01       		.uleb128 0x1
+ 1442 01ea 50       		.byte	0x50
+ 1443 01eb 01       		.uleb128 0x1
+ 1444 01ec 31       		.byte	0x31
+ 1445 01ed 00       		.byte	0
+ 1446 01ee 10       		.uleb128 0x10
+ 1447 01ef 1A000000 		.4byte	.LVL12
+ 1448 01f3 5A070000 		.4byte	0x75a
+ 1449 01f7 0E       		.uleb128 0xe
+ 1450 01f8 01       		.uleb128 0x1
+ 1451 01f9 50       		.byte	0x50
+ 1452 01fa 02       		.uleb128 0x2
+ 1453 01fb 08       		.byte	0x8
+ 1454 01fc 32       		.byte	0x32
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 32
+
+
+ 1455 01fd 00       		.byte	0
+ 1456 01fe 00       		.byte	0
+ 1457 01ff 11       		.uleb128 0x11
+ 1458 0200 B5020000 		.4byte	.LASF23
+ 1459 0204 01       		.byte	0x1
+ 1460 0205 44       		.byte	0x44
+ 1461 0206 00000000 		.4byte	.LFB66
+ 1462 020a 1C000000 		.4byte	.LFE66-.LFB66
+ 1463 020e 01       		.uleb128 0x1
+ 1464 020f 9C       		.byte	0x9c
+ 1465 0210 5E020000 		.4byte	0x25e
+ 1466 0214 0D       		.uleb128 0xd
+ 1467 0215 08000000 		.4byte	.LVL13
+ 1468 0219 4F070000 		.4byte	0x74f
+ 1469 021d 27020000 		.4byte	0x227
+ 1470 0221 0E       		.uleb128 0xe
+ 1471 0222 01       		.uleb128 0x1
+ 1472 0223 50       		.byte	0x50
+ 1473 0224 01       		.uleb128 0x1
+ 1474 0225 30       		.byte	0x30
+ 1475 0226 00       		.byte	0
+ 1476 0227 0D       		.uleb128 0xd
+ 1477 0228 0E000000 		.4byte	.LVL14
+ 1478 022c 5A070000 		.4byte	0x75a
+ 1479 0230 3B020000 		.4byte	0x23b
+ 1480 0234 0E       		.uleb128 0xe
+ 1481 0235 01       		.uleb128 0x1
+ 1482 0236 50       		.byte	0x50
+ 1483 0237 02       		.uleb128 0x2
+ 1484 0238 08       		.byte	0x8
+ 1485 0239 3C       		.byte	0x3c
+ 1486 023a 00       		.byte	0
+ 1487 023b 0D       		.uleb128 0xd
+ 1488 023c 14000000 		.4byte	.LVL15
+ 1489 0240 4F070000 		.4byte	0x74f
+ 1490 0244 4E020000 		.4byte	0x24e
+ 1491 0248 0E       		.uleb128 0xe
+ 1492 0249 01       		.uleb128 0x1
+ 1493 024a 50       		.byte	0x50
+ 1494 024b 01       		.uleb128 0x1
+ 1495 024c 31       		.byte	0x31
+ 1496 024d 00       		.byte	0
+ 1497 024e 10       		.uleb128 0x10
+ 1498 024f 1A000000 		.4byte	.LVL16
+ 1499 0253 5A070000 		.4byte	0x75a
+ 1500 0257 0E       		.uleb128 0xe
+ 1501 0258 01       		.uleb128 0x1
+ 1502 0259 50       		.byte	0x50
+ 1503 025a 01       		.uleb128 0x1
+ 1504 025b 35       		.byte	0x35
+ 1505 025c 00       		.byte	0
+ 1506 025d 00       		.byte	0
+ 1507 025e 11       		.uleb128 0x11
+ 1508 025f A2000000 		.4byte	.LASF24
+ 1509 0263 01       		.byte	0x1
+ 1510 0264 4E       		.byte	0x4e
+ 1511 0265 00000000 		.4byte	.LFB67
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 33
+
+
+ 1512 0269 10000000 		.4byte	.LFE67-.LFB67
+ 1513 026d 01       		.uleb128 0x1
+ 1514 026e 9C       		.byte	0x9c
+ 1515 026f 95020000 		.4byte	0x295
+ 1516 0273 12       		.uleb128 0x12
+ 1517 0274 62697400 		.ascii	"bit\000"
+ 1518 0278 01       		.byte	0x1
+ 1519 0279 4E       		.byte	0x4e
+ 1520 027a 81000000 		.4byte	0x81
+ 1521 027e 1E000000 		.4byte	.LLST1
+ 1522 0282 0F       		.uleb128 0xf
+ 1523 0283 08000000 		.4byte	.LVL18
+ 1524 0287 A0010000 		.4byte	0x1a0
+ 1525 028b 0F       		.uleb128 0xf
+ 1526 028c 0E000000 		.4byte	.LVL20
+ 1527 0290 FF010000 		.4byte	0x1ff
+ 1528 0294 00       		.byte	0
+ 1529 0295 0B       		.uleb128 0xb
+ 1530 0296 FD000000 		.4byte	.LASF26
+ 1531 029a 01       		.byte	0x1
+ 1532 029b 56       		.byte	0x56
+ 1533 029c 81000000 		.4byte	0x81
+ 1534 02a0 00000000 		.4byte	.LFB68
+ 1535 02a4 2A000000 		.4byte	.LFE68-.LFB68
+ 1536 02a8 01       		.uleb128 0x1
+ 1537 02a9 9C       		.byte	0x9c
+ 1538 02aa 21030000 		.4byte	0x321
+ 1539 02ae 13       		.uleb128 0x13
+ 1540 02af 62697400 		.ascii	"bit\000"
+ 1541 02b3 01       		.byte	0x1
+ 1542 02b4 5F       		.byte	0x5f
+ 1543 02b5 81000000 		.4byte	0x81
+ 1544 02b9 01       		.uleb128 0x1
+ 1545 02ba 54       		.byte	0x54
+ 1546 02bb 0D       		.uleb128 0xd
+ 1547 02bc 08000000 		.4byte	.LVL21
+ 1548 02c0 4F070000 		.4byte	0x74f
+ 1549 02c4 CE020000 		.4byte	0x2ce
+ 1550 02c8 0E       		.uleb128 0xe
+ 1551 02c9 01       		.uleb128 0x1
+ 1552 02ca 50       		.byte	0x50
+ 1553 02cb 01       		.uleb128 0x1
+ 1554 02cc 30       		.byte	0x30
+ 1555 02cd 00       		.byte	0
+ 1556 02ce 0D       		.uleb128 0xd
+ 1557 02cf 0E000000 		.4byte	.LVL22
+ 1558 02d3 5A070000 		.4byte	0x75a
+ 1559 02d7 E1020000 		.4byte	0x2e1
+ 1560 02db 0E       		.uleb128 0xe
+ 1561 02dc 01       		.uleb128 0x1
+ 1562 02dd 50       		.byte	0x50
+ 1563 02de 01       		.uleb128 0x1
+ 1564 02df 35       		.byte	0x35
+ 1565 02e0 00       		.byte	0
+ 1566 02e1 0D       		.uleb128 0xd
+ 1567 02e2 14000000 		.4byte	.LVL23
+ 1568 02e6 4F070000 		.4byte	0x74f
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 34
+
+
+ 1569 02ea F4020000 		.4byte	0x2f4
+ 1570 02ee 0E       		.uleb128 0xe
+ 1571 02ef 01       		.uleb128 0x1
+ 1572 02f0 50       		.byte	0x50
+ 1573 02f1 01       		.uleb128 0x1
+ 1574 02f2 31       		.byte	0x31
+ 1575 02f3 00       		.byte	0
+ 1576 02f4 0D       		.uleb128 0xd
+ 1577 02f5 1A000000 		.4byte	.LVL24
+ 1578 02f9 5A070000 		.4byte	0x75a
+ 1579 02fd 07030000 		.4byte	0x307
+ 1580 0301 0E       		.uleb128 0xe
+ 1581 0302 01       		.uleb128 0x1
+ 1582 0303 50       		.byte	0x50
+ 1583 0304 01       		.uleb128 0x1
+ 1584 0305 35       		.byte	0x35
+ 1585 0306 00       		.byte	0
+ 1586 0307 0F       		.uleb128 0xf
+ 1587 0308 1E000000 		.4byte	.LVL25
+ 1588 030c 65070000 		.4byte	0x765
+ 1589 0310 10       		.uleb128 0x10
+ 1590 0311 26000000 		.4byte	.LVL27
+ 1591 0315 5A070000 		.4byte	0x75a
+ 1592 0319 0E       		.uleb128 0xe
+ 1593 031a 01       		.uleb128 0x1
+ 1594 031b 50       		.byte	0x50
+ 1595 031c 02       		.uleb128 0x2
+ 1596 031d 08       		.byte	0x8
+ 1597 031e 3C       		.byte	0x3c
+ 1598 031f 00       		.byte	0
+ 1599 0320 00       		.byte	0
+ 1600 0321 11       		.uleb128 0x11
+ 1601 0322 11020000 		.4byte	.LASF27
+ 1602 0326 01       		.byte	0x1
+ 1603 0327 68       		.byte	0x68
+ 1604 0328 00000000 		.4byte	.LFB69
+ 1605 032c 26000000 		.4byte	.LFE69-.LFB69
+ 1606 0330 01       		.uleb128 0x1
+ 1607 0331 9C       		.byte	0x9c
+ 1608 0332 65030000 		.4byte	0x365
+ 1609 0336 14       		.uleb128 0x14
+ 1610 0337 60020000 		.4byte	.LASF28
+ 1611 033b 01       		.byte	0x1
+ 1612 033c 68       		.byte	0x68
+ 1613 033d 81000000 		.4byte	0x81
+ 1614 0341 58000000 		.4byte	.LLST2
+ 1615 0345 0C       		.uleb128 0xc
+ 1616 0346 6900     		.ascii	"i\000"
+ 1617 0348 01       		.byte	0x1
+ 1618 0349 69       		.byte	0x69
+ 1619 034a 81000000 		.4byte	0x81
+ 1620 034e 79000000 		.4byte	.LLST3
+ 1621 0352 0F       		.uleb128 0xf
+ 1622 0353 16000000 		.4byte	.LVL31
+ 1623 0357 A0010000 		.4byte	0x1a0
+ 1624 035b 0F       		.uleb128 0xf
+ 1625 035c 1C000000 		.4byte	.LVL32
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 35
+
+
+ 1626 0360 FF010000 		.4byte	0x1ff
+ 1627 0364 00       		.byte	0
+ 1628 0365 0B       		.uleb128 0xb
+ 1629 0366 4D020000 		.4byte	.LASF29
+ 1630 036a 01       		.byte	0x1
+ 1631 036b 73       		.byte	0x73
+ 1632 036c 81000000 		.4byte	0x81
+ 1633 0370 00000000 		.4byte	.LFB70
+ 1634 0374 1E000000 		.4byte	.LFE70-.LFB70
+ 1635 0378 01       		.uleb128 0x1
+ 1636 0379 9C       		.byte	0x9c
+ 1637 037a B3030000 		.4byte	0x3b3
+ 1638 037e 0C       		.uleb128 0xc
+ 1639 037f 6900     		.ascii	"i\000"
+ 1640 0381 01       		.byte	0x1
+ 1641 0382 74       		.byte	0x74
+ 1642 0383 81000000 		.4byte	0x81
+ 1643 0387 A3000000 		.4byte	.LLST4
+ 1644 038b 15       		.uleb128 0x15
+ 1645 038c 60020000 		.4byte	.LASF28
+ 1646 0390 01       		.byte	0x1
+ 1647 0391 75       		.byte	0x75
+ 1648 0392 81000000 		.4byte	0x81
+ 1649 0396 CD000000 		.4byte	.LLST5
+ 1650 039a 0C       		.uleb128 0xc
+ 1651 039b 62697400 		.ascii	"bit\000"
+ 1652 039f 01       		.byte	0x1
+ 1653 03a0 76       		.byte	0x76
+ 1654 03a1 81000000 		.4byte	0x81
+ 1655 03a5 F7000000 		.4byte	.LLST6
+ 1656 03a9 0F       		.uleb128 0xf
+ 1657 03aa 0C000000 		.4byte	.LVL37
+ 1658 03ae 95020000 		.4byte	0x295
+ 1659 03b2 00       		.byte	0
+ 1660 03b3 16       		.uleb128 0x16
+ 1661 03b4 36000000 		.4byte	.LASF63
+ 1662 03b8 01       		.byte	0x1
+ 1663 03b9 7E       		.byte	0x7e
+ 1664 03ba 00000000 		.4byte	.LFB71
+ 1665 03be 0C000000 		.4byte	.LFE71-.LFB71
+ 1666 03c2 01       		.uleb128 0x1
+ 1667 03c3 9C       		.byte	0x9c
+ 1668 03c4 17       		.uleb128 0x17
+ 1669 03c5 81000000 		.4byte	.LASF64
+ 1670 03c9 01       		.byte	0x1
+ 1671 03ca 82       		.byte	0x82
+ 1672 03cb 81000000 		.4byte	0x81
+ 1673 03cf 00000000 		.4byte	.LFB72
+ 1674 03d3 0C000000 		.4byte	.LFE72-.LFB72
+ 1675 03d7 01       		.uleb128 0x1
+ 1676 03d8 9C       		.byte	0x9c
+ 1677 03d9 0B       		.uleb128 0xb
+ 1678 03da 27030000 		.4byte	.LASF30
+ 1679 03de 01       		.byte	0x1
+ 1680 03df 86       		.byte	0x86
+ 1681 03e0 81000000 		.4byte	0x81
+ 1682 03e4 00000000 		.4byte	.LFB73
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 36
+
+
+ 1683 03e8 18000000 		.4byte	.LFE73-.LFB73
+ 1684 03ec 01       		.uleb128 0x1
+ 1685 03ed 9C       		.byte	0x9c
+ 1686 03ee 02040000 		.4byte	0x402
+ 1687 03f2 14       		.uleb128 0x14
+ 1688 03f3 60020000 		.4byte	.LASF28
+ 1689 03f7 01       		.byte	0x1
+ 1690 03f8 86       		.byte	0x86
+ 1691 03f9 81000000 		.4byte	0x81
+ 1692 03fd 0A010000 		.4byte	.LLST7
+ 1693 0401 00       		.byte	0
+ 1694 0402 18       		.uleb128 0x18
+ 1695 0403 16000000 		.4byte	.LASF65
+ 1696 0407 01       		.byte	0x1
+ 1697 0408 8D       		.byte	0x8d
+ 1698 0409 00000000 		.4byte	.LFB74
+ 1699 040d 2E000000 		.4byte	.LFE74-.LFB74
+ 1700 0411 01       		.uleb128 0x1
+ 1701 0412 9C       		.byte	0x9c
+ 1702 0413 7D040000 		.4byte	0x47d
+ 1703 0417 0F       		.uleb128 0xf
+ 1704 0418 06000000 		.4byte	.LVL45
+ 1705 041c 0E010000 		.4byte	0x10e
+ 1706 0420 0D       		.uleb128 0xd
+ 1707 0421 0C000000 		.4byte	.LVL46
+ 1708 0425 21030000 		.4byte	0x321
+ 1709 0429 34040000 		.4byte	0x434
+ 1710 042d 0E       		.uleb128 0xe
+ 1711 042e 01       		.uleb128 0x1
+ 1712 042f 50       		.byte	0x50
+ 1713 0430 02       		.uleb128 0x2
+ 1714 0431 08       		.byte	0x8
+ 1715 0432 33       		.byte	0x33
+ 1716 0433 00       		.byte	0
+ 1717 0434 0F       		.uleb128 0xf
+ 1718 0435 10000000 		.4byte	.LVL47
+ 1719 0439 65030000 		.4byte	0x365
+ 1720 043d 0F       		.uleb128 0xf
+ 1721 043e 14000000 		.4byte	.LVL48
+ 1722 0442 65030000 		.4byte	0x365
+ 1723 0446 0F       		.uleb128 0xf
+ 1724 0447 18000000 		.4byte	.LVL49
+ 1725 044b 65030000 		.4byte	0x365
+ 1726 044f 0F       		.uleb128 0xf
+ 1727 0450 1C000000 		.4byte	.LVL50
+ 1728 0454 65030000 		.4byte	0x365
+ 1729 0458 0F       		.uleb128 0xf
+ 1730 0459 20000000 		.4byte	.LVL51
+ 1731 045d 65030000 		.4byte	0x365
+ 1732 0461 0F       		.uleb128 0xf
+ 1733 0462 24000000 		.4byte	.LVL52
+ 1734 0466 65030000 		.4byte	0x365
+ 1735 046a 0F       		.uleb128 0xf
+ 1736 046b 28000000 		.4byte	.LVL53
+ 1737 046f 65030000 		.4byte	0x365
+ 1738 0473 0F       		.uleb128 0xf
+ 1739 0474 2C000000 		.4byte	.LVL54
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 37
+
+
+ 1740 0478 65030000 		.4byte	0x365
+ 1741 047c 00       		.byte	0
+ 1742 047d 19       		.uleb128 0x19
+ 1743 047e 65020000 		.4byte	.LASF31
+ 1744 0482 01       		.byte	0x1
+ 1745 0483 9A       		.byte	0x9a
+ 1746 0484 73000000 		.4byte	0x73
+ 1747 0488 00000000 		.4byte	.LFB75
+ 1748 048c F4000000 		.4byte	.LFE75-.LFB75
+ 1749 0490 01       		.uleb128 0x1
+ 1750 0491 9C       		.byte	0x9c
+ 1751 0492 5B050000 		.4byte	0x55b
+ 1752 0496 15       		.uleb128 0x15
+ 1753 0497 28000000 		.4byte	.LASF32
+ 1754 049b 01       		.byte	0x1
+ 1755 049c 9C       		.byte	0x9c
+ 1756 049d 81000000 		.4byte	0x81
+ 1757 04a1 2B010000 		.4byte	.LLST8
+ 1758 04a5 15       		.uleb128 0x15
+ 1759 04a6 49000000 		.4byte	.LASF33
+ 1760 04aa 01       		.byte	0x1
+ 1761 04ab 9D       		.byte	0x9d
+ 1762 04ac 73000000 		.4byte	0x73
+ 1763 04b0 6C010000 		.4byte	.LLST9
+ 1764 04b4 15       		.uleb128 0x15
+ 1765 04b5 92000000 		.4byte	.LASF34
+ 1766 04b9 01       		.byte	0x1
+ 1767 04ba 9D       		.byte	0x9d
+ 1768 04bb 73000000 		.4byte	0x73
+ 1769 04bf A2010000 		.4byte	.LLST10
+ 1770 04c3 15       		.uleb128 0x15
+ 1771 04c4 75020000 		.4byte	.LASF35
+ 1772 04c8 01       		.byte	0x1
+ 1773 04c9 9D       		.byte	0x9d
+ 1774 04ca 73000000 		.4byte	0x73
+ 1775 04ce D8010000 		.4byte	.LLST11
+ 1776 04d2 15       		.uleb128 0x15
+ 1777 04d3 CF030000 		.4byte	.LASF36
+ 1778 04d7 01       		.byte	0x1
+ 1779 04d8 9E       		.byte	0x9e
+ 1780 04d9 81000000 		.4byte	0x81
+ 1781 04dd F7010000 		.4byte	.LLST12
+ 1782 04e1 15       		.uleb128 0x15
+ 1783 04e2 53000000 		.4byte	.LASF37
+ 1784 04e6 01       		.byte	0x1
+ 1785 04e7 9E       		.byte	0x9e
+ 1786 04e8 81000000 		.4byte	0x81
+ 1787 04ec 0A020000 		.4byte	.LLST13
+ 1788 04f0 15       		.uleb128 0x15
+ 1789 04f1 EF000000 		.4byte	.LASF38
+ 1790 04f5 01       		.byte	0x1
+ 1791 04f6 9F       		.byte	0x9f
+ 1792 04f7 81000000 		.4byte	0x81
+ 1793 04fb 1D020000 		.4byte	.LLST14
+ 1794 04ff 15       		.uleb128 0x15
+ 1795 0500 F4020000 		.4byte	.LASF39
+ 1796 0504 01       		.byte	0x1
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 38
+
+
+ 1797 0505 9F       		.byte	0x9f
+ 1798 0506 81000000 		.4byte	0x81
+ 1799 050a 6A020000 		.4byte	.LLST15
+ 1800 050e 0F       		.uleb128 0xf
+ 1801 050f 16000000 		.4byte	.LVL56
+ 1802 0513 0E010000 		.4byte	0x10e
+ 1803 0517 0D       		.uleb128 0xd
+ 1804 0518 2A000000 		.4byte	.LVL57
+ 1805 051c 21030000 		.4byte	0x321
+ 1806 0520 2B050000 		.4byte	0x52b
+ 1807 0524 0E       		.uleb128 0xe
+ 1808 0525 01       		.uleb128 0x1
+ 1809 0526 50       		.byte	0x50
+ 1810 0527 02       		.uleb128 0x2
+ 1811 0528 09       		.byte	0x9
+ 1812 0529 F0       		.byte	0xf0
+ 1813 052a 00       		.byte	0
+ 1814 052b 0F       		.uleb128 0xf
+ 1815 052c 36000000 		.4byte	.LVL59
+ 1816 0530 95020000 		.4byte	0x295
+ 1817 0534 0F       		.uleb128 0xf
+ 1818 0535 3C000000 		.4byte	.LVL61
+ 1819 0539 95020000 		.4byte	0x295
+ 1820 053d 0D       		.uleb128 0xd
+ 1821 053e 88000000 		.4byte	.LVL68
+ 1822 0542 5E020000 		.4byte	0x25e
+ 1823 0546 51050000 		.4byte	0x551
+ 1824 054a 0E       		.uleb128 0xe
+ 1825 054b 01       		.uleb128 0x1
+ 1826 054c 50       		.byte	0x50
+ 1827 054d 02       		.uleb128 0x2
+ 1828 054e 75       		.byte	0x75
+ 1829 054f 00       		.sleb128 0
+ 1830 0550 00       		.byte	0
+ 1831 0551 0F       		.uleb128 0xf
+ 1832 0552 9C000000 		.4byte	.LVL73
+ 1833 0556 D9030000 		.4byte	0x3d9
+ 1834 055a 00       		.byte	0
+ 1835 055b 0B       		.uleb128 0xb
+ 1836 055c E1020000 		.4byte	.LASF40
+ 1837 0560 01       		.byte	0x1
+ 1838 0561 FC       		.byte	0xfc
+ 1839 0562 81000000 		.4byte	0x81
+ 1840 0566 00000000 		.4byte	.LFB76
+ 1841 056a 30000000 		.4byte	.LFE76-.LFB76
+ 1842 056e 01       		.uleb128 0x1
+ 1843 056f 9C       		.byte	0x9c
+ 1844 0570 C4050000 		.4byte	0x5c4
+ 1845 0574 1A       		.uleb128 0x1a
+ 1846 0575 0F010000 		.4byte	.LASF41
+ 1847 0579 01       		.byte	0x1
+ 1848 057a FC       		.byte	0xfc
+ 1849 057b 03010000 		.4byte	0x103
+ 1850 057f 02       		.uleb128 0x2
+ 1851 0580 91       		.byte	0x91
+ 1852 0581 70       		.sleb128 -16
+ 1853 0582 0C       		.uleb128 0xc
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 39
+
+
+ 1854 0583 6900     		.ascii	"i\000"
+ 1855 0585 01       		.byte	0x1
+ 1856 0586 FD       		.byte	0xfd
+ 1857 0587 73000000 		.4byte	0x73
+ 1858 058b 88020000 		.4byte	.LLST16
+ 1859 058f 0F       		.uleb128 0xf
+ 1860 0590 0E000000 		.4byte	.LVL82
+ 1861 0594 0E010000 		.4byte	0x10e
+ 1862 0598 0D       		.uleb128 0xd
+ 1863 0599 14000000 		.4byte	.LVL83
+ 1864 059d 21030000 		.4byte	0x321
+ 1865 05a1 AC050000 		.4byte	0x5ac
+ 1866 05a5 0E       		.uleb128 0xe
+ 1867 05a6 01       		.uleb128 0x1
+ 1868 05a7 50       		.byte	0x50
+ 1869 05a8 02       		.uleb128 0x2
+ 1870 05a9 08       		.byte	0x8
+ 1871 05aa 55       		.byte	0x55
+ 1872 05ab 00       		.byte	0
+ 1873 05ac 10       		.uleb128 0x10
+ 1874 05ad 24000000 		.4byte	.LVL85
+ 1875 05b1 21030000 		.4byte	0x321
+ 1876 05b5 0E       		.uleb128 0xe
+ 1877 05b6 01       		.uleb128 0x1
+ 1878 05b7 50       		.byte	0x50
+ 1879 05b8 09       		.uleb128 0x9
+ 1880 05b9 91       		.byte	0x91
+ 1881 05ba 00       		.sleb128 0
+ 1882 05bb 74       		.byte	0x74
+ 1883 05bc 00       		.sleb128 0
+ 1884 05bd 22       		.byte	0x22
+ 1885 05be 40       		.byte	0x40
+ 1886 05bf 1C       		.byte	0x1c
+ 1887 05c0 94       		.byte	0x94
+ 1888 05c1 01       		.byte	0x1
+ 1889 05c2 00       		.byte	0
+ 1890 05c3 00       		.byte	0
+ 1891 05c4 1B       		.uleb128 0x1b
+ 1892 05c5 11030000 		.4byte	.LASF42
+ 1893 05c9 01       		.byte	0x1
+ 1894 05ca 0701     		.2byte	0x107
+ 1895 05cc 73000000 		.4byte	0x73
+ 1896 05d0 00000000 		.4byte	.LFB77
+ 1897 05d4 1C000000 		.4byte	.LFE77-.LFB77
+ 1898 05d8 01       		.uleb128 0x1
+ 1899 05d9 9C       		.byte	0x9c
+ 1900 05da E8050000 		.4byte	0x5e8
+ 1901 05de 0F       		.uleb128 0xf
+ 1902 05df 10000000 		.4byte	.LVL87
+ 1903 05e3 7D040000 		.4byte	0x47d
+ 1904 05e7 00       		.byte	0
+ 1905 05e8 1B       		.uleb128 0x1b
+ 1906 05e9 E1010000 		.4byte	.LASF43
+ 1907 05ed 01       		.byte	0x1
+ 1908 05ee 0F01     		.2byte	0x10f
+ 1909 05f0 73000000 		.4byte	0x73
+ 1910 05f4 00000000 		.4byte	.LFB78
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 40
+
+
+ 1911 05f8 08000000 		.4byte	.LFE78-.LFB78
+ 1912 05fc 01       		.uleb128 0x1
+ 1913 05fd 9C       		.byte	0x9c
+ 1914 05fe 0C060000 		.4byte	0x60c
+ 1915 0602 0F       		.uleb128 0xf
+ 1916 0603 06000000 		.4byte	.LVL88
+ 1917 0607 7D040000 		.4byte	0x47d
+ 1918 060b 00       		.byte	0
+ 1919 060c 1C       		.uleb128 0x1c
+ 1920 060d EF010000 		.4byte	.LASF44
+ 1921 0611 01       		.byte	0x1
+ 1922 0612 1501     		.2byte	0x115
+ 1923 0614 80060000 		.4byte	0x680
+ 1924 0618 00000000 		.4byte	.LFB79
+ 1925 061c 6C000000 		.4byte	.LFE79-.LFB79
+ 1926 0620 01       		.uleb128 0x1
+ 1927 0621 9C       		.byte	0x9c
+ 1928 0622 80060000 		.4byte	0x680
+ 1929 0626 1D       		.uleb128 0x1d
+ 1930 0627 38020000 		.4byte	.LASF45
+ 1931 062b 01       		.byte	0x1
+ 1932 062c 1501     		.2byte	0x115
+ 1933 062e 86060000 		.4byte	0x686
+ 1934 0632 A7020000 		.4byte	.LLST17
+ 1935 0636 1E       		.uleb128 0x1e
+ 1936 0637 0F000000 		.4byte	.LASF46
+ 1937 063b 01       		.byte	0x1
+ 1938 063c 1601     		.2byte	0x116
+ 1939 063e 73000000 		.4byte	0x73
+ 1940 0642 D3020000 		.4byte	.LLST18
+ 1941 0646 1F       		.uleb128 0x1f
+ 1942 0647 6900     		.ascii	"i\000"
+ 1943 0649 01       		.byte	0x1
+ 1944 064a 1601     		.2byte	0x116
+ 1945 064c 73000000 		.4byte	0x73
+ 1946 0650 F1020000 		.4byte	.LLST19
+ 1947 0654 20       		.uleb128 0x20
+ 1948 0655 00000000 		.4byte	.Ldebug_ranges0+0
+ 1949 0659 76060000 		.4byte	0x676
+ 1950 065d 21       		.uleb128 0x21
+ 1951 065e 0F010000 		.4byte	.LASF41
+ 1952 0662 01       		.byte	0x1
+ 1953 0663 1B01     		.2byte	0x11b
+ 1954 0665 03010000 		.4byte	0x103
+ 1955 0669 02       		.uleb128 0x2
+ 1956 066a 91       		.byte	0x91
+ 1957 066b 68       		.sleb128 -24
+ 1958 066c 0F       		.uleb128 0xf
+ 1959 066d 4E000000 		.4byte	.LVL100
+ 1960 0671 E8050000 		.4byte	0x5e8
+ 1961 0675 00       		.byte	0
+ 1962 0676 0F       		.uleb128 0xf
+ 1963 0677 10000000 		.4byte	.LVL90
+ 1964 067b C4050000 		.4byte	0x5c4
+ 1965 067f 00       		.byte	0
+ 1966 0680 22       		.uleb128 0x22
+ 1967 0681 04       		.byte	0x4
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 41
+
+
+ 1968 0682 03010000 		.4byte	0x103
+ 1969 0686 22       		.uleb128 0x22
+ 1970 0687 04       		.byte	0x4
+ 1971 0688 81000000 		.4byte	0x81
+ 1972 068c 23       		.uleb128 0x23
+ 1973 068d 34030000 		.4byte	.LASF47
+ 1974 0691 05       		.byte	0x5
+ 1975 0692 1207     		.2byte	0x712
+ 1976 0694 98060000 		.4byte	0x698
+ 1977 0698 24       		.uleb128 0x24
+ 1978 0699 8C000000 		.4byte	0x8c
+ 1979 069d 09       		.uleb128 0x9
+ 1980 069e 03010000 		.4byte	0x103
+ 1981 06a2 AD060000 		.4byte	0x6ad
+ 1982 06a6 0A       		.uleb128 0xa
+ 1983 06a7 B3000000 		.4byte	0xb3
+ 1984 06ab 09       		.byte	0x9
+ 1985 06ac 00       		.byte	0
+ 1986 06ad 25       		.uleb128 0x25
+ 1987 06ae 63010000 		.4byte	.LASF48
+ 1988 06b2 01       		.byte	0x1
+ 1989 06b3 05       		.byte	0x5
+ 1990 06b4 9D060000 		.4byte	0x69d
+ 1991 06b8 05       		.uleb128 0x5
+ 1992 06b9 03       		.byte	0x3
+ 1993 06ba 00000000 		.4byte	one_wire_devices
+ 1994 06be 25       		.uleb128 0x25
+ 1995 06bf B5000000 		.4byte	.LASF49
+ 1996 06c3 01       		.byte	0x1
+ 1997 06c4 06       		.byte	0x6
+ 1998 06c5 81000000 		.4byte	0x81
+ 1999 06c9 05       		.uleb128 0x5
+ 2000 06ca 03       		.byte	0x3
+ 2001 06cb 00000000 		.4byte	one_wire_device_count
+ 2002 06cf 25       		.uleb128 0x25
+ 2003 06d0 5E000000 		.4byte	.LASF50
+ 2004 06d4 01       		.byte	0x1
+ 2005 06d5 08       		.byte	0x8
+ 2006 06d6 D3000000 		.4byte	0xd3
+ 2007 06da 05       		.uleb128 0x5
+ 2008 06db 03       		.byte	0x3
+ 2009 06dc 00000000 		.4byte	state
+ 2010 06e0 25       		.uleb128 0x25
+ 2011 06e1 03020000 		.4byte	.LASF51
+ 2012 06e5 01       		.byte	0x1
+ 2013 06e6 0B       		.byte	0xb
+ 2014 06e7 81000000 		.4byte	0x81
+ 2015 06eb 05       		.uleb128 0x5
+ 2016 06ec 03       		.byte	0x3
+ 2017 06ed 00000000 		.4byte	last_mismatch
+ 2018 06f1 25       		.uleb128 0x25
+ 2019 06f2 1C010000 		.4byte	.LASF52
+ 2020 06f6 01       		.byte	0x1
+ 2021 06f7 0C       		.byte	0xc
+ 2022 06f8 81000000 		.4byte	0x81
+ 2023 06fc 05       		.uleb128 0x5
+ 2024 06fd 03       		.byte	0x3
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 42
+
+
+ 2025 06fe 00000000 		.4byte	last_device_flag
+ 2026 0702 25       		.uleb128 0x25
+ 2027 0703 A0020000 		.4byte	.LASF53
+ 2028 0707 01       		.byte	0x1
+ 2029 0708 0D       		.byte	0xd
+ 2030 0709 81000000 		.4byte	0x81
+ 2031 070d 05       		.uleb128 0x5
+ 2032 070e 03       		.byte	0x3
+ 2033 070f 00000000 		.4byte	crc8
+ 2034 0713 25       		.uleb128 0x25
+ 2035 0714 E0000000 		.4byte	.LASF54
+ 2036 0718 01       		.byte	0x1
+ 2037 0719 0E       		.byte	0xe
+ 2038 071a F3000000 		.4byte	0xf3
+ 2039 071e 05       		.uleb128 0x5
+ 2040 071f 03       		.byte	0x3
+ 2041 0720 00000000 		.4byte	ROM_NO
+ 2042 0724 09       		.uleb128 0x9
+ 2043 0725 34070000 		.4byte	0x734
+ 2044 0729 34070000 		.4byte	0x734
+ 2045 072d 0A       		.uleb128 0xa
+ 2046 072e B3000000 		.4byte	0xb3
+ 2047 0732 FF       		.byte	0xff
+ 2048 0733 00       		.byte	0
+ 2049 0734 26       		.uleb128 0x26
+ 2050 0735 37000000 		.4byte	0x37
+ 2051 0739 25       		.uleb128 0x25
+ 2052 073a 77000000 		.4byte	.LASF55
+ 2053 073e 01       		.byte	0x1
+ 2054 073f 10       		.byte	0x10
+ 2055 0740 4A070000 		.4byte	0x74a
+ 2056 0744 05       		.uleb128 0x5
+ 2057 0745 03       		.byte	0x3
+ 2058 0746 00000000 		.4byte	crc_table
+ 2059 074a 26       		.uleb128 0x26
+ 2060 074b 24070000 		.4byte	0x724
+ 2061 074f 27       		.uleb128 0x27
+ 2062 0750 05030000 		.4byte	.LASF56
+ 2063 0754 05030000 		.4byte	.LASF56
+ 2064 0758 06       		.byte	0x6
+ 2065 0759 26       		.byte	0x26
+ 2066 075a 27       		.uleb128 0x27
+ 2067 075b 99010000 		.4byte	.LASF57
+ 2068 075f 99010000 		.4byte	.LASF57
+ 2069 0763 07       		.byte	0x7
+ 2070 0764 77       		.byte	0x77
+ 2071 0765 27       		.uleb128 0x27
+ 2072 0766 95020000 		.4byte	.LASF58
+ 2073 076a 95020000 		.4byte	.LASF58
+ 2074 076e 06       		.byte	0x6
+ 2075 076f 29       		.byte	0x29
+ 2076 0770 00       		.byte	0
+ 2077              		.section	.debug_abbrev,"",%progbits
+ 2078              	.Ldebug_abbrev0:
+ 2079 0000 01       		.uleb128 0x1
+ 2080 0001 11       		.uleb128 0x11
+ 2081 0002 01       		.byte	0x1
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 43
+
+
+ 2082 0003 25       		.uleb128 0x25
+ 2083 0004 0E       		.uleb128 0xe
+ 2084 0005 13       		.uleb128 0x13
+ 2085 0006 0B       		.uleb128 0xb
+ 2086 0007 03       		.uleb128 0x3
+ 2087 0008 0E       		.uleb128 0xe
+ 2088 0009 1B       		.uleb128 0x1b
+ 2089 000a 0E       		.uleb128 0xe
+ 2090 000b 55       		.uleb128 0x55
+ 2091 000c 17       		.uleb128 0x17
+ 2092 000d 11       		.uleb128 0x11
+ 2093 000e 01       		.uleb128 0x1
+ 2094 000f 10       		.uleb128 0x10
+ 2095 0010 17       		.uleb128 0x17
+ 2096 0011 00       		.byte	0
+ 2097 0012 00       		.byte	0
+ 2098 0013 02       		.uleb128 0x2
+ 2099 0014 24       		.uleb128 0x24
+ 2100 0015 00       		.byte	0
+ 2101 0016 0B       		.uleb128 0xb
+ 2102 0017 0B       		.uleb128 0xb
+ 2103 0018 3E       		.uleb128 0x3e
+ 2104 0019 0B       		.uleb128 0xb
+ 2105 001a 03       		.uleb128 0x3
+ 2106 001b 0E       		.uleb128 0xe
+ 2107 001c 00       		.byte	0
+ 2108 001d 00       		.byte	0
+ 2109 001e 03       		.uleb128 0x3
+ 2110 001f 16       		.uleb128 0x16
+ 2111 0020 00       		.byte	0
+ 2112 0021 03       		.uleb128 0x3
+ 2113 0022 0E       		.uleb128 0xe
+ 2114 0023 3A       		.uleb128 0x3a
+ 2115 0024 0B       		.uleb128 0xb
+ 2116 0025 3B       		.uleb128 0x3b
+ 2117 0026 0B       		.uleb128 0xb
+ 2118 0027 49       		.uleb128 0x49
+ 2119 0028 13       		.uleb128 0x13
+ 2120 0029 00       		.byte	0
+ 2121 002a 00       		.byte	0
+ 2122 002b 04       		.uleb128 0x4
+ 2123 002c 24       		.uleb128 0x24
+ 2124 002d 00       		.byte	0
+ 2125 002e 0B       		.uleb128 0xb
+ 2126 002f 0B       		.uleb128 0xb
+ 2127 0030 3E       		.uleb128 0x3e
+ 2128 0031 0B       		.uleb128 0xb
+ 2129 0032 03       		.uleb128 0x3
+ 2130 0033 08       		.uleb128 0x8
+ 2131 0034 00       		.byte	0
+ 2132 0035 00       		.byte	0
+ 2133 0036 05       		.uleb128 0x5
+ 2134 0037 04       		.uleb128 0x4
+ 2135 0038 01       		.byte	0x1
+ 2136 0039 0B       		.uleb128 0xb
+ 2137 003a 0B       		.uleb128 0xb
+ 2138 003b 49       		.uleb128 0x49
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 44
+
+
+ 2139 003c 13       		.uleb128 0x13
+ 2140 003d 3A       		.uleb128 0x3a
+ 2141 003e 0B       		.uleb128 0xb
+ 2142 003f 3B       		.uleb128 0x3b
+ 2143 0040 0B       		.uleb128 0xb
+ 2144 0041 01       		.uleb128 0x1
+ 2145 0042 13       		.uleb128 0x13
+ 2146 0043 00       		.byte	0
+ 2147 0044 00       		.byte	0
+ 2148 0045 06       		.uleb128 0x6
+ 2149 0046 28       		.uleb128 0x28
+ 2150 0047 00       		.byte	0
+ 2151 0048 03       		.uleb128 0x3
+ 2152 0049 0E       		.uleb128 0xe
+ 2153 004a 1C       		.uleb128 0x1c
+ 2154 004b 0B       		.uleb128 0xb
+ 2155 004c 00       		.byte	0
+ 2156 004d 00       		.byte	0
+ 2157 004e 07       		.uleb128 0x7
+ 2158 004f 13       		.uleb128 0x13
+ 2159 0050 01       		.byte	0x1
+ 2160 0051 0B       		.uleb128 0xb
+ 2161 0052 0B       		.uleb128 0xb
+ 2162 0053 3A       		.uleb128 0x3a
+ 2163 0054 0B       		.uleb128 0xb
+ 2164 0055 3B       		.uleb128 0x3b
+ 2165 0056 0B       		.uleb128 0xb
+ 2166 0057 01       		.uleb128 0x1
+ 2167 0058 13       		.uleb128 0x13
+ 2168 0059 00       		.byte	0
+ 2169 005a 00       		.byte	0
+ 2170 005b 08       		.uleb128 0x8
+ 2171 005c 0D       		.uleb128 0xd
+ 2172 005d 00       		.byte	0
+ 2173 005e 03       		.uleb128 0x3
+ 2174 005f 0E       		.uleb128 0xe
+ 2175 0060 3A       		.uleb128 0x3a
+ 2176 0061 0B       		.uleb128 0xb
+ 2177 0062 3B       		.uleb128 0x3b
+ 2178 0063 0B       		.uleb128 0xb
+ 2179 0064 49       		.uleb128 0x49
+ 2180 0065 13       		.uleb128 0x13
+ 2181 0066 38       		.uleb128 0x38
+ 2182 0067 0B       		.uleb128 0xb
+ 2183 0068 00       		.byte	0
+ 2184 0069 00       		.byte	0
+ 2185 006a 09       		.uleb128 0x9
+ 2186 006b 01       		.uleb128 0x1
+ 2187 006c 01       		.byte	0x1
+ 2188 006d 49       		.uleb128 0x49
+ 2189 006e 13       		.uleb128 0x13
+ 2190 006f 01       		.uleb128 0x1
+ 2191 0070 13       		.uleb128 0x13
+ 2192 0071 00       		.byte	0
+ 2193 0072 00       		.byte	0
+ 2194 0073 0A       		.uleb128 0xa
+ 2195 0074 21       		.uleb128 0x21
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 45
+
+
+ 2196 0075 00       		.byte	0
+ 2197 0076 49       		.uleb128 0x49
+ 2198 0077 13       		.uleb128 0x13
+ 2199 0078 2F       		.uleb128 0x2f
+ 2200 0079 0B       		.uleb128 0xb
+ 2201 007a 00       		.byte	0
+ 2202 007b 00       		.byte	0
+ 2203 007c 0B       		.uleb128 0xb
+ 2204 007d 2E       		.uleb128 0x2e
+ 2205 007e 01       		.byte	0x1
+ 2206 007f 3F       		.uleb128 0x3f
+ 2207 0080 19       		.uleb128 0x19
+ 2208 0081 03       		.uleb128 0x3
+ 2209 0082 0E       		.uleb128 0xe
+ 2210 0083 3A       		.uleb128 0x3a
+ 2211 0084 0B       		.uleb128 0xb
+ 2212 0085 3B       		.uleb128 0x3b
+ 2213 0086 0B       		.uleb128 0xb
+ 2214 0087 27       		.uleb128 0x27
+ 2215 0088 19       		.uleb128 0x19
+ 2216 0089 49       		.uleb128 0x49
+ 2217 008a 13       		.uleb128 0x13
+ 2218 008b 11       		.uleb128 0x11
+ 2219 008c 01       		.uleb128 0x1
+ 2220 008d 12       		.uleb128 0x12
+ 2221 008e 06       		.uleb128 0x6
+ 2222 008f 40       		.uleb128 0x40
+ 2223 0090 18       		.uleb128 0x18
+ 2224 0091 9742     		.uleb128 0x2117
+ 2225 0093 19       		.uleb128 0x19
+ 2226 0094 01       		.uleb128 0x1
+ 2227 0095 13       		.uleb128 0x13
+ 2228 0096 00       		.byte	0
+ 2229 0097 00       		.byte	0
+ 2230 0098 0C       		.uleb128 0xc
+ 2231 0099 34       		.uleb128 0x34
+ 2232 009a 00       		.byte	0
+ 2233 009b 03       		.uleb128 0x3
+ 2234 009c 08       		.uleb128 0x8
+ 2235 009d 3A       		.uleb128 0x3a
+ 2236 009e 0B       		.uleb128 0xb
+ 2237 009f 3B       		.uleb128 0x3b
+ 2238 00a0 0B       		.uleb128 0xb
+ 2239 00a1 49       		.uleb128 0x49
+ 2240 00a2 13       		.uleb128 0x13
+ 2241 00a3 02       		.uleb128 0x2
+ 2242 00a4 17       		.uleb128 0x17
+ 2243 00a5 00       		.byte	0
+ 2244 00a6 00       		.byte	0
+ 2245 00a7 0D       		.uleb128 0xd
+ 2246 00a8 898201   		.uleb128 0x4109
+ 2247 00ab 01       		.byte	0x1
+ 2248 00ac 11       		.uleb128 0x11
+ 2249 00ad 01       		.uleb128 0x1
+ 2250 00ae 31       		.uleb128 0x31
+ 2251 00af 13       		.uleb128 0x13
+ 2252 00b0 01       		.uleb128 0x1
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 46
+
+
+ 2253 00b1 13       		.uleb128 0x13
+ 2254 00b2 00       		.byte	0
+ 2255 00b3 00       		.byte	0
+ 2256 00b4 0E       		.uleb128 0xe
+ 2257 00b5 8A8201   		.uleb128 0x410a
+ 2258 00b8 00       		.byte	0
+ 2259 00b9 02       		.uleb128 0x2
+ 2260 00ba 18       		.uleb128 0x18
+ 2261 00bb 9142     		.uleb128 0x2111
+ 2262 00bd 18       		.uleb128 0x18
+ 2263 00be 00       		.byte	0
+ 2264 00bf 00       		.byte	0
+ 2265 00c0 0F       		.uleb128 0xf
+ 2266 00c1 898201   		.uleb128 0x4109
+ 2267 00c4 00       		.byte	0
+ 2268 00c5 11       		.uleb128 0x11
+ 2269 00c6 01       		.uleb128 0x1
+ 2270 00c7 31       		.uleb128 0x31
+ 2271 00c8 13       		.uleb128 0x13
+ 2272 00c9 00       		.byte	0
+ 2273 00ca 00       		.byte	0
+ 2274 00cb 10       		.uleb128 0x10
+ 2275 00cc 898201   		.uleb128 0x4109
+ 2276 00cf 01       		.byte	0x1
+ 2277 00d0 11       		.uleb128 0x11
+ 2278 00d1 01       		.uleb128 0x1
+ 2279 00d2 31       		.uleb128 0x31
+ 2280 00d3 13       		.uleb128 0x13
+ 2281 00d4 00       		.byte	0
+ 2282 00d5 00       		.byte	0
+ 2283 00d6 11       		.uleb128 0x11
+ 2284 00d7 2E       		.uleb128 0x2e
+ 2285 00d8 01       		.byte	0x1
+ 2286 00d9 3F       		.uleb128 0x3f
+ 2287 00da 19       		.uleb128 0x19
+ 2288 00db 03       		.uleb128 0x3
+ 2289 00dc 0E       		.uleb128 0xe
+ 2290 00dd 3A       		.uleb128 0x3a
+ 2291 00de 0B       		.uleb128 0xb
+ 2292 00df 3B       		.uleb128 0x3b
+ 2293 00e0 0B       		.uleb128 0xb
+ 2294 00e1 27       		.uleb128 0x27
+ 2295 00e2 19       		.uleb128 0x19
+ 2296 00e3 11       		.uleb128 0x11
+ 2297 00e4 01       		.uleb128 0x1
+ 2298 00e5 12       		.uleb128 0x12
+ 2299 00e6 06       		.uleb128 0x6
+ 2300 00e7 40       		.uleb128 0x40
+ 2301 00e8 18       		.uleb128 0x18
+ 2302 00e9 9742     		.uleb128 0x2117
+ 2303 00eb 19       		.uleb128 0x19
+ 2304 00ec 01       		.uleb128 0x1
+ 2305 00ed 13       		.uleb128 0x13
+ 2306 00ee 00       		.byte	0
+ 2307 00ef 00       		.byte	0
+ 2308 00f0 12       		.uleb128 0x12
+ 2309 00f1 05       		.uleb128 0x5
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 47
+
+
+ 2310 00f2 00       		.byte	0
+ 2311 00f3 03       		.uleb128 0x3
+ 2312 00f4 08       		.uleb128 0x8
+ 2313 00f5 3A       		.uleb128 0x3a
+ 2314 00f6 0B       		.uleb128 0xb
+ 2315 00f7 3B       		.uleb128 0x3b
+ 2316 00f8 0B       		.uleb128 0xb
+ 2317 00f9 49       		.uleb128 0x49
+ 2318 00fa 13       		.uleb128 0x13
+ 2319 00fb 02       		.uleb128 0x2
+ 2320 00fc 17       		.uleb128 0x17
+ 2321 00fd 00       		.byte	0
+ 2322 00fe 00       		.byte	0
+ 2323 00ff 13       		.uleb128 0x13
+ 2324 0100 34       		.uleb128 0x34
+ 2325 0101 00       		.byte	0
+ 2326 0102 03       		.uleb128 0x3
+ 2327 0103 08       		.uleb128 0x8
+ 2328 0104 3A       		.uleb128 0x3a
+ 2329 0105 0B       		.uleb128 0xb
+ 2330 0106 3B       		.uleb128 0x3b
+ 2331 0107 0B       		.uleb128 0xb
+ 2332 0108 49       		.uleb128 0x49
+ 2333 0109 13       		.uleb128 0x13
+ 2334 010a 02       		.uleb128 0x2
+ 2335 010b 18       		.uleb128 0x18
+ 2336 010c 00       		.byte	0
+ 2337 010d 00       		.byte	0
+ 2338 010e 14       		.uleb128 0x14
+ 2339 010f 05       		.uleb128 0x5
+ 2340 0110 00       		.byte	0
+ 2341 0111 03       		.uleb128 0x3
+ 2342 0112 0E       		.uleb128 0xe
+ 2343 0113 3A       		.uleb128 0x3a
+ 2344 0114 0B       		.uleb128 0xb
+ 2345 0115 3B       		.uleb128 0x3b
+ 2346 0116 0B       		.uleb128 0xb
+ 2347 0117 49       		.uleb128 0x49
+ 2348 0118 13       		.uleb128 0x13
+ 2349 0119 02       		.uleb128 0x2
+ 2350 011a 17       		.uleb128 0x17
+ 2351 011b 00       		.byte	0
+ 2352 011c 00       		.byte	0
+ 2353 011d 15       		.uleb128 0x15
+ 2354 011e 34       		.uleb128 0x34
+ 2355 011f 00       		.byte	0
+ 2356 0120 03       		.uleb128 0x3
+ 2357 0121 0E       		.uleb128 0xe
+ 2358 0122 3A       		.uleb128 0x3a
+ 2359 0123 0B       		.uleb128 0xb
+ 2360 0124 3B       		.uleb128 0x3b
+ 2361 0125 0B       		.uleb128 0xb
+ 2362 0126 49       		.uleb128 0x49
+ 2363 0127 13       		.uleb128 0x13
+ 2364 0128 02       		.uleb128 0x2
+ 2365 0129 17       		.uleb128 0x17
+ 2366 012a 00       		.byte	0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 48
+
+
+ 2367 012b 00       		.byte	0
+ 2368 012c 16       		.uleb128 0x16
+ 2369 012d 2E       		.uleb128 0x2e
+ 2370 012e 00       		.byte	0
+ 2371 012f 3F       		.uleb128 0x3f
+ 2372 0130 19       		.uleb128 0x19
+ 2373 0131 03       		.uleb128 0x3
+ 2374 0132 0E       		.uleb128 0xe
+ 2375 0133 3A       		.uleb128 0x3a
+ 2376 0134 0B       		.uleb128 0xb
+ 2377 0135 3B       		.uleb128 0x3b
+ 2378 0136 0B       		.uleb128 0xb
+ 2379 0137 27       		.uleb128 0x27
+ 2380 0138 19       		.uleb128 0x19
+ 2381 0139 11       		.uleb128 0x11
+ 2382 013a 01       		.uleb128 0x1
+ 2383 013b 12       		.uleb128 0x12
+ 2384 013c 06       		.uleb128 0x6
+ 2385 013d 40       		.uleb128 0x40
+ 2386 013e 18       		.uleb128 0x18
+ 2387 013f 9742     		.uleb128 0x2117
+ 2388 0141 19       		.uleb128 0x19
+ 2389 0142 00       		.byte	0
+ 2390 0143 00       		.byte	0
+ 2391 0144 17       		.uleb128 0x17
+ 2392 0145 2E       		.uleb128 0x2e
+ 2393 0146 00       		.byte	0
+ 2394 0147 3F       		.uleb128 0x3f
+ 2395 0148 19       		.uleb128 0x19
+ 2396 0149 03       		.uleb128 0x3
+ 2397 014a 0E       		.uleb128 0xe
+ 2398 014b 3A       		.uleb128 0x3a
+ 2399 014c 0B       		.uleb128 0xb
+ 2400 014d 3B       		.uleb128 0x3b
+ 2401 014e 0B       		.uleb128 0xb
+ 2402 014f 27       		.uleb128 0x27
+ 2403 0150 19       		.uleb128 0x19
+ 2404 0151 49       		.uleb128 0x49
+ 2405 0152 13       		.uleb128 0x13
+ 2406 0153 11       		.uleb128 0x11
+ 2407 0154 01       		.uleb128 0x1
+ 2408 0155 12       		.uleb128 0x12
+ 2409 0156 06       		.uleb128 0x6
+ 2410 0157 40       		.uleb128 0x40
+ 2411 0158 18       		.uleb128 0x18
+ 2412 0159 9742     		.uleb128 0x2117
+ 2413 015b 19       		.uleb128 0x19
+ 2414 015c 00       		.byte	0
+ 2415 015d 00       		.byte	0
+ 2416 015e 18       		.uleb128 0x18
+ 2417 015f 2E       		.uleb128 0x2e
+ 2418 0160 01       		.byte	0x1
+ 2419 0161 3F       		.uleb128 0x3f
+ 2420 0162 19       		.uleb128 0x19
+ 2421 0163 03       		.uleb128 0x3
+ 2422 0164 0E       		.uleb128 0xe
+ 2423 0165 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 49
+
+
+ 2424 0166 0B       		.uleb128 0xb
+ 2425 0167 3B       		.uleb128 0x3b
+ 2426 0168 0B       		.uleb128 0xb
+ 2427 0169 11       		.uleb128 0x11
+ 2428 016a 01       		.uleb128 0x1
+ 2429 016b 12       		.uleb128 0x12
+ 2430 016c 06       		.uleb128 0x6
+ 2431 016d 40       		.uleb128 0x40
+ 2432 016e 18       		.uleb128 0x18
+ 2433 016f 9742     		.uleb128 0x2117
+ 2434 0171 19       		.uleb128 0x19
+ 2435 0172 01       		.uleb128 0x1
+ 2436 0173 13       		.uleb128 0x13
+ 2437 0174 00       		.byte	0
+ 2438 0175 00       		.byte	0
+ 2439 0176 19       		.uleb128 0x19
+ 2440 0177 2E       		.uleb128 0x2e
+ 2441 0178 01       		.byte	0x1
+ 2442 0179 3F       		.uleb128 0x3f
+ 2443 017a 19       		.uleb128 0x19
+ 2444 017b 03       		.uleb128 0x3
+ 2445 017c 0E       		.uleb128 0xe
+ 2446 017d 3A       		.uleb128 0x3a
+ 2447 017e 0B       		.uleb128 0xb
+ 2448 017f 3B       		.uleb128 0x3b
+ 2449 0180 0B       		.uleb128 0xb
+ 2450 0181 49       		.uleb128 0x49
+ 2451 0182 13       		.uleb128 0x13
+ 2452 0183 11       		.uleb128 0x11
+ 2453 0184 01       		.uleb128 0x1
+ 2454 0185 12       		.uleb128 0x12
+ 2455 0186 06       		.uleb128 0x6
+ 2456 0187 40       		.uleb128 0x40
+ 2457 0188 18       		.uleb128 0x18
+ 2458 0189 9742     		.uleb128 0x2117
+ 2459 018b 19       		.uleb128 0x19
+ 2460 018c 01       		.uleb128 0x1
+ 2461 018d 13       		.uleb128 0x13
+ 2462 018e 00       		.byte	0
+ 2463 018f 00       		.byte	0
+ 2464 0190 1A       		.uleb128 0x1a
+ 2465 0191 05       		.uleb128 0x5
+ 2466 0192 00       		.byte	0
+ 2467 0193 03       		.uleb128 0x3
+ 2468 0194 0E       		.uleb128 0xe
+ 2469 0195 3A       		.uleb128 0x3a
+ 2470 0196 0B       		.uleb128 0xb
+ 2471 0197 3B       		.uleb128 0x3b
+ 2472 0198 0B       		.uleb128 0xb
+ 2473 0199 49       		.uleb128 0x49
+ 2474 019a 13       		.uleb128 0x13
+ 2475 019b 02       		.uleb128 0x2
+ 2476 019c 18       		.uleb128 0x18
+ 2477 019d 00       		.byte	0
+ 2478 019e 00       		.byte	0
+ 2479 019f 1B       		.uleb128 0x1b
+ 2480 01a0 2E       		.uleb128 0x2e
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 50
+
+
+ 2481 01a1 01       		.byte	0x1
+ 2482 01a2 3F       		.uleb128 0x3f
+ 2483 01a3 19       		.uleb128 0x19
+ 2484 01a4 03       		.uleb128 0x3
+ 2485 01a5 0E       		.uleb128 0xe
+ 2486 01a6 3A       		.uleb128 0x3a
+ 2487 01a7 0B       		.uleb128 0xb
+ 2488 01a8 3B       		.uleb128 0x3b
+ 2489 01a9 05       		.uleb128 0x5
+ 2490 01aa 49       		.uleb128 0x49
+ 2491 01ab 13       		.uleb128 0x13
+ 2492 01ac 11       		.uleb128 0x11
+ 2493 01ad 01       		.uleb128 0x1
+ 2494 01ae 12       		.uleb128 0x12
+ 2495 01af 06       		.uleb128 0x6
+ 2496 01b0 40       		.uleb128 0x40
+ 2497 01b1 18       		.uleb128 0x18
+ 2498 01b2 9742     		.uleb128 0x2117
+ 2499 01b4 19       		.uleb128 0x19
+ 2500 01b5 01       		.uleb128 0x1
+ 2501 01b6 13       		.uleb128 0x13
+ 2502 01b7 00       		.byte	0
+ 2503 01b8 00       		.byte	0
+ 2504 01b9 1C       		.uleb128 0x1c
+ 2505 01ba 2E       		.uleb128 0x2e
+ 2506 01bb 01       		.byte	0x1
+ 2507 01bc 3F       		.uleb128 0x3f
+ 2508 01bd 19       		.uleb128 0x19
+ 2509 01be 03       		.uleb128 0x3
+ 2510 01bf 0E       		.uleb128 0xe
+ 2511 01c0 3A       		.uleb128 0x3a
+ 2512 01c1 0B       		.uleb128 0xb
+ 2513 01c2 3B       		.uleb128 0x3b
+ 2514 01c3 05       		.uleb128 0x5
+ 2515 01c4 27       		.uleb128 0x27
+ 2516 01c5 19       		.uleb128 0x19
+ 2517 01c6 49       		.uleb128 0x49
+ 2518 01c7 13       		.uleb128 0x13
+ 2519 01c8 11       		.uleb128 0x11
+ 2520 01c9 01       		.uleb128 0x1
+ 2521 01ca 12       		.uleb128 0x12
+ 2522 01cb 06       		.uleb128 0x6
+ 2523 01cc 40       		.uleb128 0x40
+ 2524 01cd 18       		.uleb128 0x18
+ 2525 01ce 9742     		.uleb128 0x2117
+ 2526 01d0 19       		.uleb128 0x19
+ 2527 01d1 01       		.uleb128 0x1
+ 2528 01d2 13       		.uleb128 0x13
+ 2529 01d3 00       		.byte	0
+ 2530 01d4 00       		.byte	0
+ 2531 01d5 1D       		.uleb128 0x1d
+ 2532 01d6 05       		.uleb128 0x5
+ 2533 01d7 00       		.byte	0
+ 2534 01d8 03       		.uleb128 0x3
+ 2535 01d9 0E       		.uleb128 0xe
+ 2536 01da 3A       		.uleb128 0x3a
+ 2537 01db 0B       		.uleb128 0xb
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 51
+
+
+ 2538 01dc 3B       		.uleb128 0x3b
+ 2539 01dd 05       		.uleb128 0x5
+ 2540 01de 49       		.uleb128 0x49
+ 2541 01df 13       		.uleb128 0x13
+ 2542 01e0 02       		.uleb128 0x2
+ 2543 01e1 17       		.uleb128 0x17
+ 2544 01e2 00       		.byte	0
+ 2545 01e3 00       		.byte	0
+ 2546 01e4 1E       		.uleb128 0x1e
+ 2547 01e5 34       		.uleb128 0x34
+ 2548 01e6 00       		.byte	0
+ 2549 01e7 03       		.uleb128 0x3
+ 2550 01e8 0E       		.uleb128 0xe
+ 2551 01e9 3A       		.uleb128 0x3a
+ 2552 01ea 0B       		.uleb128 0xb
+ 2553 01eb 3B       		.uleb128 0x3b
+ 2554 01ec 05       		.uleb128 0x5
+ 2555 01ed 49       		.uleb128 0x49
+ 2556 01ee 13       		.uleb128 0x13
+ 2557 01ef 02       		.uleb128 0x2
+ 2558 01f0 17       		.uleb128 0x17
+ 2559 01f1 00       		.byte	0
+ 2560 01f2 00       		.byte	0
+ 2561 01f3 1F       		.uleb128 0x1f
+ 2562 01f4 34       		.uleb128 0x34
+ 2563 01f5 00       		.byte	0
+ 2564 01f6 03       		.uleb128 0x3
+ 2565 01f7 08       		.uleb128 0x8
+ 2566 01f8 3A       		.uleb128 0x3a
+ 2567 01f9 0B       		.uleb128 0xb
+ 2568 01fa 3B       		.uleb128 0x3b
+ 2569 01fb 05       		.uleb128 0x5
+ 2570 01fc 49       		.uleb128 0x49
+ 2571 01fd 13       		.uleb128 0x13
+ 2572 01fe 02       		.uleb128 0x2
+ 2573 01ff 17       		.uleb128 0x17
+ 2574 0200 00       		.byte	0
+ 2575 0201 00       		.byte	0
+ 2576 0202 20       		.uleb128 0x20
+ 2577 0203 0B       		.uleb128 0xb
+ 2578 0204 01       		.byte	0x1
+ 2579 0205 55       		.uleb128 0x55
+ 2580 0206 17       		.uleb128 0x17
+ 2581 0207 01       		.uleb128 0x1
+ 2582 0208 13       		.uleb128 0x13
+ 2583 0209 00       		.byte	0
+ 2584 020a 00       		.byte	0
+ 2585 020b 21       		.uleb128 0x21
+ 2586 020c 34       		.uleb128 0x34
+ 2587 020d 00       		.byte	0
+ 2588 020e 03       		.uleb128 0x3
+ 2589 020f 0E       		.uleb128 0xe
+ 2590 0210 3A       		.uleb128 0x3a
+ 2591 0211 0B       		.uleb128 0xb
+ 2592 0212 3B       		.uleb128 0x3b
+ 2593 0213 05       		.uleb128 0x5
+ 2594 0214 49       		.uleb128 0x49
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 52
+
+
+ 2595 0215 13       		.uleb128 0x13
+ 2596 0216 02       		.uleb128 0x2
+ 2597 0217 18       		.uleb128 0x18
+ 2598 0218 00       		.byte	0
+ 2599 0219 00       		.byte	0
+ 2600 021a 22       		.uleb128 0x22
+ 2601 021b 0F       		.uleb128 0xf
+ 2602 021c 00       		.byte	0
+ 2603 021d 0B       		.uleb128 0xb
+ 2604 021e 0B       		.uleb128 0xb
+ 2605 021f 49       		.uleb128 0x49
+ 2606 0220 13       		.uleb128 0x13
+ 2607 0221 00       		.byte	0
+ 2608 0222 00       		.byte	0
+ 2609 0223 23       		.uleb128 0x23
+ 2610 0224 34       		.uleb128 0x34
+ 2611 0225 00       		.byte	0
+ 2612 0226 03       		.uleb128 0x3
+ 2613 0227 0E       		.uleb128 0xe
+ 2614 0228 3A       		.uleb128 0x3a
+ 2615 0229 0B       		.uleb128 0xb
+ 2616 022a 3B       		.uleb128 0x3b
+ 2617 022b 05       		.uleb128 0x5
+ 2618 022c 49       		.uleb128 0x49
+ 2619 022d 13       		.uleb128 0x13
+ 2620 022e 3F       		.uleb128 0x3f
+ 2621 022f 19       		.uleb128 0x19
+ 2622 0230 3C       		.uleb128 0x3c
+ 2623 0231 19       		.uleb128 0x19
+ 2624 0232 00       		.byte	0
+ 2625 0233 00       		.byte	0
+ 2626 0234 24       		.uleb128 0x24
+ 2627 0235 35       		.uleb128 0x35
+ 2628 0236 00       		.byte	0
+ 2629 0237 49       		.uleb128 0x49
+ 2630 0238 13       		.uleb128 0x13
+ 2631 0239 00       		.byte	0
+ 2632 023a 00       		.byte	0
+ 2633 023b 25       		.uleb128 0x25
+ 2634 023c 34       		.uleb128 0x34
+ 2635 023d 00       		.byte	0
+ 2636 023e 03       		.uleb128 0x3
+ 2637 023f 0E       		.uleb128 0xe
+ 2638 0240 3A       		.uleb128 0x3a
+ 2639 0241 0B       		.uleb128 0xb
+ 2640 0242 3B       		.uleb128 0x3b
+ 2641 0243 0B       		.uleb128 0xb
+ 2642 0244 49       		.uleb128 0x49
+ 2643 0245 13       		.uleb128 0x13
+ 2644 0246 3F       		.uleb128 0x3f
+ 2645 0247 19       		.uleb128 0x19
+ 2646 0248 02       		.uleb128 0x2
+ 2647 0249 18       		.uleb128 0x18
+ 2648 024a 00       		.byte	0
+ 2649 024b 00       		.byte	0
+ 2650 024c 26       		.uleb128 0x26
+ 2651 024d 26       		.uleb128 0x26
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 53
+
+
+ 2652 024e 00       		.byte	0
+ 2653 024f 49       		.uleb128 0x49
+ 2654 0250 13       		.uleb128 0x13
+ 2655 0251 00       		.byte	0
+ 2656 0252 00       		.byte	0
+ 2657 0253 27       		.uleb128 0x27
+ 2658 0254 2E       		.uleb128 0x2e
+ 2659 0255 00       		.byte	0
+ 2660 0256 3F       		.uleb128 0x3f
+ 2661 0257 19       		.uleb128 0x19
+ 2662 0258 3C       		.uleb128 0x3c
+ 2663 0259 19       		.uleb128 0x19
+ 2664 025a 6E       		.uleb128 0x6e
+ 2665 025b 0E       		.uleb128 0xe
+ 2666 025c 03       		.uleb128 0x3
+ 2667 025d 0E       		.uleb128 0xe
+ 2668 025e 3A       		.uleb128 0x3a
+ 2669 025f 0B       		.uleb128 0xb
+ 2670 0260 3B       		.uleb128 0x3b
+ 2671 0261 0B       		.uleb128 0xb
+ 2672 0262 00       		.byte	0
+ 2673 0263 00       		.byte	0
+ 2674 0264 00       		.byte	0
+ 2675              		.section	.debug_loc,"",%progbits
+ 2676              	.Ldebug_loc0:
+ 2677              	.LLST0:
+ 2678 0000 20000000 		.4byte	.LVL4
+ 2679 0004 2C000000 		.4byte	.LVL5
+ 2680 0008 0100     		.2byte	0x1
+ 2681 000a 50       		.byte	0x50
+ 2682 000b 34000000 		.4byte	.LVL7
+ 2683 000f 3C000000 		.4byte	.LVL8
+ 2684 0013 0100     		.2byte	0x1
+ 2685 0015 50       		.byte	0x50
+ 2686 0016 00000000 		.4byte	0
+ 2687 001a 00000000 		.4byte	0
+ 2688              	.LLST1:
+ 2689 001e 00000000 		.4byte	.LVL17
+ 2690 0022 07000000 		.4byte	.LVL18-1
+ 2691 0026 0100     		.2byte	0x1
+ 2692 0028 50       		.byte	0x50
+ 2693 0029 07000000 		.4byte	.LVL18-1
+ 2694 002d 0A000000 		.4byte	.LVL19
+ 2695 0031 0400     		.2byte	0x4
+ 2696 0033 F3       		.byte	0xf3
+ 2697 0034 01       		.uleb128 0x1
+ 2698 0035 50       		.byte	0x50
+ 2699 0036 9F       		.byte	0x9f
+ 2700 0037 0A000000 		.4byte	.LVL19
+ 2701 003b 0D000000 		.4byte	.LVL20-1
+ 2702 003f 0100     		.2byte	0x1
+ 2703 0041 50       		.byte	0x50
+ 2704 0042 0D000000 		.4byte	.LVL20-1
+ 2705 0046 10000000 		.4byte	.LFE67
+ 2706 004a 0400     		.2byte	0x4
+ 2707 004c F3       		.byte	0xf3
+ 2708 004d 01       		.uleb128 0x1
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 54
+
+
+ 2709 004e 50       		.byte	0x50
+ 2710 004f 9F       		.byte	0x9f
+ 2711 0050 00000000 		.4byte	0
+ 2712 0054 00000000 		.4byte	0
+ 2713              	.LLST2:
+ 2714 0058 00000000 		.4byte	.LVL28
+ 2715 005c 08000000 		.4byte	.LVL30
+ 2716 0060 0100     		.2byte	0x1
+ 2717 0062 50       		.byte	0x50
+ 2718 0063 08000000 		.4byte	.LVL30
+ 2719 0067 26000000 		.4byte	.LFE69
+ 2720 006b 0400     		.2byte	0x4
+ 2721 006d F3       		.byte	0xf3
+ 2722 006e 01       		.uleb128 0x1
+ 2723 006f 50       		.byte	0x50
+ 2724 0070 9F       		.byte	0x9f
+ 2725 0071 00000000 		.4byte	0
+ 2726 0075 00000000 		.4byte	0
+ 2727              	.LLST3:
+ 2728 0079 04000000 		.4byte	.LVL29
+ 2729 007d 08000000 		.4byte	.LVL30
+ 2730 0081 0200     		.2byte	0x2
+ 2731 0083 30       		.byte	0x30
+ 2732 0084 9F       		.byte	0x9f
+ 2733 0085 08000000 		.4byte	.LVL30
+ 2734 0089 1E000000 		.4byte	.LVL33
+ 2735 008d 0100     		.2byte	0x1
+ 2736 008f 54       		.byte	0x54
+ 2737 0090 20000000 		.4byte	.LVL34
+ 2738 0094 26000000 		.4byte	.LFE69
+ 2739 0098 0100     		.2byte	0x1
+ 2740 009a 54       		.byte	0x54
+ 2741 009b 00000000 		.4byte	0
+ 2742 009f 00000000 		.4byte	0
+ 2743              	.LLST4:
+ 2744 00a3 02000000 		.4byte	.LVL35
+ 2745 00a7 08000000 		.4byte	.LVL36
+ 2746 00ab 0200     		.2byte	0x2
+ 2747 00ad 30       		.byte	0x30
+ 2748 00ae 9F       		.byte	0x9f
+ 2749 00af 08000000 		.4byte	.LVL36
+ 2750 00b3 14000000 		.4byte	.LVL41
+ 2751 00b7 0100     		.2byte	0x1
+ 2752 00b9 54       		.byte	0x54
+ 2753 00ba 16000000 		.4byte	.LVL42
+ 2754 00be 1E000000 		.4byte	.LFE70
+ 2755 00c2 0100     		.2byte	0x1
+ 2756 00c4 54       		.byte	0x54
+ 2757 00c5 00000000 		.4byte	0
+ 2758 00c9 00000000 		.4byte	0
+ 2759              	.LLST5:
+ 2760 00cd 02000000 		.4byte	.LVL35
+ 2761 00d1 08000000 		.4byte	.LVL36
+ 2762 00d5 0200     		.2byte	0x2
+ 2763 00d7 30       		.byte	0x30
+ 2764 00d8 9F       		.byte	0x9f
+ 2765 00d9 08000000 		.4byte	.LVL36
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 55
+
+
+ 2766 00dd 10000000 		.4byte	.LVL39
+ 2767 00e1 0100     		.2byte	0x1
+ 2768 00e3 55       		.byte	0x55
+ 2769 00e4 12000000 		.4byte	.LVL40
+ 2770 00e8 1E000000 		.4byte	.LFE70
+ 2771 00ec 0100     		.2byte	0x1
+ 2772 00ee 55       		.byte	0x55
+ 2773 00ef 00000000 		.4byte	0
+ 2774 00f3 00000000 		.4byte	0
+ 2775              	.LLST6:
+ 2776 00f7 0C000000 		.4byte	.LVL37
+ 2777 00fb 0E000000 		.4byte	.LVL38
+ 2778 00ff 0100     		.2byte	0x1
+ 2779 0101 50       		.byte	0x50
+ 2780 0102 00000000 		.4byte	0
+ 2781 0106 00000000 		.4byte	0
+ 2782              	.LLST7:
+ 2783 010a 00000000 		.4byte	.LVL43
+ 2784 010e 06000000 		.4byte	.LVL44
+ 2785 0112 0100     		.2byte	0x1
+ 2786 0114 50       		.byte	0x50
+ 2787 0115 06000000 		.4byte	.LVL44
+ 2788 0119 18000000 		.4byte	.LFE73
+ 2789 011d 0400     		.2byte	0x4
+ 2790 011f F3       		.byte	0xf3
+ 2791 0120 01       		.uleb128 0x1
+ 2792 0121 50       		.byte	0x50
+ 2793 0122 9F       		.byte	0x9f
+ 2794 0123 00000000 		.4byte	0
+ 2795 0127 00000000 		.4byte	0
+ 2796              	.LLST8:
+ 2797 012b 04000000 		.4byte	.LVL55
+ 2798 012f 32000000 		.4byte	.LVL58
+ 2799 0133 0200     		.2byte	0x2
+ 2800 0135 31       		.byte	0x31
+ 2801 0136 9F       		.byte	0x9f
+ 2802 0137 32000000 		.4byte	.LVL58
+ 2803 013b 8A000000 		.4byte	.LVL69
+ 2804 013f 0100     		.2byte	0x1
+ 2805 0141 56       		.byte	0x56
+ 2806 0142 8C000000 		.4byte	.LVL70
+ 2807 0146 C0000000 		.4byte	.LVL77
+ 2808 014a 0100     		.2byte	0x1
+ 2809 014c 56       		.byte	0x56
+ 2810 014d C0000000 		.4byte	.LVL77
+ 2811 0151 C4000000 		.4byte	.LVL78
+ 2812 0155 0200     		.2byte	0x2
+ 2813 0157 31       		.byte	0x31
+ 2814 0158 9F       		.byte	0x9f
+ 2815 0159 C4000000 		.4byte	.LVL78
+ 2816 015d CE000000 		.4byte	.LVL79
+ 2817 0161 0100     		.2byte	0x1
+ 2818 0163 56       		.byte	0x56
+ 2819 0164 00000000 		.4byte	0
+ 2820 0168 00000000 		.4byte	0
+ 2821              	.LLST9:
+ 2822 016c 04000000 		.4byte	.LVL55
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 56
+
+
+ 2823 0170 32000000 		.4byte	.LVL58
+ 2824 0174 0200     		.2byte	0x2
+ 2825 0176 30       		.byte	0x30
+ 2826 0177 9F       		.byte	0x9f
+ 2827 0178 32000000 		.4byte	.LVL58
+ 2828 017c C0000000 		.4byte	.LVL77
+ 2829 0180 0100     		.2byte	0x1
+ 2830 0182 58       		.byte	0x58
+ 2831 0183 C0000000 		.4byte	.LVL77
+ 2832 0187 C4000000 		.4byte	.LVL78
+ 2833 018b 0200     		.2byte	0x2
+ 2834 018d 30       		.byte	0x30
+ 2835 018e 9F       		.byte	0x9f
+ 2836 018f C4000000 		.4byte	.LVL78
+ 2837 0193 CE000000 		.4byte	.LVL79
+ 2838 0197 0100     		.2byte	0x1
+ 2839 0199 58       		.byte	0x58
+ 2840 019a 00000000 		.4byte	0
+ 2841 019e 00000000 		.4byte	0
+ 2842              	.LLST10:
+ 2843 01a2 04000000 		.4byte	.LVL55
+ 2844 01a6 32000000 		.4byte	.LVL58
+ 2845 01aa 0200     		.2byte	0x2
+ 2846 01ac 30       		.byte	0x30
+ 2847 01ad 9F       		.byte	0x9f
+ 2848 01ae 32000000 		.4byte	.LVL58
+ 2849 01b2 C0000000 		.4byte	.LVL77
+ 2850 01b6 0100     		.2byte	0x1
+ 2851 01b8 57       		.byte	0x57
+ 2852 01b9 C0000000 		.4byte	.LVL77
+ 2853 01bd C4000000 		.4byte	.LVL78
+ 2854 01c1 0200     		.2byte	0x2
+ 2855 01c3 30       		.byte	0x30
+ 2856 01c4 9F       		.byte	0x9f
+ 2857 01c5 C4000000 		.4byte	.LVL78
+ 2858 01c9 CE000000 		.4byte	.LVL79
+ 2859 01cd 0100     		.2byte	0x1
+ 2860 01cf 57       		.byte	0x57
+ 2861 01d0 00000000 		.4byte	0
+ 2862 01d4 00000000 		.4byte	0
+ 2863              	.LLST11:
+ 2864 01d8 04000000 		.4byte	.LVL55
+ 2865 01dc CE000000 		.4byte	.LVL79
+ 2866 01e0 0200     		.2byte	0x2
+ 2867 01e2 30       		.byte	0x30
+ 2868 01e3 9F       		.byte	0x9f
+ 2869 01e4 CE000000 		.4byte	.LVL79
+ 2870 01e8 D8000000 		.4byte	.LVL80
+ 2871 01ec 0100     		.2byte	0x1
+ 2872 01ee 50       		.byte	0x50
+ 2873 01ef 00000000 		.4byte	0
+ 2874 01f3 00000000 		.4byte	0
+ 2875              	.LLST12:
+ 2876 01f7 38000000 		.4byte	.LVL60
+ 2877 01fb 4C000000 		.4byte	.LVL62
+ 2878 01ff 0100     		.2byte	0x1
+ 2879 0201 55       		.byte	0x55
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 57
+
+
+ 2880 0202 00000000 		.4byte	0
+ 2881 0206 00000000 		.4byte	0
+ 2882              	.LLST13:
+ 2883 020a 3C000000 		.4byte	.LVL61
+ 2884 020e 84000000 		.4byte	.LVL67
+ 2885 0212 0100     		.2byte	0x1
+ 2886 0214 50       		.byte	0x50
+ 2887 0215 00000000 		.4byte	0
+ 2888 0219 00000000 		.4byte	0
+ 2889              	.LLST14:
+ 2890 021d 04000000 		.4byte	.LVL55
+ 2891 0221 32000000 		.4byte	.LVL58
+ 2892 0225 0200     		.2byte	0x2
+ 2893 0227 31       		.byte	0x31
+ 2894 0228 9F       		.byte	0x9f
+ 2895 0229 32000000 		.4byte	.LVL58
+ 2896 022d 92000000 		.4byte	.LVL72
+ 2897 0231 0100     		.2byte	0x1
+ 2898 0233 54       		.byte	0x54
+ 2899 0234 9E000000 		.4byte	.LVL74
+ 2900 0238 A0000000 		.4byte	.LVL75
+ 2901 023c 0200     		.2byte	0x2
+ 2902 023e 31       		.byte	0x31
+ 2903 023f 9F       		.byte	0x9f
+ 2904 0240 A0000000 		.4byte	.LVL75
+ 2905 0244 C0000000 		.4byte	.LVL77
+ 2906 0248 0100     		.2byte	0x1
+ 2907 024a 54       		.byte	0x54
+ 2908 024b C0000000 		.4byte	.LVL77
+ 2909 024f C4000000 		.4byte	.LVL78
+ 2910 0253 0200     		.2byte	0x2
+ 2911 0255 31       		.byte	0x31
+ 2912 0256 9F       		.byte	0x9f
+ 2913 0257 C4000000 		.4byte	.LVL78
+ 2914 025b CE000000 		.4byte	.LVL79
+ 2915 025f 0100     		.2byte	0x1
+ 2916 0261 54       		.byte	0x54
+ 2917 0262 00000000 		.4byte	0
+ 2918 0266 00000000 		.4byte	0
+ 2919              	.LLST15:
+ 2920 026a 5C000000 		.4byte	.LVL63
+ 2921 026e 5E000000 		.4byte	.LVL64
+ 2922 0272 0100     		.2byte	0x1
+ 2923 0274 55       		.byte	0x55
+ 2924 0275 66000000 		.4byte	.LVL65
+ 2925 0279 A4000000 		.4byte	.LVL76
+ 2926 027d 0100     		.2byte	0x1
+ 2927 027f 55       		.byte	0x55
+ 2928 0280 00000000 		.4byte	0
+ 2929 0284 00000000 		.4byte	0
+ 2930              	.LLST16:
+ 2931 0288 14000000 		.4byte	.LVL83
+ 2932 028c 18000000 		.4byte	.LVL84
+ 2933 0290 0200     		.2byte	0x2
+ 2934 0292 30       		.byte	0x30
+ 2935 0293 9F       		.byte	0x9f
+ 2936 0294 18000000 		.4byte	.LVL84
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 58
+
+
+ 2937 0298 30000000 		.4byte	.LFE76
+ 2938 029c 0100     		.2byte	0x1
+ 2939 029e 54       		.byte	0x54
+ 2940 029f 00000000 		.4byte	0
+ 2941 02a3 00000000 		.4byte	0
+ 2942              	.LLST17:
+ 2943 02a7 00000000 		.4byte	.LVL89
+ 2944 02ab 0F000000 		.4byte	.LVL90-1
+ 2945 02af 0100     		.2byte	0x1
+ 2946 02b1 50       		.byte	0x50
+ 2947 02b2 0F000000 		.4byte	.LVL90-1
+ 2948 02b6 5E000000 		.4byte	.LVL102
+ 2949 02ba 0100     		.2byte	0x1
+ 2950 02bc 54       		.byte	0x54
+ 2951 02bd 5E000000 		.4byte	.LVL102
+ 2952 02c1 6C000000 		.4byte	.LFE79
+ 2953 02c5 0400     		.2byte	0x4
+ 2954 02c7 F3       		.byte	0xf3
+ 2955 02c8 01       		.uleb128 0x1
+ 2956 02c9 50       		.byte	0x50
+ 2957 02ca 9F       		.byte	0x9f
+ 2958 02cb 00000000 		.4byte	0
+ 2959 02cf 00000000 		.4byte	0
+ 2960              	.LLST18:
+ 2961 02d3 10000000 		.4byte	.LVL90
+ 2962 02d7 44000000 		.4byte	.LVL99
+ 2963 02db 0100     		.2byte	0x1
+ 2964 02dd 50       		.byte	0x50
+ 2965 02de 4E000000 		.4byte	.LVL100
+ 2966 02e2 5A000000 		.4byte	.LVL101
+ 2967 02e6 0100     		.2byte	0x1
+ 2968 02e8 50       		.byte	0x50
+ 2969 02e9 00000000 		.4byte	0
+ 2970 02ed 00000000 		.4byte	0
+ 2971              	.LLST19:
+ 2972 02f1 12000000 		.4byte	.LVL91
+ 2973 02f5 16000000 		.4byte	.LVL93
+ 2974 02f9 0100     		.2byte	0x1
+ 2975 02fb 53       		.byte	0x53
+ 2976 02fc 18000000 		.4byte	.LVL94
+ 2977 0300 1E000000 		.4byte	.LVL95
+ 2978 0304 0100     		.2byte	0x1
+ 2979 0306 53       		.byte	0x53
+ 2980 0307 20000000 		.4byte	.LVL96
+ 2981 030b 34000000 		.4byte	.LVL98
+ 2982 030f 0100     		.2byte	0x1
+ 2983 0311 53       		.byte	0x53
+ 2984 0312 00000000 		.4byte	0
+ 2985 0316 00000000 		.4byte	0
+ 2986              		.section	.debug_aranges,"",%progbits
+ 2987 0000 94000000 		.4byte	0x94
+ 2988 0004 0200     		.2byte	0x2
+ 2989 0006 00000000 		.4byte	.Ldebug_info0
+ 2990 000a 04       		.byte	0x4
+ 2991 000b 00       		.byte	0
+ 2992 000c 0000     		.2byte	0
+ 2993 000e 0000     		.2byte	0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 59
+
+
+ 2994 0010 00000000 		.4byte	.LFB64
+ 2995 0014 44000000 		.4byte	.LFE64-.LFB64
+ 2996 0018 00000000 		.4byte	.LFB65
+ 2997 001c 1C000000 		.4byte	.LFE65-.LFB65
+ 2998 0020 00000000 		.4byte	.LFB66
+ 2999 0024 1C000000 		.4byte	.LFE66-.LFB66
+ 3000 0028 00000000 		.4byte	.LFB67
+ 3001 002c 10000000 		.4byte	.LFE67-.LFB67
+ 3002 0030 00000000 		.4byte	.LFB68
+ 3003 0034 2A000000 		.4byte	.LFE68-.LFB68
+ 3004 0038 00000000 		.4byte	.LFB69
+ 3005 003c 26000000 		.4byte	.LFE69-.LFB69
+ 3006 0040 00000000 		.4byte	.LFB70
+ 3007 0044 1E000000 		.4byte	.LFE70-.LFB70
+ 3008 0048 00000000 		.4byte	.LFB71
+ 3009 004c 0C000000 		.4byte	.LFE71-.LFB71
+ 3010 0050 00000000 		.4byte	.LFB72
+ 3011 0054 0C000000 		.4byte	.LFE72-.LFB72
+ 3012 0058 00000000 		.4byte	.LFB73
+ 3013 005c 18000000 		.4byte	.LFE73-.LFB73
+ 3014 0060 00000000 		.4byte	.LFB74
+ 3015 0064 2E000000 		.4byte	.LFE74-.LFB74
+ 3016 0068 00000000 		.4byte	.LFB75
+ 3017 006c F4000000 		.4byte	.LFE75-.LFB75
+ 3018 0070 00000000 		.4byte	.LFB76
+ 3019 0074 30000000 		.4byte	.LFE76-.LFB76
+ 3020 0078 00000000 		.4byte	.LFB77
+ 3021 007c 1C000000 		.4byte	.LFE77-.LFB77
+ 3022 0080 00000000 		.4byte	.LFB78
+ 3023 0084 08000000 		.4byte	.LFE78-.LFB78
+ 3024 0088 00000000 		.4byte	.LFB79
+ 3025 008c 6C000000 		.4byte	.LFE79-.LFB79
+ 3026 0090 00000000 		.4byte	0
+ 3027 0094 00000000 		.4byte	0
+ 3028              		.section	.debug_ranges,"",%progbits
+ 3029              	.Ldebug_ranges0:
+ 3030 0000 12000000 		.4byte	.LBB2
+ 3031 0004 16000000 		.4byte	.LBE2
+ 3032 0008 18000000 		.4byte	.LBB3
+ 3033 000c 4E000000 		.4byte	.LBE3
+ 3034 0010 00000000 		.4byte	0
+ 3035 0014 00000000 		.4byte	0
+ 3036 0018 00000000 		.4byte	.LFB64
+ 3037 001c 44000000 		.4byte	.LFE64
+ 3038 0020 00000000 		.4byte	.LFB65
+ 3039 0024 1C000000 		.4byte	.LFE65
+ 3040 0028 00000000 		.4byte	.LFB66
+ 3041 002c 1C000000 		.4byte	.LFE66
+ 3042 0030 00000000 		.4byte	.LFB67
+ 3043 0034 10000000 		.4byte	.LFE67
+ 3044 0038 00000000 		.4byte	.LFB68
+ 3045 003c 2A000000 		.4byte	.LFE68
+ 3046 0040 00000000 		.4byte	.LFB69
+ 3047 0044 26000000 		.4byte	.LFE69
+ 3048 0048 00000000 		.4byte	.LFB70
+ 3049 004c 1E000000 		.4byte	.LFE70
+ 3050 0050 00000000 		.4byte	.LFB71
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 60
+
+
+ 3051 0054 0C000000 		.4byte	.LFE71
+ 3052 0058 00000000 		.4byte	.LFB72
+ 3053 005c 0C000000 		.4byte	.LFE72
+ 3054 0060 00000000 		.4byte	.LFB73
+ 3055 0064 18000000 		.4byte	.LFE73
+ 3056 0068 00000000 		.4byte	.LFB74
+ 3057 006c 2E000000 		.4byte	.LFE74
+ 3058 0070 00000000 		.4byte	.LFB75
+ 3059 0074 F4000000 		.4byte	.LFE75
+ 3060 0078 00000000 		.4byte	.LFB76
+ 3061 007c 30000000 		.4byte	.LFE76
+ 3062 0080 00000000 		.4byte	.LFB77
+ 3063 0084 1C000000 		.4byte	.LFE77
+ 3064 0088 00000000 		.4byte	.LFB78
+ 3065 008c 08000000 		.4byte	.LFE78
+ 3066 0090 00000000 		.4byte	.LFB79
+ 3067 0094 6C000000 		.4byte	.LFE79
+ 3068 0098 00000000 		.4byte	0
+ 3069 009c 00000000 		.4byte	0
+ 3070              		.section	.debug_line,"",%progbits
+ 3071              	.Ldebug_line0:
+ 3072 0000 57030000 		.section	.debug_str,"MS",%progbits,1
+ 3072      02006D01 
+ 3072      00000201 
+ 3072      FB0E0D00 
+ 3072      01010101 
+ 3073              	.LASF19:
+ 3074 0000 4F4E455F 		.ascii	"ONE_WIRE_ERROR\000"
+ 3074      57495245 
+ 3074      5F455252 
+ 3074      4F5200
+ 3075              	.LASF46:
+ 3076 000f 72657375 		.ascii	"result\000"
+ 3076      6C7400
+ 3077              	.LASF65:
+ 3078 0016 6F6E655F 		.ascii	"one_wire_read_rom\000"
+ 3078      77697265 
+ 3078      5F726561 
+ 3078      645F726F 
+ 3078      6D00
+ 3079              	.LASF32:
+ 3080 0028 69645F62 		.ascii	"id_bit_number\000"
+ 3080      69745F6E 
+ 3080      756D6265 
+ 3080      7200
+ 3081              	.LASF63:
+ 3082 0036 6F6E655F 		.ascii	"one_wire_reset_crc\000"
+ 3082      77697265 
+ 3082      5F726573 
+ 3082      65745F63 
+ 3082      726300
+ 3083              	.LASF33:
+ 3084 0049 6C617374 		.ascii	"last_zero\000"
+ 3084      5F7A6572 
+ 3084      6F00
+ 3085              	.LASF37:
+ 3086 0053 636D705F 		.ascii	"cmp_id_bit\000"
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 61
+
+
+ 3086      69645F62 
+ 3086      697400
+ 3087              	.LASF50:
+ 3088 005e 73746174 		.ascii	"state\000"
+ 3088      6500
+ 3089              	.LASF2:
+ 3090 0064 73686F72 		.ascii	"short int\000"
+ 3090      7420696E 
+ 3090      7400
+ 3091              	.LASF17:
+ 3092 006e 73697A65 		.ascii	"sizetype\000"
+ 3092      74797065 
+ 3092      00
+ 3093              	.LASF55:
+ 3094 0077 6372635F 		.ascii	"crc_table\000"
+ 3094      7461626C 
+ 3094      6500
+ 3095              	.LASF64:
+ 3096 0081 6F6E655F 		.ascii	"one_wire_get_crc\000"
+ 3096      77697265 
+ 3096      5F676574 
+ 3096      5F637263 
+ 3096      00
+ 3097              	.LASF34:
+ 3098 0092 726F6D5F 		.ascii	"rom_byte_number\000"
+ 3098      62797465 
+ 3098      5F6E756D 
+ 3098      62657200 
+ 3099              	.LASF24:
+ 3100 00a2 6F6E655F 		.ascii	"one_wire_write_bit\000"
+ 3100      77697265 
+ 3100      5F777269 
+ 3100      74655F62 
+ 3100      697400
+ 3101              	.LASF49:
+ 3102 00b5 6F6E655F 		.ascii	"one_wire_device_count\000"
+ 3102      77697265 
+ 3102      5F646576 
+ 3102      6963655F 
+ 3102      636F756E 
+ 3103              	.LASF25:
+ 3104 00cb 6F6E655F 		.ascii	"one_wire_reset_pulse\000"
+ 3104      77697265 
+ 3104      5F726573 
+ 3104      65745F70 
+ 3104      756C7365 
+ 3105              	.LASF54:
+ 3106 00e0 524F4D5F 		.ascii	"ROM_NO\000"
+ 3106      4E4F00
+ 3107              	.LASF11:
+ 3108 00e7 75696E74 		.ascii	"uint8_t\000"
+ 3108      385F7400 
+ 3109              	.LASF38:
+ 3110 00ef 726F6D5F 		.ascii	"rom_byte_mask\000"
+ 3110      62797465 
+ 3110      5F6D6173 
+ 3110      6B00
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 62
+
+
+ 3111              	.LASF26:
+ 3112 00fd 6F6E655F 		.ascii	"one_wire_read_bit\000"
+ 3112      77697265 
+ 3112      5F726561 
+ 3112      645F6269 
+ 3112      7400
+ 3113              	.LASF41:
+ 3114 010f 64657669 		.ascii	"device\000"
+ 3114      636500
+ 3115              	.LASF13:
+ 3116 0116 666C6F61 		.ascii	"float\000"
+ 3116      7400
+ 3117              	.LASF52:
+ 3118 011c 6C617374 		.ascii	"last_device_flag\000"
+ 3118      5F646576 
+ 3118      6963655F 
+ 3118      666C6167 
+ 3118      00
+ 3119              	.LASF8:
+ 3120 012d 6C6F6E67 		.ascii	"long long int\000"
+ 3120      206C6F6E 
+ 3120      6720696E 
+ 3120      7400
+ 3121              	.LASF6:
+ 3122 013b 6C6F6E67 		.ascii	"long int\000"
+ 3122      20696E74 
+ 3122      00
+ 3123              	.LASF62:
+ 3124 0144 61646472 		.ascii	"address\000"
+ 3124      65737300 
+ 3125              	.LASF18:
+ 3126 014c 4F4E455F 		.ascii	"ONE_WIRE_SLAVE_PRESENT\000"
+ 3126      57495245 
+ 3126      5F534C41 
+ 3126      56455F50 
+ 3126      52455345 
+ 3127              	.LASF48:
+ 3128 0163 6F6E655F 		.ascii	"one_wire_devices\000"
+ 3128      77697265 
+ 3128      5F646576 
+ 3128      69636573 
+ 3128      00
+ 3129              	.LASF4:
+ 3130 0174 5F5F7569 		.ascii	"__uint8_t\000"
+ 3130      6E74385F 
+ 3130      7400
+ 3131              	.LASF16:
+ 3132 017e 6C6F6E67 		.ascii	"long double\000"
+ 3132      20646F75 
+ 3132      626C6500 
+ 3133              	.LASF20:
+ 3134 018a 6F6E655F 		.ascii	"one_wire_state\000"
+ 3134      77697265 
+ 3134      5F737461 
+ 3134      746500
+ 3135              	.LASF57:
+ 3136 0199 43794465 		.ascii	"CyDelayUs\000"
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 63
+
+
+ 3136      6C617955 
+ 3136      7300
+ 3137              	.LASF1:
+ 3138 01a3 756E7369 		.ascii	"unsigned char\000"
+ 3138      676E6564 
+ 3138      20636861 
+ 3138      7200
+ 3139              	.LASF0:
+ 3140 01b1 7369676E 		.ascii	"signed char\000"
+ 3140      65642063 
+ 3140      68617200 
+ 3141              	.LASF9:
+ 3142 01bd 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 3142      206C6F6E 
+ 3142      6720756E 
+ 3142      7369676E 
+ 3142      65642069 
+ 3143              	.LASF10:
+ 3144 01d4 756E7369 		.ascii	"unsigned int\000"
+ 3144      676E6564 
+ 3144      20696E74 
+ 3144      00
+ 3145              	.LASF43:
+ 3146 01e1 6F6E655F 		.ascii	"one_wire_next\000"
+ 3146      77697265 
+ 3146      5F6E6578 
+ 3146      7400
+ 3147              	.LASF44:
+ 3148 01ef 6F6E655F 		.ascii	"one_wire_search_rom\000"
+ 3148      77697265 
+ 3148      5F736561 
+ 3148      7263685F 
+ 3148      726F6D00 
+ 3149              	.LASF51:
+ 3150 0203 6C617374 		.ascii	"last_mismatch\000"
+ 3150      5F6D6973 
+ 3150      6D617463 
+ 3150      6800
+ 3151              	.LASF27:
+ 3152 0211 6F6E655F 		.ascii	"one_wire_write_byte\000"
+ 3152      77697265 
+ 3152      5F777269 
+ 3152      74655F62 
+ 3152      79746500 
+ 3153              	.LASF3:
+ 3154 0225 73686F72 		.ascii	"short unsigned int\000"
+ 3154      7420756E 
+ 3154      7369676E 
+ 3154      65642069 
+ 3154      6E7400
+ 3155              	.LASF45:
+ 3156 0238 64657669 		.ascii	"devices\000"
+ 3156      63657300 
+ 3157              	.LASF15:
+ 3158 0240 63686172 		.ascii	"char\000"
+ 3158      00
+ 3159              	.LASF12:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 64
+
+
+ 3160 0245 696E7433 		.ascii	"int32_t\000"
+ 3160      325F7400 
+ 3161              	.LASF29:
+ 3162 024d 6F6E655F 		.ascii	"one_wire_read_byte\000"
+ 3162      77697265 
+ 3162      5F726561 
+ 3162      645F6279 
+ 3162      746500
+ 3163              	.LASF28:
+ 3164 0260 64617461 		.ascii	"data\000"
+ 3164      00
+ 3165              	.LASF31:
+ 3166 0265 6F6E655F 		.ascii	"one_wire_search\000"
+ 3166      77697265 
+ 3166      5F736561 
+ 3166      72636800 
+ 3167              	.LASF35:
+ 3168 0275 73656172 		.ascii	"search_result\000"
+ 3168      63685F72 
+ 3168      6573756C 
+ 3168      7400
+ 3169              	.LASF7:
+ 3170 0283 6C6F6E67 		.ascii	"long unsigned int\000"
+ 3170      20756E73 
+ 3170      69676E65 
+ 3170      6420696E 
+ 3170      7400
+ 3171              	.LASF58:
+ 3172 0295 57697265 		.ascii	"Wire1_Read\000"
+ 3172      315F5265 
+ 3172      616400
+ 3173              	.LASF53:
+ 3174 02a0 63726338 		.ascii	"crc8\000"
+ 3174      00
+ 3175              	.LASF21:
+ 3176 02a5 6F6E655F 		.ascii	"one_wire_device\000"
+ 3176      77697265 
+ 3176      5F646576 
+ 3176      69636500 
+ 3177              	.LASF23:
+ 3178 02b5 6F6E655F 		.ascii	"one_wire_write_0\000"
+ 3178      77697265 
+ 3178      5F777269 
+ 3178      74655F30 
+ 3178      00
+ 3179              	.LASF22:
+ 3180 02c6 6F6E655F 		.ascii	"one_wire_write_1\000"
+ 3180      77697265 
+ 3180      5F777269 
+ 3180      74655F31 
+ 3180      00
+ 3181              	.LASF5:
+ 3182 02d7 5F5F696E 		.ascii	"__int32_t\000"
+ 3182      7433325F 
+ 3182      7400
+ 3183              	.LASF40:
+ 3184 02e1 6F6E655F 		.ascii	"one_wire_match_rom\000"
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 65
+
+
+ 3184      77697265 
+ 3184      5F6D6174 
+ 3184      63685F72 
+ 3184      6F6D00
+ 3185              	.LASF39:
+ 3186 02f4 73656172 		.ascii	"search_direction\000"
+ 3186      63685F64 
+ 3186      69726563 
+ 3186      74696F6E 
+ 3186      00
+ 3187              	.LASF56:
+ 3188 0305 57697265 		.ascii	"Wire1_Write\000"
+ 3188      315F5772 
+ 3188      69746500 
+ 3189              	.LASF42:
+ 3190 0311 6F6E655F 		.ascii	"one_wire_first\000"
+ 3190      77697265 
+ 3190      5F666972 
+ 3190      737400
+ 3191              	.LASF14:
+ 3192 0320 646F7562 		.ascii	"double\000"
+ 3192      6C6500
+ 3193              	.LASF30:
+ 3194 0327 6F6E655F 		.ascii	"one_wire_crc\000"
+ 3194      77697265 
+ 3194      5F637263 
+ 3194      00
+ 3195              	.LASF47:
+ 3196 0334 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 3196      52784275 
+ 3196      66666572 
+ 3196      00
+ 3197              	.LASF59:
+ 3198 0341 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 3198      43313120 
+ 3198      352E342E 
+ 3198      31203230 
+ 3198      31363036 
+ 3199 0374 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 3199      20726576 
+ 3199      6973696F 
+ 3199      6E203233 
+ 3199      37373135 
+ 3200 03a7 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 3200      66756E63 
+ 3200      74696F6E 
+ 3200      2D736563 
+ 3200      74696F6E 
+ 3201              	.LASF36:
+ 3202 03cf 69645F62 		.ascii	"id_bit\000"
+ 3202      697400
+ 3203              	.LASF60:
+ 3204 03d6 2E2E5C6F 		.ascii	"..\\one_wire.c\000"
+ 3204      6E655F77 
+ 3204      6972652E 
+ 3204      6300
+ 3205              	.LASF61:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccisld9I.s 			page 66
+
+
+ 3206 03e4 583A5C70 		.ascii	"X:\\projects\\PVCC-Air-Handlers\\AHU_1.cydsn\000"
+ 3206      726F6A65 
+ 3206      6374735C 
+ 3206      50564343 
+ 3206      2D416972 
+ 3207              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

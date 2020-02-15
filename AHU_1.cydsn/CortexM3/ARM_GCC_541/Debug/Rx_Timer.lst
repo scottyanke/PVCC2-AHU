@@ -1,0 +1,2421 @@
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"Rx_Timer.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.Rx_Timer_Enable,"ax",%progbits
+  20              		.align	2
+  21              		.global	Rx_Timer_Enable
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	Rx_Timer_Enable, %function
+  25              	Rx_Timer_Enable:
+  26              	.LFB1:
+  27              		.file 1 "Generated_Source\\PSoC5\\Rx_Timer.c"
+   1:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+   2:Generated_Source\PSoC5/Rx_Timer.c **** * File Name: Rx_Timer.c
+   3:Generated_Source\PSoC5/Rx_Timer.c **** * Version 2.80
+   4:Generated_Source\PSoC5/Rx_Timer.c **** *
+   5:Generated_Source\PSoC5/Rx_Timer.c **** * Description:
+   6:Generated_Source\PSoC5/Rx_Timer.c **** *  The Timer component consists of a 8, 16, 24 or 32-bit timer with
+   7:Generated_Source\PSoC5/Rx_Timer.c **** *  a selectable period between 2 and 2^Width - 1.  The timer may free run
+   8:Generated_Source\PSoC5/Rx_Timer.c **** *  or be used as a capture timer as well.  The capture can be initiated
+   9:Generated_Source\PSoC5/Rx_Timer.c **** *  by a positive or negative edge signal as well as via software.
+  10:Generated_Source\PSoC5/Rx_Timer.c **** *  A trigger input can be programmed to enable the timer on rising edge
+  11:Generated_Source\PSoC5/Rx_Timer.c **** *  falling edge, either edge or continous run.
+  12:Generated_Source\PSoC5/Rx_Timer.c **** *  Interrupts may be generated due to a terminal count condition
+  13:Generated_Source\PSoC5/Rx_Timer.c **** *  or a capture event.
+  14:Generated_Source\PSoC5/Rx_Timer.c **** *
+  15:Generated_Source\PSoC5/Rx_Timer.c **** * Note:
+  16:Generated_Source\PSoC5/Rx_Timer.c **** *
+  17:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+  18:Generated_Source\PSoC5/Rx_Timer.c **** * Copyright 2008-2017, Cypress Semiconductor Corporation.  All rights reserved.
+  19:Generated_Source\PSoC5/Rx_Timer.c **** * You may use this file only in accordance with the license, terms, conditions,
+  20:Generated_Source\PSoC5/Rx_Timer.c **** * disclaimers, and limitations in the end user license agreement accompanying
+  21:Generated_Source\PSoC5/Rx_Timer.c **** * the software package with which this file was provided.
+  22:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************/
+  23:Generated_Source\PSoC5/Rx_Timer.c **** 
+  24:Generated_Source\PSoC5/Rx_Timer.c **** #include "Rx_Timer.h"
+  25:Generated_Source\PSoC5/Rx_Timer.c **** 
+  26:Generated_Source\PSoC5/Rx_Timer.c **** uint8 Rx_Timer_initVar = 0u;
+  27:Generated_Source\PSoC5/Rx_Timer.c **** 
+  28:Generated_Source\PSoC5/Rx_Timer.c **** 
+  29:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+  30:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_Init
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 2
+
+
+  31:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+  32:Generated_Source\PSoC5/Rx_Timer.c **** *
+  33:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+  34:Generated_Source\PSoC5/Rx_Timer.c **** *  Initialize to the schematic state
+  35:Generated_Source\PSoC5/Rx_Timer.c **** *
+  36:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+  37:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+  38:Generated_Source\PSoC5/Rx_Timer.c **** *
+  39:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+  40:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+  41:Generated_Source\PSoC5/Rx_Timer.c **** *
+  42:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+  43:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_Init(void) 
+  44:Generated_Source\PSoC5/Rx_Timer.c **** {
+  45:Generated_Source\PSoC5/Rx_Timer.c ****     #if(!Rx_Timer_UsingFixedFunction)
+  46:Generated_Source\PSoC5/Rx_Timer.c ****             /* Interrupt State Backup for Critical Region*/
+  47:Generated_Source\PSoC5/Rx_Timer.c ****             uint8 Rx_Timer_interruptState;
+  48:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* Interrupt state back up for Fixed Function only */
+  49:Generated_Source\PSoC5/Rx_Timer.c **** 
+  50:Generated_Source\PSoC5/Rx_Timer.c ****     #if (Rx_Timer_UsingFixedFunction)
+  51:Generated_Source\PSoC5/Rx_Timer.c ****         /* Clear all bits but the enable bit (if it's already set) for Timer operation */
+  52:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_CONTROL &= Rx_Timer_CTRL_ENABLE;
+  53:Generated_Source\PSoC5/Rx_Timer.c **** 
+  54:Generated_Source\PSoC5/Rx_Timer.c ****         /* Clear the mode bits for continuous run mode */
+  55:Generated_Source\PSoC5/Rx_Timer.c ****         #if (CY_PSOC5A)
+  56:Generated_Source\PSoC5/Rx_Timer.c ****             Rx_Timer_CONTROL2 &= ((uint8)(~Rx_Timer_CTRL_MODE_MASK));
+  57:Generated_Source\PSoC5/Rx_Timer.c ****         #endif /* Clear bits in CONTROL2 only in PSOC5A */
+  58:Generated_Source\PSoC5/Rx_Timer.c **** 
+  59:Generated_Source\PSoC5/Rx_Timer.c ****         #if (CY_PSOC3 || CY_PSOC5LP)
+  60:Generated_Source\PSoC5/Rx_Timer.c ****             Rx_Timer_CONTROL3 &= ((uint8)(~Rx_Timer_CTRL_MODE_MASK));
+  61:Generated_Source\PSoC5/Rx_Timer.c ****         #endif /* CONTROL3 register exists only in PSoC3 OR PSoC5LP */
+  62:Generated_Source\PSoC5/Rx_Timer.c **** 
+  63:Generated_Source\PSoC5/Rx_Timer.c ****         /* Check if One Shot mode is enabled i.e. RunMode !=0*/
+  64:Generated_Source\PSoC5/Rx_Timer.c ****         #if (Rx_Timer_RunModeUsed != 0x0u)
+  65:Generated_Source\PSoC5/Rx_Timer.c ****             /* Set 3rd bit of Control register to enable one shot mode */
+  66:Generated_Source\PSoC5/Rx_Timer.c ****             Rx_Timer_CONTROL |= 0x04u;
+  67:Generated_Source\PSoC5/Rx_Timer.c ****         #endif /* One Shot enabled only when RunModeUsed is not Continuous*/
+  68:Generated_Source\PSoC5/Rx_Timer.c **** 
+  69:Generated_Source\PSoC5/Rx_Timer.c ****         #if (Rx_Timer_RunModeUsed == 2)
+  70:Generated_Source\PSoC5/Rx_Timer.c ****             #if (CY_PSOC5A)
+  71:Generated_Source\PSoC5/Rx_Timer.c ****                 /* Set last 2 bits of control2 register if one shot(halt on
+  72:Generated_Source\PSoC5/Rx_Timer.c ****                 interrupt) is enabled*/
+  73:Generated_Source\PSoC5/Rx_Timer.c ****                 Rx_Timer_CONTROL2 |= 0x03u;
+  74:Generated_Source\PSoC5/Rx_Timer.c ****             #endif /* Set One-Shot Halt on Interrupt bit in CONTROL2 for PSoC5A */
+  75:Generated_Source\PSoC5/Rx_Timer.c **** 
+  76:Generated_Source\PSoC5/Rx_Timer.c ****             #if (CY_PSOC3 || CY_PSOC5LP)
+  77:Generated_Source\PSoC5/Rx_Timer.c ****                 /* Set last 2 bits of control3 register if one shot(halt on
+  78:Generated_Source\PSoC5/Rx_Timer.c ****                 interrupt) is enabled*/
+  79:Generated_Source\PSoC5/Rx_Timer.c ****                 Rx_Timer_CONTROL3 |= 0x03u;
+  80:Generated_Source\PSoC5/Rx_Timer.c ****             #endif /* Set One-Shot Halt on Interrupt bit in CONTROL3 for PSoC3 or PSoC5LP */
+  81:Generated_Source\PSoC5/Rx_Timer.c **** 
+  82:Generated_Source\PSoC5/Rx_Timer.c ****         #endif /* Remove section if One Shot Halt on Interrupt is not enabled */
+  83:Generated_Source\PSoC5/Rx_Timer.c **** 
+  84:Generated_Source\PSoC5/Rx_Timer.c ****         #if (Rx_Timer_UsingHWEnable != 0)
+  85:Generated_Source\PSoC5/Rx_Timer.c ****             #if (CY_PSOC5A)
+  86:Generated_Source\PSoC5/Rx_Timer.c ****                 /* Set the default Run Mode of the Timer to Continuous */
+  87:Generated_Source\PSoC5/Rx_Timer.c ****                 Rx_Timer_CONTROL2 |= Rx_Timer_CTRL_MODE_PULSEWIDTH;
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 3
+
+
+  88:Generated_Source\PSoC5/Rx_Timer.c ****             #endif /* Set Continuous Run Mode in CONTROL2 for PSoC5A */
+  89:Generated_Source\PSoC5/Rx_Timer.c **** 
+  90:Generated_Source\PSoC5/Rx_Timer.c ****             #if (CY_PSOC3 || CY_PSOC5LP)
+  91:Generated_Source\PSoC5/Rx_Timer.c ****                 /* Clear and Set ROD and COD bits of CFG2 register */
+  92:Generated_Source\PSoC5/Rx_Timer.c ****                 Rx_Timer_CONTROL3 &= ((uint8)(~Rx_Timer_CTRL_RCOD_MASK));
+  93:Generated_Source\PSoC5/Rx_Timer.c ****                 Rx_Timer_CONTROL3 |= Rx_Timer_CTRL_RCOD;
+  94:Generated_Source\PSoC5/Rx_Timer.c **** 
+  95:Generated_Source\PSoC5/Rx_Timer.c ****                 /* Clear and Enable the HW enable bit in CFG2 register */
+  96:Generated_Source\PSoC5/Rx_Timer.c ****                 Rx_Timer_CONTROL3 &= ((uint8)(~Rx_Timer_CTRL_ENBL_MASK));
+  97:Generated_Source\PSoC5/Rx_Timer.c ****                 Rx_Timer_CONTROL3 |= Rx_Timer_CTRL_ENBL;
+  98:Generated_Source\PSoC5/Rx_Timer.c **** 
+  99:Generated_Source\PSoC5/Rx_Timer.c ****                 /* Set the default Run Mode of the Timer to Continuous */
+ 100:Generated_Source\PSoC5/Rx_Timer.c ****                 Rx_Timer_CONTROL3 |= Rx_Timer_CTRL_MODE_CONTINUOUS;
+ 101:Generated_Source\PSoC5/Rx_Timer.c ****             #endif /* Set Continuous Run Mode in CONTROL3 for PSoC3ES3 or PSoC5A */
+ 102:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 103:Generated_Source\PSoC5/Rx_Timer.c ****         #endif /* Configure Run Mode with hardware enable */
+ 104:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 105:Generated_Source\PSoC5/Rx_Timer.c ****         /* Clear and Set SYNCTC and SYNCCMP bits of RT1 register */
+ 106:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_RT1 &= ((uint8)(~Rx_Timer_RT1_MASK));
+ 107:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_RT1 |= Rx_Timer_SYNC;
+ 108:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 109:Generated_Source\PSoC5/Rx_Timer.c ****         /*Enable DSI Sync all all inputs of the Timer*/
+ 110:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_RT1 &= ((uint8)(~Rx_Timer_SYNCDSI_MASK));
+ 111:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_RT1 |= Rx_Timer_SYNCDSI_EN;
+ 112:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 113:Generated_Source\PSoC5/Rx_Timer.c ****         /* Set the IRQ to use the status register interrupts */
+ 114:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_CONTROL2 |= Rx_Timer_CTRL2_IRQ_SEL;
+ 115:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* Configuring registers of fixed function implementation */
+ 116:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 117:Generated_Source\PSoC5/Rx_Timer.c ****     /* Set Initial values from Configuration */
+ 118:Generated_Source\PSoC5/Rx_Timer.c ****     Rx_Timer_WritePeriod(Rx_Timer_INIT_PERIOD);
+ 119:Generated_Source\PSoC5/Rx_Timer.c ****     Rx_Timer_WriteCounter(Rx_Timer_INIT_PERIOD);
+ 120:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 121:Generated_Source\PSoC5/Rx_Timer.c ****     #if (Rx_Timer_UsingHWCaptureCounter)/* Capture counter is enabled */
+ 122:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_CAPTURE_COUNT_CTRL |= Rx_Timer_CNTR_ENABLE;
+ 123:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_SetCaptureCount(Rx_Timer_INIT_CAPTURE_COUNT);
+ 124:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* Configure capture counter value */
+ 125:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 126:Generated_Source\PSoC5/Rx_Timer.c ****     #if (!Rx_Timer_UsingFixedFunction)
+ 127:Generated_Source\PSoC5/Rx_Timer.c ****         #if (Rx_Timer_SoftwareCaptureMode)
+ 128:Generated_Source\PSoC5/Rx_Timer.c ****             Rx_Timer_SetCaptureMode(Rx_Timer_INIT_CAPTURE_MODE);
+ 129:Generated_Source\PSoC5/Rx_Timer.c ****         #endif /* Set Capture Mode for UDB implementation if capture mode is software controlled */
+ 130:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 131:Generated_Source\PSoC5/Rx_Timer.c ****         #if (Rx_Timer_SoftwareTriggerMode)
+ 132:Generated_Source\PSoC5/Rx_Timer.c ****             #if (!Rx_Timer_UDB_CONTROL_REG_REMOVED)
+ 133:Generated_Source\PSoC5/Rx_Timer.c ****                 if (0u == (Rx_Timer_CONTROL & Rx_Timer__B_TIMER__TM_SOFTWARE))
+ 134:Generated_Source\PSoC5/Rx_Timer.c ****                 {
+ 135:Generated_Source\PSoC5/Rx_Timer.c ****                     Rx_Timer_SetTriggerMode(Rx_Timer_INIT_TRIGGER_MODE);
+ 136:Generated_Source\PSoC5/Rx_Timer.c ****                 }
+ 137:Generated_Source\PSoC5/Rx_Timer.c ****             #endif /* (!Rx_Timer_UDB_CONTROL_REG_REMOVED) */
+ 138:Generated_Source\PSoC5/Rx_Timer.c ****         #endif /* Set trigger mode for UDB Implementation if trigger mode is software controlled */
+ 139:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 140:Generated_Source\PSoC5/Rx_Timer.c ****         /* CyEnterCriticalRegion and CyExitCriticalRegion are used to mark following region critica
+ 141:Generated_Source\PSoC5/Rx_Timer.c ****         /* Enter Critical Region*/
+ 142:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_interruptState = CyEnterCriticalSection();
+ 143:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 144:Generated_Source\PSoC5/Rx_Timer.c ****         /* Use the interrupt output of the status register for IRQ output */
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 4
+
+
+ 145:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_STATUS_AUX_CTRL |= Rx_Timer_STATUS_ACTL_INT_EN_MASK;
+ 146:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 147:Generated_Source\PSoC5/Rx_Timer.c ****         /* Exit Critical Region*/
+ 148:Generated_Source\PSoC5/Rx_Timer.c ****         CyExitCriticalSection(Rx_Timer_interruptState);
+ 149:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 150:Generated_Source\PSoC5/Rx_Timer.c ****         #if (Rx_Timer_EnableTriggerMode)
+ 151:Generated_Source\PSoC5/Rx_Timer.c ****             Rx_Timer_EnableTrigger();
+ 152:Generated_Source\PSoC5/Rx_Timer.c ****         #endif /* Set Trigger enable bit for UDB implementation in the control register*/
+ 153:Generated_Source\PSoC5/Rx_Timer.c **** 		
+ 154:Generated_Source\PSoC5/Rx_Timer.c **** 		
+ 155:Generated_Source\PSoC5/Rx_Timer.c ****         #if (Rx_Timer_InterruptOnCaptureCount && !Rx_Timer_UDB_CONTROL_REG_REMOVED)
+ 156:Generated_Source\PSoC5/Rx_Timer.c ****             Rx_Timer_SetInterruptCount(Rx_Timer_INIT_INT_CAPTURE_COUNT);
+ 157:Generated_Source\PSoC5/Rx_Timer.c ****         #endif /* Set interrupt count in UDB implementation if interrupt count feature is checked.*
+ 158:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 159:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_ClearFIFO();
+ 160:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* Configure additional features of UDB implementation */
+ 161:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 162:Generated_Source\PSoC5/Rx_Timer.c ****     Rx_Timer_SetInterruptMode(Rx_Timer_INIT_INTERRUPT_MODE);
+ 163:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 164:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 165:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 166:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 167:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_Enable
+ 168:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 169:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 170:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 171:Generated_Source\PSoC5/Rx_Timer.c **** *  Enable the Timer
+ 172:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 173:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 174:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 175:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 176:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 177:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 178:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 179:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 180:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_Enable(void) 
+ 181:Generated_Source\PSoC5/Rx_Timer.c **** {
+  28              		.loc 1 181 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+ 182:Generated_Source\PSoC5/Rx_Timer.c ****     /* Globally Enable the Fixed Function Block chosen */
+ 183:Generated_Source\PSoC5/Rx_Timer.c ****     #if (Rx_Timer_UsingFixedFunction)
+ 184:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_GLOBAL_ENABLE |= Rx_Timer_BLOCK_EN_MASK;
+ 185:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_GLOBAL_STBY_ENABLE |= Rx_Timer_BLOCK_STBY_EN_MASK;
+ 186:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* Set Enable bit for enabling Fixed function timer*/
+ 187:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 188:Generated_Source\PSoC5/Rx_Timer.c ****     /* Remove assignment if control register is removed */
+ 189:Generated_Source\PSoC5/Rx_Timer.c ****     #if (!Rx_Timer_UDB_CONTROL_REG_REMOVED || Rx_Timer_UsingFixedFunction)
+ 190:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_CONTROL |= Rx_Timer_CTRL_ENABLE;
+  33              		.loc 1 190 0
+  34 0000 024A     		ldr	r2, .L2
+  35 0002 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  36 0004 43F08003 		orr	r3, r3, #128
+  37 0008 1370     		strb	r3, [r2]
+  38 000a 7047     		bx	lr
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 5
+
+
+  39              	.L3:
+  40              		.align	2
+  41              	.L2:
+  42 000c 7A640040 		.word	1073767546
+  43              		.cfi_endproc
+  44              	.LFE1:
+  45              		.size	Rx_Timer_Enable, .-Rx_Timer_Enable
+  46              		.section	.text.Rx_Timer_Stop,"ax",%progbits
+  47              		.align	2
+  48              		.global	Rx_Timer_Stop
+  49              		.thumb
+  50              		.thumb_func
+  51              		.type	Rx_Timer_Stop, %function
+  52              	Rx_Timer_Stop:
+  53              	.LFB3:
+ 191:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* Remove assignment if control register is removed */
+ 192:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 193:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 194:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 195:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 196:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_Start
+ 197:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 198:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 199:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 200:Generated_Source\PSoC5/Rx_Timer.c **** *  The start function initializes the timer with the default values, the
+ 201:Generated_Source\PSoC5/Rx_Timer.c **** *  enables the timerto begin counting.  It does not enable interrupts,
+ 202:Generated_Source\PSoC5/Rx_Timer.c **** *  the EnableInt command should be called if interrupt generation is required.
+ 203:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 204:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 205:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 206:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 207:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 208:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 209:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 210:Generated_Source\PSoC5/Rx_Timer.c **** * Global variables:
+ 211:Generated_Source\PSoC5/Rx_Timer.c **** *  Rx_Timer_initVar: Is modified when this function is called for the
+ 212:Generated_Source\PSoC5/Rx_Timer.c **** *   first time. Is used to ensure that initialization happens only once.
+ 213:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 214:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 215:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_Start(void) 
+ 216:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 217:Generated_Source\PSoC5/Rx_Timer.c ****     if(Rx_Timer_initVar == 0u)
+ 218:Generated_Source\PSoC5/Rx_Timer.c ****     {
+ 219:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_Init();
+ 220:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 221:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_initVar = 1u;   /* Clear this bit for Initialization */
+ 222:Generated_Source\PSoC5/Rx_Timer.c ****     }
+ 223:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 224:Generated_Source\PSoC5/Rx_Timer.c ****     /* Enable the Timer */
+ 225:Generated_Source\PSoC5/Rx_Timer.c ****     Rx_Timer_Enable();
+ 226:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 227:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 228:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 229:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 230:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_Stop
+ 231:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 232:Generated_Source\PSoC5/Rx_Timer.c **** *
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 6
+
+
+ 233:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 234:Generated_Source\PSoC5/Rx_Timer.c **** *  The stop function halts the timer, but does not change any modes or disable
+ 235:Generated_Source\PSoC5/Rx_Timer.c **** *  interrupts.
+ 236:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 237:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 238:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 239:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 240:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 241:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 242:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 243:Generated_Source\PSoC5/Rx_Timer.c **** * Side Effects: If the Enable mode is set to Hardware only then this function
+ 244:Generated_Source\PSoC5/Rx_Timer.c **** *               has no effect on the operation of the timer.
+ 245:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 246:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 247:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_Stop(void) 
+ 248:Generated_Source\PSoC5/Rx_Timer.c **** {
+  54              		.loc 1 248 0
+  55              		.cfi_startproc
+  56              		@ args = 0, pretend = 0, frame = 0
+  57              		@ frame_needed = 0, uses_anonymous_args = 0
+  58              		@ link register save eliminated.
+ 249:Generated_Source\PSoC5/Rx_Timer.c ****     /* Disable Timer */
+ 250:Generated_Source\PSoC5/Rx_Timer.c ****     #if(!Rx_Timer_UDB_CONTROL_REG_REMOVED || Rx_Timer_UsingFixedFunction)
+ 251:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_CONTROL &= ((uint8)(~Rx_Timer_CTRL_ENABLE));
+  59              		.loc 1 251 0
+  60 0000 024A     		ldr	r2, .L5
+  61 0002 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  62 0004 03F07F03 		and	r3, r3, #127
+  63 0008 1370     		strb	r3, [r2]
+  64 000a 7047     		bx	lr
+  65              	.L6:
+  66              		.align	2
+  67              	.L5:
+  68 000c 7A640040 		.word	1073767546
+  69              		.cfi_endproc
+  70              	.LFE3:
+  71              		.size	Rx_Timer_Stop, .-Rx_Timer_Stop
+  72              		.section	.text.Rx_Timer_SetInterruptMode,"ax",%progbits
+  73              		.align	2
+  74              		.global	Rx_Timer_SetInterruptMode
+  75              		.thumb
+  76              		.thumb_func
+  77              		.type	Rx_Timer_SetInterruptMode, %function
+  78              	Rx_Timer_SetInterruptMode:
+  79              	.LFB4:
+ 252:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* Remove assignment if control register is removed */
+ 253:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 254:Generated_Source\PSoC5/Rx_Timer.c ****     /* Globally disable the Fixed Function Block chosen */
+ 255:Generated_Source\PSoC5/Rx_Timer.c ****     #if (Rx_Timer_UsingFixedFunction)
+ 256:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_GLOBAL_ENABLE &= ((uint8)(~Rx_Timer_BLOCK_EN_MASK));
+ 257:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_GLOBAL_STBY_ENABLE &= ((uint8)(~Rx_Timer_BLOCK_STBY_EN_MASK));
+ 258:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* Disable global enable for the Timer Fixed function block to stop the Timer*/
+ 259:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 260:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 261:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 262:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 263:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_SetInterruptMode
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 7
+
+
+ 264:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 265:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 266:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 267:Generated_Source\PSoC5/Rx_Timer.c **** *  This function selects which of the interrupt inputs may cause an interrupt.
+ 268:Generated_Source\PSoC5/Rx_Timer.c **** *  The twosources are caputure and terminal.  One, both or neither may
+ 269:Generated_Source\PSoC5/Rx_Timer.c **** *  be selected.
+ 270:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 271:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 272:Generated_Source\PSoC5/Rx_Timer.c **** *  interruptMode:   This parameter is used to enable interrups on either/or
+ 273:Generated_Source\PSoC5/Rx_Timer.c **** *                   terminal count or capture.
+ 274:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 275:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 276:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 277:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 278:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 279:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_SetInterruptMode(uint8 interruptMode) 
+ 280:Generated_Source\PSoC5/Rx_Timer.c **** {
+  80              		.loc 1 280 0
+  81              		.cfi_startproc
+  82              		@ args = 0, pretend = 0, frame = 0
+  83              		@ frame_needed = 0, uses_anonymous_args = 0
+  84              		@ link register save eliminated.
+  85              	.LVL0:
+ 281:Generated_Source\PSoC5/Rx_Timer.c ****     Rx_Timer_STATUS_MASK = interruptMode;
+  86              		.loc 1 281 0
+  87 0000 014B     		ldr	r3, .L8
+  88 0002 1870     		strb	r0, [r3]
+  89 0004 7047     		bx	lr
+  90              	.L9:
+  91 0006 00BF     		.align	2
+  92              	.L8:
+  93 0008 8A640040 		.word	1073767562
+  94              		.cfi_endproc
+  95              	.LFE4:
+  96              		.size	Rx_Timer_SetInterruptMode, .-Rx_Timer_SetInterruptMode
+  97              		.section	.text.Rx_Timer_SoftwareCapture,"ax",%progbits
+  98              		.align	2
+  99              		.global	Rx_Timer_SoftwareCapture
+ 100              		.thumb
+ 101              		.thumb_func
+ 102              		.type	Rx_Timer_SoftwareCapture, %function
+ 103              	Rx_Timer_SoftwareCapture:
+ 104              	.LFB5:
+ 282:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 283:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 284:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 285:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 286:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_SoftwareCapture
+ 287:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 288:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 289:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 290:Generated_Source\PSoC5/Rx_Timer.c **** *  This function forces a capture independent of the capture signal.
+ 291:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 292:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 293:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 294:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 295:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 8
+
+
+ 296:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 297:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 298:Generated_Source\PSoC5/Rx_Timer.c **** * Side Effects:
+ 299:Generated_Source\PSoC5/Rx_Timer.c **** *  An existing hardware capture could be overwritten.
+ 300:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 301:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 302:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_SoftwareCapture(void) 
+ 303:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 105              		.loc 1 303 0
+ 106              		.cfi_startproc
+ 107              		@ args = 0, pretend = 0, frame = 0
+ 108              		@ frame_needed = 0, uses_anonymous_args = 0
+ 109              		@ link register save eliminated.
+ 304:Generated_Source\PSoC5/Rx_Timer.c ****     /* Generate a software capture by reading the counter register */
+ 305:Generated_Source\PSoC5/Rx_Timer.c ****     #if(Rx_Timer_UsingFixedFunction)
+ 306:Generated_Source\PSoC5/Rx_Timer.c ****         (void)CY_GET_REG16(Rx_Timer_COUNTER_LSB_PTR);
+ 307:Generated_Source\PSoC5/Rx_Timer.c ****     #else
+ 308:Generated_Source\PSoC5/Rx_Timer.c ****         (void)CY_GET_REG8(Rx_Timer_COUNTER_LSB_PTR_8BIT);
+ 110              		.loc 1 308 0
+ 111 0000 014B     		ldr	r3, .L11
+ 112 0002 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 113 0004 7047     		bx	lr
+ 114              	.L12:
+ 115 0006 00BF     		.align	2
+ 116              	.L11:
+ 117 0008 0A640040 		.word	1073767434
+ 118              		.cfi_endproc
+ 119              	.LFE5:
+ 120              		.size	Rx_Timer_SoftwareCapture, .-Rx_Timer_SoftwareCapture
+ 121              		.section	.text.Rx_Timer_ReadStatusRegister,"ax",%progbits
+ 122              		.align	2
+ 123              		.global	Rx_Timer_ReadStatusRegister
+ 124              		.thumb
+ 125              		.thumb_func
+ 126              		.type	Rx_Timer_ReadStatusRegister, %function
+ 127              	Rx_Timer_ReadStatusRegister:
+ 128              	.LFB6:
+ 309:Generated_Source\PSoC5/Rx_Timer.c ****     #endif/* (Rx_Timer_UsingFixedFunction) */
+ 310:Generated_Source\PSoC5/Rx_Timer.c ****     /* Capture Data is now in the FIFO */
+ 311:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 312:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 313:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 314:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 315:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_ReadStatusRegister
+ 316:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 317:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 318:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 319:Generated_Source\PSoC5/Rx_Timer.c **** *  Reads the status register and returns it's state. This function should use
+ 320:Generated_Source\PSoC5/Rx_Timer.c **** *  defined types for the bit-field information as the bits in this register may
+ 321:Generated_Source\PSoC5/Rx_Timer.c **** *  be permuteable.
+ 322:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 323:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 324:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 325:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 326:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 327:Generated_Source\PSoC5/Rx_Timer.c **** *  The contents of the status register
+ 328:Generated_Source\PSoC5/Rx_Timer.c **** *
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 9
+
+
+ 329:Generated_Source\PSoC5/Rx_Timer.c **** * Side Effects:
+ 330:Generated_Source\PSoC5/Rx_Timer.c **** *  Status register bits may be clear on read.
+ 331:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 332:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 333:Generated_Source\PSoC5/Rx_Timer.c **** uint8   Rx_Timer_ReadStatusRegister(void) 
+ 334:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 129              		.loc 1 334 0
+ 130              		.cfi_startproc
+ 131              		@ args = 0, pretend = 0, frame = 0
+ 132              		@ frame_needed = 0, uses_anonymous_args = 0
+ 133              		@ link register save eliminated.
+ 335:Generated_Source\PSoC5/Rx_Timer.c ****     return (Rx_Timer_STATUS);
+ 134              		.loc 1 335 0
+ 135 0000 014B     		ldr	r3, .L14
+ 136 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 336:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 137              		.loc 1 336 0
+ 138 0004 7047     		bx	lr
+ 139              	.L15:
+ 140 0006 00BF     		.align	2
+ 141              	.L14:
+ 142 0008 6A640040 		.word	1073767530
+ 143              		.cfi_endproc
+ 144              	.LFE6:
+ 145              		.size	Rx_Timer_ReadStatusRegister, .-Rx_Timer_ReadStatusRegister
+ 146              		.section	.text.Rx_Timer_ReadControlRegister,"ax",%progbits
+ 147              		.align	2
+ 148              		.global	Rx_Timer_ReadControlRegister
+ 149              		.thumb
+ 150              		.thumb_func
+ 151              		.type	Rx_Timer_ReadControlRegister, %function
+ 152              	Rx_Timer_ReadControlRegister:
+ 153              	.LFB7:
+ 337:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 338:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 339:Generated_Source\PSoC5/Rx_Timer.c **** #if (!Rx_Timer_UDB_CONTROL_REG_REMOVED) /* Remove API if control register is unused */
+ 340:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 341:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 342:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 343:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_ReadControlRegister
+ 344:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 345:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 346:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 347:Generated_Source\PSoC5/Rx_Timer.c **** *  Reads the control register and returns it's value.
+ 348:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 349:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 350:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 351:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 352:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 353:Generated_Source\PSoC5/Rx_Timer.c **** *  The contents of the control register
+ 354:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 355:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 356:Generated_Source\PSoC5/Rx_Timer.c **** uint8 Rx_Timer_ReadControlRegister(void) 
+ 357:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 154              		.loc 1 357 0
+ 155              		.cfi_startproc
+ 156              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 10
+
+
+ 157              		@ frame_needed = 0, uses_anonymous_args = 0
+ 158              		@ link register save eliminated.
+ 358:Generated_Source\PSoC5/Rx_Timer.c ****     #if (!Rx_Timer_UDB_CONTROL_REG_REMOVED) 
+ 359:Generated_Source\PSoC5/Rx_Timer.c ****         return ((uint8)Rx_Timer_CONTROL);
+ 159              		.loc 1 359 0
+ 160 0000 014B     		ldr	r3, .L17
+ 161 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 360:Generated_Source\PSoC5/Rx_Timer.c ****     #else
+ 361:Generated_Source\PSoC5/Rx_Timer.c ****         return (0);
+ 362:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* (!Rx_Timer_UDB_CONTROL_REG_REMOVED) */
+ 363:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 162              		.loc 1 363 0
+ 163 0004 7047     		bx	lr
+ 164              	.L18:
+ 165 0006 00BF     		.align	2
+ 166              	.L17:
+ 167 0008 7A640040 		.word	1073767546
+ 168              		.cfi_endproc
+ 169              	.LFE7:
+ 170              		.size	Rx_Timer_ReadControlRegister, .-Rx_Timer_ReadControlRegister
+ 171              		.section	.text.Rx_Timer_WriteControlRegister,"ax",%progbits
+ 172              		.align	2
+ 173              		.global	Rx_Timer_WriteControlRegister
+ 174              		.thumb
+ 175              		.thumb_func
+ 176              		.type	Rx_Timer_WriteControlRegister, %function
+ 177              	Rx_Timer_WriteControlRegister:
+ 178              	.LFB8:
+ 364:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 365:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 366:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 367:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_WriteControlRegister
+ 368:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 369:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 370:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 371:Generated_Source\PSoC5/Rx_Timer.c **** *  Sets the bit-field of the control register.
+ 372:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 373:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 374:Generated_Source\PSoC5/Rx_Timer.c **** *  control: The contents of the control register
+ 375:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 376:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 377:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 378:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 379:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_WriteControlRegister(uint8 control) 
+ 380:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 179              		.loc 1 380 0
+ 180              		.cfi_startproc
+ 181              		@ args = 0, pretend = 0, frame = 0
+ 182              		@ frame_needed = 0, uses_anonymous_args = 0
+ 183              		@ link register save eliminated.
+ 184              	.LVL1:
+ 381:Generated_Source\PSoC5/Rx_Timer.c ****     #if (!Rx_Timer_UDB_CONTROL_REG_REMOVED) 
+ 382:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_CONTROL = control;
+ 185              		.loc 1 382 0
+ 186 0000 014B     		ldr	r3, .L20
+ 187 0002 1870     		strb	r0, [r3]
+ 188 0004 7047     		bx	lr
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 11
+
+
+ 189              	.L21:
+ 190 0006 00BF     		.align	2
+ 191              	.L20:
+ 192 0008 7A640040 		.word	1073767546
+ 193              		.cfi_endproc
+ 194              	.LFE8:
+ 195              		.size	Rx_Timer_WriteControlRegister, .-Rx_Timer_WriteControlRegister
+ 196              		.section	.text.Rx_Timer_ReadPeriod,"ax",%progbits
+ 197              		.align	2
+ 198              		.global	Rx_Timer_ReadPeriod
+ 199              		.thumb
+ 200              		.thumb_func
+ 201              		.type	Rx_Timer_ReadPeriod, %function
+ 202              	Rx_Timer_ReadPeriod:
+ 203              	.LFB9:
+ 383:Generated_Source\PSoC5/Rx_Timer.c ****     #else
+ 384:Generated_Source\PSoC5/Rx_Timer.c ****         control = 0u;
+ 385:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* (!Rx_Timer_UDB_CONTROL_REG_REMOVED) */
+ 386:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 387:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 388:Generated_Source\PSoC5/Rx_Timer.c **** #endif /* Remove API if control register is unused */
+ 389:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 390:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 391:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 392:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_ReadPeriod
+ 393:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 394:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 395:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 396:Generated_Source\PSoC5/Rx_Timer.c **** *  This function returns the current value of the Period.
+ 397:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 398:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 399:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 400:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 401:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 402:Generated_Source\PSoC5/Rx_Timer.c **** *  The present value of the counter.
+ 403:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 404:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 405:Generated_Source\PSoC5/Rx_Timer.c **** uint32 Rx_Timer_ReadPeriod(void) 
+ 406:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 204              		.loc 1 406 0
+ 205              		.cfi_startproc
+ 206              		@ args = 0, pretend = 0, frame = 0
+ 207              		@ frame_needed = 0, uses_anonymous_args = 0
+ 208              		@ link register save eliminated.
+ 407:Generated_Source\PSoC5/Rx_Timer.c ****    #if(Rx_Timer_UsingFixedFunction)
+ 408:Generated_Source\PSoC5/Rx_Timer.c ****        return ((uint32)CY_GET_REG16(Rx_Timer_PERIOD_LSB_PTR));
+ 409:Generated_Source\PSoC5/Rx_Timer.c ****    #else
+ 410:Generated_Source\PSoC5/Rx_Timer.c ****        return (CY_GET_REG32(Rx_Timer_PERIOD_LSB_PTR));
+ 209              		.loc 1 410 0
+ 210 0000 014B     		ldr	r3, .L23
+ 211 0002 1868     		ldr	r0, [r3]	@ unaligned
+ 411:Generated_Source\PSoC5/Rx_Timer.c ****    #endif /* (Rx_Timer_UsingFixedFunction) */
+ 412:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 212              		.loc 1 412 0
+ 213 0004 7047     		bx	lr
+ 214              	.L24:
+ 215 0006 00BF     		.align	2
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 12
+
+
+ 216              	.L23:
+ 217 0008 2A640040 		.word	1073767466
+ 218              		.cfi_endproc
+ 219              	.LFE9:
+ 220              		.size	Rx_Timer_ReadPeriod, .-Rx_Timer_ReadPeriod
+ 221              		.section	.text.Rx_Timer_WritePeriod,"ax",%progbits
+ 222              		.align	2
+ 223              		.global	Rx_Timer_WritePeriod
+ 224              		.thumb
+ 225              		.thumb_func
+ 226              		.type	Rx_Timer_WritePeriod, %function
+ 227              	Rx_Timer_WritePeriod:
+ 228              	.LFB10:
+ 413:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 414:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 415:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 416:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_WritePeriod
+ 417:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 418:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 419:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 420:Generated_Source\PSoC5/Rx_Timer.c **** *  This function is used to change the period of the counter.  The new period
+ 421:Generated_Source\PSoC5/Rx_Timer.c **** *  will be loaded the next time terminal count is detected.
+ 422:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 423:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 424:Generated_Source\PSoC5/Rx_Timer.c **** *  period: This value may be between 1 and (2^Resolution)-1.  A value of 0 will
+ 425:Generated_Source\PSoC5/Rx_Timer.c **** *          result in the counter remaining at zero.
+ 426:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 427:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 428:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 429:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 430:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 431:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_WritePeriod(uint32 period) 
+ 432:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 229              		.loc 1 432 0
+ 230              		.cfi_startproc
+ 231              		@ args = 0, pretend = 0, frame = 0
+ 232              		@ frame_needed = 0, uses_anonymous_args = 0
+ 233              		@ link register save eliminated.
+ 234              	.LVL2:
+ 433:Generated_Source\PSoC5/Rx_Timer.c ****     #if(Rx_Timer_UsingFixedFunction)
+ 434:Generated_Source\PSoC5/Rx_Timer.c ****         uint16 period_temp = (uint16)period;
+ 435:Generated_Source\PSoC5/Rx_Timer.c ****         CY_SET_REG16(Rx_Timer_PERIOD_LSB_PTR, period_temp);
+ 436:Generated_Source\PSoC5/Rx_Timer.c ****     #else
+ 437:Generated_Source\PSoC5/Rx_Timer.c ****         CY_SET_REG32(Rx_Timer_PERIOD_LSB_PTR, period);
+ 235              		.loc 1 437 0
+ 236 0000 014B     		ldr	r3, .L26
+ 237 0002 1860     		str	r0, [r3]	@ unaligned
+ 238 0004 7047     		bx	lr
+ 239              	.L27:
+ 240 0006 00BF     		.align	2
+ 241              	.L26:
+ 242 0008 2A640040 		.word	1073767466
+ 243              		.cfi_endproc
+ 244              	.LFE10:
+ 245              		.size	Rx_Timer_WritePeriod, .-Rx_Timer_WritePeriod
+ 246              		.section	.text.Rx_Timer_ReadCapture,"ax",%progbits
+ 247              		.align	2
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 13
+
+
+ 248              		.global	Rx_Timer_ReadCapture
+ 249              		.thumb
+ 250              		.thumb_func
+ 251              		.type	Rx_Timer_ReadCapture, %function
+ 252              	Rx_Timer_ReadCapture:
+ 253              	.LFB11:
+ 438:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /*Write Period value with appropriate resolution suffix depending on UDB or fixed functi
+ 439:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 440:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 441:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 442:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 443:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_ReadCapture
+ 444:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 445:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 446:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 447:Generated_Source\PSoC5/Rx_Timer.c **** *  This function returns the last value captured.
+ 448:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 449:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 450:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 451:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 452:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 453:Generated_Source\PSoC5/Rx_Timer.c **** *  Present Capture value.
+ 454:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 455:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 456:Generated_Source\PSoC5/Rx_Timer.c **** uint32 Rx_Timer_ReadCapture(void) 
+ 457:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 254              		.loc 1 457 0
+ 255              		.cfi_startproc
+ 256              		@ args = 0, pretend = 0, frame = 0
+ 257              		@ frame_needed = 0, uses_anonymous_args = 0
+ 258              		@ link register save eliminated.
+ 458:Generated_Source\PSoC5/Rx_Timer.c ****    #if(Rx_Timer_UsingFixedFunction)
+ 459:Generated_Source\PSoC5/Rx_Timer.c ****        return ((uint32)CY_GET_REG16(Rx_Timer_CAPTURE_LSB_PTR));
+ 460:Generated_Source\PSoC5/Rx_Timer.c ****    #else
+ 461:Generated_Source\PSoC5/Rx_Timer.c ****        return (CY_GET_REG32(Rx_Timer_CAPTURE_LSB_PTR));
+ 259              		.loc 1 461 0
+ 260 0000 014B     		ldr	r3, .L29
+ 261 0002 1868     		ldr	r0, [r3]	@ unaligned
+ 462:Generated_Source\PSoC5/Rx_Timer.c ****    #endif /* (Rx_Timer_UsingFixedFunction) */
+ 463:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 262              		.loc 1 463 0
+ 263 0004 7047     		bx	lr
+ 264              	.L30:
+ 265 0006 00BF     		.align	2
+ 266              	.L29:
+ 267 0008 4A640040 		.word	1073767498
+ 268              		.cfi_endproc
+ 269              	.LFE11:
+ 270              		.size	Rx_Timer_ReadCapture, .-Rx_Timer_ReadCapture
+ 271              		.section	.text.Rx_Timer_WriteCounter,"ax",%progbits
+ 272              		.align	2
+ 273              		.global	Rx_Timer_WriteCounter
+ 274              		.thumb
+ 275              		.thumb_func
+ 276              		.type	Rx_Timer_WriteCounter, %function
+ 277              	Rx_Timer_WriteCounter:
+ 278              	.LFB12:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 14
+
+
+ 464:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 465:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 466:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 467:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_WriteCounter
+ 468:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 469:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 470:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 471:Generated_Source\PSoC5/Rx_Timer.c **** *  This funtion is used to set the counter to a specific value
+ 472:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 473:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 474:Generated_Source\PSoC5/Rx_Timer.c **** *  counter:  New counter value.
+ 475:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 476:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 477:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 478:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 479:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 480:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_WriteCounter(uint32 counter) 
+ 481:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 279              		.loc 1 481 0
+ 280              		.cfi_startproc
+ 281              		@ args = 0, pretend = 0, frame = 0
+ 282              		@ frame_needed = 0, uses_anonymous_args = 0
+ 283              		@ link register save eliminated.
+ 284              	.LVL3:
+ 482:Generated_Source\PSoC5/Rx_Timer.c ****    #if(Rx_Timer_UsingFixedFunction)
+ 483:Generated_Source\PSoC5/Rx_Timer.c ****         /* This functionality is removed until a FixedFunction HW update to
+ 484:Generated_Source\PSoC5/Rx_Timer.c ****          * allow this register to be written
+ 485:Generated_Source\PSoC5/Rx_Timer.c ****          */
+ 486:Generated_Source\PSoC5/Rx_Timer.c ****         CY_SET_REG16(Rx_Timer_COUNTER_LSB_PTR, (uint16)counter);
+ 487:Generated_Source\PSoC5/Rx_Timer.c ****         
+ 488:Generated_Source\PSoC5/Rx_Timer.c ****     #else
+ 489:Generated_Source\PSoC5/Rx_Timer.c ****         CY_SET_REG32(Rx_Timer_COUNTER_LSB_PTR, counter);
+ 285              		.loc 1 489 0
+ 286 0000 014B     		ldr	r3, .L32
+ 287 0002 1860     		str	r0, [r3]	@ unaligned
+ 288 0004 7047     		bx	lr
+ 289              	.L33:
+ 290 0006 00BF     		.align	2
+ 291              	.L32:
+ 292 0008 0A640040 		.word	1073767434
+ 293              		.cfi_endproc
+ 294              	.LFE12:
+ 295              		.size	Rx_Timer_WriteCounter, .-Rx_Timer_WriteCounter
+ 296              		.section	.text.Rx_Timer_ReadCounter,"ax",%progbits
+ 297              		.align	2
+ 298              		.global	Rx_Timer_ReadCounter
+ 299              		.thumb
+ 300              		.thumb_func
+ 301              		.type	Rx_Timer_ReadCounter, %function
+ 302              	Rx_Timer_ReadCounter:
+ 303              	.LFB13:
+ 490:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* Set Write Counter only for the UDB implementation (Write Counter not available in fix
+ 491:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 492:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 493:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 494:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 495:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_ReadCounter
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 15
+
+
+ 496:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 497:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 498:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 499:Generated_Source\PSoC5/Rx_Timer.c **** *  This function returns the current counter value.
+ 500:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 501:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 502:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 503:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 504:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 505:Generated_Source\PSoC5/Rx_Timer.c **** *  Present compare value.
+ 506:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 507:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 508:Generated_Source\PSoC5/Rx_Timer.c **** uint32 Rx_Timer_ReadCounter(void) 
+ 509:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 304              		.loc 1 509 0
+ 305              		.cfi_startproc
+ 306              		@ args = 0, pretend = 0, frame = 0
+ 307              		@ frame_needed = 0, uses_anonymous_args = 0
+ 308              		@ link register save eliminated.
+ 510:Generated_Source\PSoC5/Rx_Timer.c ****     /* Force capture by reading Accumulator */
+ 511:Generated_Source\PSoC5/Rx_Timer.c ****     /* Must first do a software capture to be able to read the counter */
+ 512:Generated_Source\PSoC5/Rx_Timer.c ****     /* It is up to the user code to make sure there isn't already captured data in the FIFO */
+ 513:Generated_Source\PSoC5/Rx_Timer.c ****     #if(Rx_Timer_UsingFixedFunction)
+ 514:Generated_Source\PSoC5/Rx_Timer.c ****         (void)CY_GET_REG16(Rx_Timer_COUNTER_LSB_PTR);
+ 515:Generated_Source\PSoC5/Rx_Timer.c ****     #else
+ 516:Generated_Source\PSoC5/Rx_Timer.c ****         (void)CY_GET_REG8(Rx_Timer_COUNTER_LSB_PTR_8BIT);
+ 309              		.loc 1 516 0
+ 310 0000 024B     		ldr	r3, .L35
+ 311 0002 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 517:Generated_Source\PSoC5/Rx_Timer.c ****     #endif/* (Rx_Timer_UsingFixedFunction) */
+ 518:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 519:Generated_Source\PSoC5/Rx_Timer.c ****     /* Read the data from the FIFO (or capture register for Fixed Function)*/
+ 520:Generated_Source\PSoC5/Rx_Timer.c ****     #if(Rx_Timer_UsingFixedFunction)
+ 521:Generated_Source\PSoC5/Rx_Timer.c ****         return ((uint32)CY_GET_REG16(Rx_Timer_CAPTURE_LSB_PTR));
+ 522:Generated_Source\PSoC5/Rx_Timer.c ****     #else
+ 523:Generated_Source\PSoC5/Rx_Timer.c ****         return (CY_GET_REG32(Rx_Timer_CAPTURE_LSB_PTR));
+ 312              		.loc 1 523 0
+ 313 0004 024B     		ldr	r3, .L35+4
+ 314 0006 1868     		ldr	r0, [r3]	@ unaligned
+ 524:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* (Rx_Timer_UsingFixedFunction) */
+ 525:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 315              		.loc 1 525 0
+ 316 0008 7047     		bx	lr
+ 317              	.L36:
+ 318 000a 00BF     		.align	2
+ 319              	.L35:
+ 320 000c 0A640040 		.word	1073767434
+ 321 0010 4A640040 		.word	1073767498
+ 322              		.cfi_endproc
+ 323              	.LFE13:
+ 324              		.size	Rx_Timer_ReadCounter, .-Rx_Timer_ReadCounter
+ 325              		.section	.text.Rx_Timer_SetCaptureMode,"ax",%progbits
+ 326              		.align	2
+ 327              		.global	Rx_Timer_SetCaptureMode
+ 328              		.thumb
+ 329              		.thumb_func
+ 330              		.type	Rx_Timer_SetCaptureMode, %function
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 16
+
+
+ 331              	Rx_Timer_SetCaptureMode:
+ 332              	.LFB14:
+ 526:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 527:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 528:Generated_Source\PSoC5/Rx_Timer.c **** #if(!Rx_Timer_UsingFixedFunction) /* UDB Specific Functions */
+ 529:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 530:Generated_Source\PSoC5/Rx_Timer.c ****     
+ 531:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 532:Generated_Source\PSoC5/Rx_Timer.c ****  * The functions below this point are only available using the UDB
+ 533:Generated_Source\PSoC5/Rx_Timer.c ****  * implementation.  If a feature is selected, then the API is enabled.
+ 534:Generated_Source\PSoC5/Rx_Timer.c ****  ******************************************************************************/
+ 535:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 536:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 537:Generated_Source\PSoC5/Rx_Timer.c **** #if (Rx_Timer_SoftwareCaptureMode)
+ 538:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 539:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 540:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 541:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_SetCaptureMode
+ 542:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 543:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 544:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 545:Generated_Source\PSoC5/Rx_Timer.c **** *  This function sets the capture mode to either rising or falling edge.
+ 546:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 547:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 548:Generated_Source\PSoC5/Rx_Timer.c **** *  captureMode: This parameter sets the capture mode of the UDB capture feature
+ 549:Generated_Source\PSoC5/Rx_Timer.c **** *  The parameter values are defined using the
+ 550:Generated_Source\PSoC5/Rx_Timer.c **** *  #define Rx_Timer__B_TIMER__CM_NONE 0
+ 551:Generated_Source\PSoC5/Rx_Timer.c **** #define Rx_Timer__B_TIMER__CM_RISINGEDGE 1
+ 552:Generated_Source\PSoC5/Rx_Timer.c **** #define Rx_Timer__B_TIMER__CM_FALLINGEDGE 2
+ 553:Generated_Source\PSoC5/Rx_Timer.c **** #define Rx_Timer__B_TIMER__CM_EITHEREDGE 3
+ 554:Generated_Source\PSoC5/Rx_Timer.c **** #define Rx_Timer__B_TIMER__CM_SOFTWARE 4
+ 555:Generated_Source\PSoC5/Rx_Timer.c ****  identifiers
+ 556:Generated_Source\PSoC5/Rx_Timer.c **** *  The following are the possible values of the parameter
+ 557:Generated_Source\PSoC5/Rx_Timer.c **** *  Rx_Timer__B_TIMER__CM_NONE        - Set Capture mode to None
+ 558:Generated_Source\PSoC5/Rx_Timer.c **** *  Rx_Timer__B_TIMER__CM_RISINGEDGE  - Rising edge of Capture input
+ 559:Generated_Source\PSoC5/Rx_Timer.c **** *  Rx_Timer__B_TIMER__CM_FALLINGEDGE - Falling edge of Capture input
+ 560:Generated_Source\PSoC5/Rx_Timer.c **** *  Rx_Timer__B_TIMER__CM_EITHEREDGE  - Either edge of Capture input
+ 561:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 562:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 563:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 564:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 565:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 566:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_SetCaptureMode(uint8 captureMode) 
+ 567:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 333              		.loc 1 567 0
+ 334              		.cfi_startproc
+ 335              		@ args = 0, pretend = 0, frame = 0
+ 336              		@ frame_needed = 0, uses_anonymous_args = 0
+ 337              		@ link register save eliminated.
+ 338              	.LVL4:
+ 568:Generated_Source\PSoC5/Rx_Timer.c ****     /* This must only set to two bits of the control register associated */
+ 569:Generated_Source\PSoC5/Rx_Timer.c ****     captureMode = ((uint8)((uint8)captureMode << Rx_Timer_CTRL_CAP_MODE_SHIFT));
+ 339              		.loc 1 569 0
+ 340 0000 4001     		lsls	r0, r0, #5
+ 341              	.LVL5:
+ 570:Generated_Source\PSoC5/Rx_Timer.c ****     captureMode &= (Rx_Timer_CTRL_CAP_MODE_MASK);
+ 342              		.loc 1 570 0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 17
+
+
+ 343 0002 00F06000 		and	r0, r0, #96
+ 344              	.LVL6:
+ 571:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 572:Generated_Source\PSoC5/Rx_Timer.c ****     #if (!Rx_Timer_UDB_CONTROL_REG_REMOVED)
+ 573:Generated_Source\PSoC5/Rx_Timer.c ****         /* Clear the Current Setting */
+ 574:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_CONTROL &= ((uint8)(~Rx_Timer_CTRL_CAP_MODE_MASK));
+ 345              		.loc 1 574 0
+ 346 0006 044B     		ldr	r3, .L38
+ 347 0008 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 348 000a 02F09F02 		and	r2, r2, #159
+ 349 000e 1A70     		strb	r2, [r3]
+ 575:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 576:Generated_Source\PSoC5/Rx_Timer.c ****         /* Write The New Setting */
+ 577:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_CONTROL |= captureMode;
+ 350              		.loc 1 577 0
+ 351 0010 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 352 0012 1043     		orrs	r0, r0, r2
+ 353              	.LVL7:
+ 354 0014 1870     		strb	r0, [r3]
+ 355 0016 7047     		bx	lr
+ 356              	.L39:
+ 357              		.align	2
+ 358              	.L38:
+ 359 0018 7A640040 		.word	1073767546
+ 360              		.cfi_endproc
+ 361              	.LFE14:
+ 362              		.size	Rx_Timer_SetCaptureMode, .-Rx_Timer_SetCaptureMode
+ 363              		.section	.text.Rx_Timer_ClearFIFO,"ax",%progbits
+ 364              		.align	2
+ 365              		.global	Rx_Timer_ClearFIFO
+ 366              		.thumb
+ 367              		.thumb_func
+ 368              		.type	Rx_Timer_ClearFIFO, %function
+ 369              	Rx_Timer_ClearFIFO:
+ 370              	.LFB15:
+ 578:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* (!Rx_Timer_UDB_CONTROL_REG_REMOVED) */
+ 579:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 580:Generated_Source\PSoC5/Rx_Timer.c **** #endif /* Remove API if Capture Mode is not Software Controlled */
+ 581:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 582:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 583:Generated_Source\PSoC5/Rx_Timer.c **** #if (Rx_Timer_SoftwareTriggerMode)
+ 584:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 585:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 586:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 587:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_SetTriggerMode
+ 588:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 589:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 590:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 591:Generated_Source\PSoC5/Rx_Timer.c **** *  This function sets the trigger input mode
+ 592:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 593:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 594:Generated_Source\PSoC5/Rx_Timer.c **** *  triggerMode: Pass one of the pre-defined Trigger Modes (except Software)
+ 595:Generated_Source\PSoC5/Rx_Timer.c ****     #define Rx_Timer__B_TIMER__TM_NONE 0x00u
+ 596:Generated_Source\PSoC5/Rx_Timer.c ****     #define Rx_Timer__B_TIMER__TM_RISINGEDGE 0x04u
+ 597:Generated_Source\PSoC5/Rx_Timer.c ****     #define Rx_Timer__B_TIMER__TM_FALLINGEDGE 0x08u
+ 598:Generated_Source\PSoC5/Rx_Timer.c ****     #define Rx_Timer__B_TIMER__TM_EITHEREDGE 0x0Cu
+ 599:Generated_Source\PSoC5/Rx_Timer.c ****     #define Rx_Timer__B_TIMER__TM_SOFTWARE 0x10u
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 18
+
+
+ 600:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 601:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 602:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 603:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 604:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 605:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_SetTriggerMode(uint8 triggerMode) 
+ 606:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 607:Generated_Source\PSoC5/Rx_Timer.c ****     /* This must only set to two bits of the control register associated */
+ 608:Generated_Source\PSoC5/Rx_Timer.c ****     triggerMode &= Rx_Timer_CTRL_TRIG_MODE_MASK;
+ 609:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 610:Generated_Source\PSoC5/Rx_Timer.c ****     #if (!Rx_Timer_UDB_CONTROL_REG_REMOVED)   /* Remove assignment if control register is removed *
+ 611:Generated_Source\PSoC5/Rx_Timer.c ****     
+ 612:Generated_Source\PSoC5/Rx_Timer.c ****         /* Clear the Current Setting */
+ 613:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_CONTROL &= ((uint8)(~Rx_Timer_CTRL_TRIG_MODE_MASK));
+ 614:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 615:Generated_Source\PSoC5/Rx_Timer.c ****         /* Write The New Setting */
+ 616:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_CONTROL |= (triggerMode | Rx_Timer__B_TIMER__TM_SOFTWARE);
+ 617:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* Remove code section if control register is not used */
+ 618:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 619:Generated_Source\PSoC5/Rx_Timer.c **** #endif /* Remove API if Trigger Mode is not Software Controlled */
+ 620:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 621:Generated_Source\PSoC5/Rx_Timer.c **** #if (Rx_Timer_EnableTriggerMode)
+ 622:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 623:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 624:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 625:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_EnableTrigger
+ 626:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 627:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 628:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 629:Generated_Source\PSoC5/Rx_Timer.c **** *  Sets the control bit enabling Hardware Trigger mode
+ 630:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 631:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 632:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 633:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 634:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 635:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 636:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 637:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 638:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_EnableTrigger(void) 
+ 639:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 640:Generated_Source\PSoC5/Rx_Timer.c ****     #if (!Rx_Timer_UDB_CONTROL_REG_REMOVED)   /* Remove assignment if control register is removed *
+ 641:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_CONTROL |= Rx_Timer_CTRL_TRIG_EN;
+ 642:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* Remove code section if control register is not used */
+ 643:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 644:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 645:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 646:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 647:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_DisableTrigger
+ 648:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 649:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 650:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 651:Generated_Source\PSoC5/Rx_Timer.c **** *  Clears the control bit enabling Hardware Trigger mode
+ 652:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 653:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 654:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 655:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 656:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 19
+
+
+ 657:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 658:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 659:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 660:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_DisableTrigger(void) 
+ 661:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 662:Generated_Source\PSoC5/Rx_Timer.c ****     #if (!Rx_Timer_UDB_CONTROL_REG_REMOVED )   /* Remove assignment if control register is removed 
+ 663:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_CONTROL &= ((uint8)(~Rx_Timer_CTRL_TRIG_EN));
+ 664:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* Remove code section if control register is not used */
+ 665:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 666:Generated_Source\PSoC5/Rx_Timer.c **** #endif /* Remove API is Trigger Mode is set to None */
+ 667:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 668:Generated_Source\PSoC5/Rx_Timer.c **** #if(Rx_Timer_InterruptOnCaptureCount)
+ 669:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 670:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 671:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 672:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_SetInterruptCount
+ 673:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 674:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 675:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 676:Generated_Source\PSoC5/Rx_Timer.c **** *  This function sets the capture count before an interrupt is triggered.
+ 677:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 678:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 679:Generated_Source\PSoC5/Rx_Timer.c **** *  interruptCount:  A value between 0 and 3 is valid.  If the value is 0, then
+ 680:Generated_Source\PSoC5/Rx_Timer.c **** *                   an interrupt will occur each time a capture occurs.
+ 681:Generated_Source\PSoC5/Rx_Timer.c **** *                   A value of 1 to 3 will cause the interrupt
+ 682:Generated_Source\PSoC5/Rx_Timer.c **** *                   to delay by the same number of captures.
+ 683:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 684:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 685:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 686:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 687:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 688:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_SetInterruptCount(uint8 interruptCount) 
+ 689:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 690:Generated_Source\PSoC5/Rx_Timer.c ****     /* This must only set to two bits of the control register associated */
+ 691:Generated_Source\PSoC5/Rx_Timer.c ****     interruptCount &= Rx_Timer_CTRL_INTCNT_MASK;
+ 692:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 693:Generated_Source\PSoC5/Rx_Timer.c ****     #if (!Rx_Timer_UDB_CONTROL_REG_REMOVED)
+ 694:Generated_Source\PSoC5/Rx_Timer.c ****         /* Clear the Current Setting */
+ 695:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_CONTROL &= ((uint8)(~Rx_Timer_CTRL_INTCNT_MASK));
+ 696:Generated_Source\PSoC5/Rx_Timer.c ****         /* Write The New Setting */
+ 697:Generated_Source\PSoC5/Rx_Timer.c ****         Rx_Timer_CONTROL |= interruptCount;
+ 698:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* (!Rx_Timer_UDB_CONTROL_REG_REMOVED) */
+ 699:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 700:Generated_Source\PSoC5/Rx_Timer.c **** #endif /* Rx_Timer_InterruptOnCaptureCount */
+ 701:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 702:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 703:Generated_Source\PSoC5/Rx_Timer.c **** #if (Rx_Timer_UsingHWCaptureCounter)
+ 704:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 705:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 706:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 707:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_SetCaptureCount
+ 708:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 709:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 710:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 711:Generated_Source\PSoC5/Rx_Timer.c **** *  This function sets the capture count
+ 712:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 713:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 20
+
+
+ 714:Generated_Source\PSoC5/Rx_Timer.c **** *  captureCount: A value between 2 and 127 inclusive is valid.  A value of 1
+ 715:Generated_Source\PSoC5/Rx_Timer.c **** *                to 127 will cause the interrupt to delay by the same number of
+ 716:Generated_Source\PSoC5/Rx_Timer.c **** *                captures.
+ 717:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 718:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 719:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 720:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 721:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 722:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_SetCaptureCount(uint8 captureCount) 
+ 723:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 724:Generated_Source\PSoC5/Rx_Timer.c ****     Rx_Timer_CAP_COUNT = captureCount;
+ 725:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 726:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 727:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 728:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 729:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_ReadCaptureCount
+ 730:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 731:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 732:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 733:Generated_Source\PSoC5/Rx_Timer.c **** *  This function reads the capture count setting
+ 734:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 735:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 736:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 737:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 738:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 739:Generated_Source\PSoC5/Rx_Timer.c **** *  Returns the Capture Count Setting
+ 740:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 741:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 742:Generated_Source\PSoC5/Rx_Timer.c **** uint8 Rx_Timer_ReadCaptureCount(void) 
+ 743:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 744:Generated_Source\PSoC5/Rx_Timer.c ****     return ((uint8)Rx_Timer_CAP_COUNT);
+ 745:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 746:Generated_Source\PSoC5/Rx_Timer.c **** #endif /* Rx_Timer_UsingHWCaptureCounter */
+ 747:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 748:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 749:Generated_Source\PSoC5/Rx_Timer.c **** /*******************************************************************************
+ 750:Generated_Source\PSoC5/Rx_Timer.c **** * Function Name: Rx_Timer_ClearFIFO
+ 751:Generated_Source\PSoC5/Rx_Timer.c **** ********************************************************************************
+ 752:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 753:Generated_Source\PSoC5/Rx_Timer.c **** * Summary:
+ 754:Generated_Source\PSoC5/Rx_Timer.c **** *  This function clears all capture data from the capture FIFO
+ 755:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 756:Generated_Source\PSoC5/Rx_Timer.c **** * Parameters:
+ 757:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 758:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 759:Generated_Source\PSoC5/Rx_Timer.c **** * Return:
+ 760:Generated_Source\PSoC5/Rx_Timer.c **** *  void
+ 761:Generated_Source\PSoC5/Rx_Timer.c **** *
+ 762:Generated_Source\PSoC5/Rx_Timer.c **** *******************************************************************************/
+ 763:Generated_Source\PSoC5/Rx_Timer.c **** void Rx_Timer_ClearFIFO(void) 
+ 764:Generated_Source\PSoC5/Rx_Timer.c **** {
+ 371              		.loc 1 764 0
+ 372              		.cfi_startproc
+ 373              		@ args = 0, pretend = 0, frame = 0
+ 374              		@ frame_needed = 0, uses_anonymous_args = 0
+ 375 0000 08B5     		push	{r3, lr}
+ 376              		.cfi_def_cfa_offset 8
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 21
+
+
+ 377              		.cfi_offset 3, -8
+ 378              		.cfi_offset 14, -4
+ 765:Generated_Source\PSoC5/Rx_Timer.c ****     while(0u != (Rx_Timer_ReadStatusRegister() & Rx_Timer_STATUS_FIFONEMP))
+ 379              		.loc 1 765 0
+ 380 0002 01E0     		b	.L41
+ 381              	.L42:
+ 766:Generated_Source\PSoC5/Rx_Timer.c ****     {
+ 767:Generated_Source\PSoC5/Rx_Timer.c ****         (void)Rx_Timer_ReadCapture();
+ 382              		.loc 1 767 0
+ 383 0004 FFF7FEFF 		bl	Rx_Timer_ReadCapture
+ 384              	.LVL8:
+ 385              	.L41:
+ 765:Generated_Source\PSoC5/Rx_Timer.c ****     while(0u != (Rx_Timer_ReadStatusRegister() & Rx_Timer_STATUS_FIFONEMP))
+ 386              		.loc 1 765 0
+ 387 0008 FFF7FEFF 		bl	Rx_Timer_ReadStatusRegister
+ 388              	.LVL9:
+ 389 000c 10F0080F 		tst	r0, #8
+ 390 0010 F8D1     		bne	.L42
+ 768:Generated_Source\PSoC5/Rx_Timer.c ****     }
+ 769:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 391              		.loc 1 769 0
+ 392 0012 08BD     		pop	{r3, pc}
+ 393              		.cfi_endproc
+ 394              	.LFE15:
+ 395              		.size	Rx_Timer_ClearFIFO, .-Rx_Timer_ClearFIFO
+ 396              		.section	.text.Rx_Timer_Init,"ax",%progbits
+ 397              		.align	2
+ 398              		.global	Rx_Timer_Init
+ 399              		.thumb
+ 400              		.thumb_func
+ 401              		.type	Rx_Timer_Init, %function
+ 402              	Rx_Timer_Init:
+ 403              	.LFB0:
+  44:Generated_Source\PSoC5/Rx_Timer.c ****     #if(!Rx_Timer_UsingFixedFunction)
+ 404              		.loc 1 44 0
+ 405              		.cfi_startproc
+ 406              		@ args = 0, pretend = 0, frame = 0
+ 407              		@ frame_needed = 0, uses_anonymous_args = 0
+ 408 0000 10B5     		push	{r4, lr}
+ 409              		.cfi_def_cfa_offset 8
+ 410              		.cfi_offset 4, -8
+ 411              		.cfi_offset 14, -4
+ 118:Generated_Source\PSoC5/Rx_Timer.c ****     Rx_Timer_WriteCounter(Rx_Timer_INIT_PERIOD);
+ 412              		.loc 1 118 0
+ 413 0002 0C4C     		ldr	r4, .L46
+ 414 0004 2046     		mov	r0, r4
+ 415 0006 FFF7FEFF 		bl	Rx_Timer_WritePeriod
+ 416              	.LVL10:
+ 119:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 417              		.loc 1 119 0
+ 418 000a 2046     		mov	r0, r4
+ 419 000c FFF7FEFF 		bl	Rx_Timer_WriteCounter
+ 420              	.LVL11:
+ 128:Generated_Source\PSoC5/Rx_Timer.c ****         #endif /* Set Capture Mode for UDB implementation if capture mode is software controlled */
+ 421              		.loc 1 128 0
+ 422 0010 8020     		movs	r0, #128
+ 423 0012 FFF7FEFF 		bl	Rx_Timer_SetCaptureMode
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 22
+
+
+ 424              	.LVL12:
+ 142:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 425              		.loc 1 142 0
+ 426 0016 FFF7FEFF 		bl	CyEnterCriticalSection
+ 427              	.LVL13:
+ 145:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 428              		.loc 1 145 0
+ 429 001a 074A     		ldr	r2, .L46+4
+ 430 001c 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 431 001e 43F01003 		orr	r3, r3, #16
+ 432 0022 1370     		strb	r3, [r2]
+ 148:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 433              		.loc 1 148 0
+ 434 0024 FFF7FEFF 		bl	CyExitCriticalSection
+ 435              	.LVL14:
+ 159:Generated_Source\PSoC5/Rx_Timer.c ****     #endif /* Configure additional features of UDB implementation */
+ 436              		.loc 1 159 0
+ 437 0028 FFF7FEFF 		bl	Rx_Timer_ClearFIFO
+ 438              	.LVL15:
+ 162:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 439              		.loc 1 162 0
+ 440 002c 0120     		movs	r0, #1
+ 441 002e FFF7FEFF 		bl	Rx_Timer_SetInterruptMode
+ 442              	.LVL16:
+ 443 0032 10BD     		pop	{r4, pc}
+ 444              	.L47:
+ 445              		.align	2
+ 446              	.L46:
+ 447 0034 FF760100 		.word	95999
+ 448 0038 9A640040 		.word	1073767578
+ 449              		.cfi_endproc
+ 450              	.LFE0:
+ 451              		.size	Rx_Timer_Init, .-Rx_Timer_Init
+ 452              		.section	.text.Rx_Timer_Start,"ax",%progbits
+ 453              		.align	2
+ 454              		.global	Rx_Timer_Start
+ 455              		.thumb
+ 456              		.thumb_func
+ 457              		.type	Rx_Timer_Start, %function
+ 458              	Rx_Timer_Start:
+ 459              	.LFB2:
+ 216:Generated_Source\PSoC5/Rx_Timer.c ****     if(Rx_Timer_initVar == 0u)
+ 460              		.loc 1 216 0
+ 461              		.cfi_startproc
+ 462              		@ args = 0, pretend = 0, frame = 0
+ 463              		@ frame_needed = 0, uses_anonymous_args = 0
+ 464 0000 08B5     		push	{r3, lr}
+ 465              		.cfi_def_cfa_offset 8
+ 466              		.cfi_offset 3, -8
+ 467              		.cfi_offset 14, -4
+ 217:Generated_Source\PSoC5/Rx_Timer.c ****     {
+ 468              		.loc 1 217 0
+ 469 0002 054B     		ldr	r3, .L51
+ 470 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 471 0006 23B9     		cbnz	r3, .L49
+ 219:Generated_Source\PSoC5/Rx_Timer.c **** 
+ 472              		.loc 1 219 0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 23
+
+
+ 473 0008 FFF7FEFF 		bl	Rx_Timer_Init
+ 474              	.LVL17:
+ 221:Generated_Source\PSoC5/Rx_Timer.c ****     }
+ 475              		.loc 1 221 0
+ 476 000c 0122     		movs	r2, #1
+ 477 000e 024B     		ldr	r3, .L51
+ 478 0010 1A70     		strb	r2, [r3]
+ 479              	.L49:
+ 225:Generated_Source\PSoC5/Rx_Timer.c **** }
+ 480              		.loc 1 225 0
+ 481 0012 FFF7FEFF 		bl	Rx_Timer_Enable
+ 482              	.LVL18:
+ 483 0016 08BD     		pop	{r3, pc}
+ 484              	.L52:
+ 485              		.align	2
+ 486              	.L51:
+ 487 0018 00000000 		.word	.LANCHOR0
+ 488              		.cfi_endproc
+ 489              	.LFE2:
+ 490              		.size	Rx_Timer_Start, .-Rx_Timer_Start
+ 491              		.global	Rx_Timer_initVar
+ 492              		.bss
+ 493              		.set	.LANCHOR0,. + 0
+ 494              		.type	Rx_Timer_initVar, %object
+ 495              		.size	Rx_Timer_initVar, 1
+ 496              	Rx_Timer_initVar:
+ 497 0000 00       		.space	1
+ 498              		.text
+ 499              	.Letext0:
+ 500              		.file 2 "Generated_Source\\PSoC5\\cytypes.h"
+ 501              		.file 3 "Generated_Source\\PSoC5\\CyLib.h"
+ 502              		.section	.debug_info,"",%progbits
+ 503              	.Ldebug_info0:
+ 504 0000 25030000 		.4byte	0x325
+ 505 0004 0400     		.2byte	0x4
+ 506 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 507 000a 04       		.byte	0x4
+ 508 000b 01       		.uleb128 0x1
+ 509 000c 10020000 		.4byte	.LASF41
+ 510 0010 0C       		.byte	0xc
+ 511 0011 DB000000 		.4byte	.LASF42
+ 512 0015 73010000 		.4byte	.LASF43
+ 513 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 514 001d 00000000 		.4byte	0
+ 515 0021 00000000 		.4byte	.Ldebug_line0
+ 516 0025 02       		.uleb128 0x2
+ 517 0026 01       		.byte	0x1
+ 518 0027 06       		.byte	0x6
+ 519 0028 41030000 		.4byte	.LASF0
+ 520 002c 02       		.uleb128 0x2
+ 521 002d 01       		.byte	0x1
+ 522 002e 08       		.byte	0x8
+ 523 002f 9A000000 		.4byte	.LASF1
+ 524 0033 02       		.uleb128 0x2
+ 525 0034 02       		.byte	0x2
+ 526 0035 05       		.byte	0x5
+ 527 0036 FC020000 		.4byte	.LASF2
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 24
+
+
+ 528 003a 02       		.uleb128 0x2
+ 529 003b 02       		.byte	0x2
+ 530 003c 07       		.byte	0x7
+ 531 003d 41000000 		.4byte	.LASF3
+ 532 0041 02       		.uleb128 0x2
+ 533 0042 04       		.byte	0x4
+ 534 0043 05       		.byte	0x5
+ 535 0044 06030000 		.4byte	.LASF4
+ 536 0048 02       		.uleb128 0x2
+ 537 0049 04       		.byte	0x4
+ 538 004a 07       		.byte	0x7
+ 539 004b 0D010000 		.4byte	.LASF5
+ 540 004f 02       		.uleb128 0x2
+ 541 0050 08       		.byte	0x8
+ 542 0051 05       		.byte	0x5
+ 543 0052 A7020000 		.4byte	.LASF6
+ 544 0056 02       		.uleb128 0x2
+ 545 0057 08       		.byte	0x8
+ 546 0058 07       		.byte	0x7
+ 547 0059 83000000 		.4byte	.LASF7
+ 548 005d 03       		.uleb128 0x3
+ 549 005e 04       		.byte	0x4
+ 550 005f 05       		.byte	0x5
+ 551 0060 696E7400 		.ascii	"int\000"
+ 552 0064 02       		.uleb128 0x2
+ 553 0065 04       		.byte	0x4
+ 554 0066 07       		.byte	0x7
+ 555 0067 D0010000 		.4byte	.LASF8
+ 556 006b 04       		.uleb128 0x4
+ 557 006c 1F010000 		.4byte	.LASF9
+ 558 0070 02       		.byte	0x2
+ 559 0071 E401     		.2byte	0x1e4
+ 560 0073 2C000000 		.4byte	0x2c
+ 561 0077 04       		.uleb128 0x4
+ 562 0078 B2010000 		.4byte	.LASF10
+ 563 007c 02       		.byte	0x2
+ 564 007d E601     		.2byte	0x1e6
+ 565 007f 48000000 		.4byte	0x48
+ 566 0083 02       		.uleb128 0x2
+ 567 0084 04       		.byte	0x4
+ 568 0085 04       		.byte	0x4
+ 569 0086 75000000 		.4byte	.LASF11
+ 570 008a 02       		.uleb128 0x2
+ 571 008b 08       		.byte	0x8
+ 572 008c 04       		.byte	0x4
+ 573 008d 6E000000 		.4byte	.LASF12
+ 574 0091 02       		.uleb128 0x2
+ 575 0092 01       		.byte	0x1
+ 576 0093 08       		.byte	0x8
+ 577 0094 54000000 		.4byte	.LASF13
+ 578 0098 04       		.uleb128 0x4
+ 579 0099 D6000000 		.4byte	.LASF14
+ 580 009d 02       		.byte	0x2
+ 581 009e 8E02     		.2byte	0x28e
+ 582 00a0 A4000000 		.4byte	0xa4
+ 583 00a4 05       		.uleb128 0x5
+ 584 00a5 6B000000 		.4byte	0x6b
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 25
+
+
+ 585 00a9 04       		.uleb128 0x4
+ 586 00aa 16000000 		.4byte	.LASF15
+ 587 00ae 02       		.byte	0x2
+ 588 00af 9002     		.2byte	0x290
+ 589 00b1 B5000000 		.4byte	0xb5
+ 590 00b5 05       		.uleb128 0x5
+ 591 00b6 77000000 		.4byte	0x77
+ 592 00ba 02       		.uleb128 0x2
+ 593 00bb 08       		.byte	0x8
+ 594 00bc 04       		.byte	0x4
+ 595 00bd 35030000 		.4byte	.LASF16
+ 596 00c1 02       		.uleb128 0x2
+ 597 00c2 04       		.byte	0x4
+ 598 00c3 07       		.byte	0x7
+ 599 00c4 9E020000 		.4byte	.LASF17
+ 600 00c8 06       		.uleb128 0x6
+ 601 00c9 FD000000 		.4byte	.LASF18
+ 602 00cd 01       		.byte	0x1
+ 603 00ce B4       		.byte	0xb4
+ 604 00cf 00000000 		.4byte	.LFB1
+ 605 00d3 10000000 		.4byte	.LFE1-.LFB1
+ 606 00d7 01       		.uleb128 0x1
+ 607 00d8 9C       		.byte	0x9c
+ 608 00d9 06       		.uleb128 0x6
+ 609 00da EE020000 		.4byte	.LASF19
+ 610 00de 01       		.byte	0x1
+ 611 00df F7       		.byte	0xf7
+ 612 00e0 00000000 		.4byte	.LFB3
+ 613 00e4 10000000 		.4byte	.LFE3-.LFB3
+ 614 00e8 01       		.uleb128 0x1
+ 615 00e9 9C       		.byte	0x9c
+ 616 00ea 07       		.uleb128 0x7
+ 617 00eb A8000000 		.4byte	.LASF23
+ 618 00ef 01       		.byte	0x1
+ 619 00f0 1701     		.2byte	0x117
+ 620 00f2 00000000 		.4byte	.LFB4
+ 621 00f6 0C000000 		.4byte	.LFE4-.LFB4
+ 622 00fa 01       		.uleb128 0x1
+ 623 00fb 9C       		.byte	0x9c
+ 624 00fc 0F010000 		.4byte	0x10f
+ 625 0100 08       		.uleb128 0x8
+ 626 0101 C4020000 		.4byte	.LASF25
+ 627 0105 01       		.byte	0x1
+ 628 0106 1701     		.2byte	0x117
+ 629 0108 6B000000 		.4byte	0x6b
+ 630 010c 01       		.uleb128 0x1
+ 631 010d 50       		.byte	0x50
+ 632 010e 00       		.byte	0
+ 633 010f 09       		.uleb128 0x9
+ 634 0110 5A010000 		.4byte	.LASF20
+ 635 0114 01       		.byte	0x1
+ 636 0115 2E01     		.2byte	0x12e
+ 637 0117 00000000 		.4byte	.LFB5
+ 638 011b 0C000000 		.4byte	.LFE5-.LFB5
+ 639 011f 01       		.uleb128 0x1
+ 640 0120 9C       		.byte	0x9c
+ 641 0121 0A       		.uleb128 0xa
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 26
+
+
+ 642 0122 D2020000 		.4byte	.LASF21
+ 643 0126 01       		.byte	0x1
+ 644 0127 4D01     		.2byte	0x14d
+ 645 0129 6B000000 		.4byte	0x6b
+ 646 012d 00000000 		.4byte	.LFB6
+ 647 0131 0C000000 		.4byte	.LFE6-.LFB6
+ 648 0135 01       		.uleb128 0x1
+ 649 0136 9C       		.byte	0x9c
+ 650 0137 0A       		.uleb128 0xa
+ 651 0138 DD010000 		.4byte	.LASF22
+ 652 013c 01       		.byte	0x1
+ 653 013d 6401     		.2byte	0x164
+ 654 013f 6B000000 		.4byte	0x6b
+ 655 0143 00000000 		.4byte	.LFB7
+ 656 0147 0C000000 		.4byte	.LFE7-.LFB7
+ 657 014b 01       		.uleb128 0x1
+ 658 014c 9C       		.byte	0x9c
+ 659 014d 07       		.uleb128 0x7
+ 660 014e 1C000000 		.4byte	.LASF24
+ 661 0152 01       		.byte	0x1
+ 662 0153 7B01     		.2byte	0x17b
+ 663 0155 00000000 		.4byte	.LFB8
+ 664 0159 0C000000 		.4byte	.LFE8-.LFB8
+ 665 015d 01       		.uleb128 0x1
+ 666 015e 9C       		.byte	0x9c
+ 667 015f 72010000 		.4byte	0x172
+ 668 0163 08       		.uleb128 0x8
+ 669 0164 25010000 		.4byte	.LASF26
+ 670 0168 01       		.byte	0x1
+ 671 0169 7B01     		.2byte	0x17b
+ 672 016b 6B000000 		.4byte	0x6b
+ 673 016f 01       		.uleb128 0x1
+ 674 0170 50       		.byte	0x50
+ 675 0171 00       		.byte	0
+ 676 0172 0A       		.uleb128 0xa
+ 677 0173 C2000000 		.4byte	.LASF27
+ 678 0177 01       		.byte	0x1
+ 679 0178 9501     		.2byte	0x195
+ 680 017a 77000000 		.4byte	0x77
+ 681 017e 00000000 		.4byte	.LFB9
+ 682 0182 0C000000 		.4byte	.LFE9-.LFB9
+ 683 0186 01       		.uleb128 0x1
+ 684 0187 9C       		.byte	0x9c
+ 685 0188 07       		.uleb128 0x7
+ 686 0189 9D010000 		.4byte	.LASF28
+ 687 018d 01       		.byte	0x1
+ 688 018e AF01     		.2byte	0x1af
+ 689 0190 00000000 		.4byte	.LFB10
+ 690 0194 0C000000 		.4byte	.LFE10-.LFB10
+ 691 0198 01       		.uleb128 0x1
+ 692 0199 9C       		.byte	0x9c
+ 693 019a AD010000 		.4byte	0x1ad
+ 694 019e 08       		.uleb128 0x8
+ 695 019f 3A000000 		.4byte	.LASF29
+ 696 01a3 01       		.byte	0x1
+ 697 01a4 AF01     		.2byte	0x1af
+ 698 01a6 77000000 		.4byte	0x77
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 27
+
+
+ 699 01aa 01       		.uleb128 0x1
+ 700 01ab 50       		.byte	0x50
+ 701 01ac 00       		.byte	0
+ 702 01ad 0A       		.uleb128 0xa
+ 703 01ae 59000000 		.4byte	.LASF30
+ 704 01b2 01       		.byte	0x1
+ 705 01b3 C801     		.2byte	0x1c8
+ 706 01b5 77000000 		.4byte	0x77
+ 707 01b9 00000000 		.4byte	.LFB11
+ 708 01bd 0C000000 		.4byte	.LFE11-.LFB11
+ 709 01c1 01       		.uleb128 0x1
+ 710 01c2 9C       		.byte	0x9c
+ 711 01c3 07       		.uleb128 0x7
+ 712 01c4 00000000 		.4byte	.LASF31
+ 713 01c8 01       		.byte	0x1
+ 714 01c9 E001     		.2byte	0x1e0
+ 715 01cb 00000000 		.4byte	.LFB12
+ 716 01cf 0C000000 		.4byte	.LFE12-.LFB12
+ 717 01d3 01       		.uleb128 0x1
+ 718 01d4 9C       		.byte	0x9c
+ 719 01d5 E8010000 		.4byte	0x1e8
+ 720 01d9 08       		.uleb128 0x8
+ 721 01da 7B000000 		.4byte	.LASF32
+ 722 01de 01       		.byte	0x1
+ 723 01df E001     		.2byte	0x1e0
+ 724 01e1 77000000 		.4byte	0x77
+ 725 01e5 01       		.uleb128 0x1
+ 726 01e6 50       		.byte	0x50
+ 727 01e7 00       		.byte	0
+ 728 01e8 0A       		.uleb128 0xa
+ 729 01e9 0F030000 		.4byte	.LASF33
+ 730 01ed 01       		.byte	0x1
+ 731 01ee FC01     		.2byte	0x1fc
+ 732 01f0 77000000 		.4byte	0x77
+ 733 01f4 00000000 		.4byte	.LFB13
+ 734 01f8 14000000 		.4byte	.LFE13-.LFB13
+ 735 01fc 01       		.uleb128 0x1
+ 736 01fd 9C       		.byte	0x9c
+ 737 01fe 07       		.uleb128 0x7
+ 738 01ff 65030000 		.4byte	.LASF34
+ 739 0203 01       		.byte	0x1
+ 740 0204 3602     		.2byte	0x236
+ 741 0206 00000000 		.4byte	.LFB14
+ 742 020a 1C000000 		.4byte	.LFE14-.LFB14
+ 743 020e 01       		.uleb128 0x1
+ 744 020f 9C       		.byte	0x9c
+ 745 0210 25020000 		.4byte	0x225
+ 746 0214 0B       		.uleb128 0xb
+ 747 0215 2D010000 		.4byte	.LASF35
+ 748 0219 01       		.byte	0x1
+ 749 021a 3602     		.2byte	0x236
+ 750 021c 6B000000 		.4byte	0x6b
+ 751 0220 00000000 		.4byte	.LLST0
+ 752 0224 00       		.byte	0
+ 753 0225 07       		.uleb128 0x7
+ 754 0226 47010000 		.4byte	.LASF36
+ 755 022a 01       		.byte	0x1
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 28
+
+
+ 756 022b FB02     		.2byte	0x2fb
+ 757 022d 00000000 		.4byte	.LFB15
+ 758 0231 14000000 		.4byte	.LFE15-.LFB15
+ 759 0235 01       		.uleb128 0x1
+ 760 0236 9C       		.byte	0x9c
+ 761 0237 4E020000 		.4byte	0x24e
+ 762 023b 0C       		.uleb128 0xc
+ 763 023c 08000000 		.4byte	.LVL8
+ 764 0240 AD010000 		.4byte	0x1ad
+ 765 0244 0C       		.uleb128 0xc
+ 766 0245 0C000000 		.4byte	.LVL9
+ 767 0249 21010000 		.4byte	0x121
+ 768 024d 00       		.byte	0
+ 769 024e 0D       		.uleb128 0xd
+ 770 024f 39010000 		.4byte	.LASF37
+ 771 0253 01       		.byte	0x1
+ 772 0254 2B       		.byte	0x2b
+ 773 0255 00000000 		.4byte	.LFB0
+ 774 0259 3C000000 		.4byte	.LFE0-.LFB0
+ 775 025d 01       		.uleb128 0x1
+ 776 025e 9C       		.byte	0x9c
+ 777 025f D9020000 		.4byte	0x2d9
+ 778 0263 0E       		.uleb128 0xe
+ 779 0264 4D030000 		.4byte	.LASF44
+ 780 0268 01       		.byte	0x1
+ 781 0269 2F       		.byte	0x2f
+ 782 026a 6B000000 		.4byte	0x6b
+ 783 026e 1E000000 		.4byte	.LLST1
+ 784 0272 0F       		.uleb128 0xf
+ 785 0273 0A000000 		.4byte	.LVL10
+ 786 0277 88010000 		.4byte	0x188
+ 787 027b 86020000 		.4byte	0x286
+ 788 027f 10       		.uleb128 0x10
+ 789 0280 01       		.uleb128 0x1
+ 790 0281 50       		.byte	0x50
+ 791 0282 02       		.uleb128 0x2
+ 792 0283 74       		.byte	0x74
+ 793 0284 00       		.sleb128 0
+ 794 0285 00       		.byte	0
+ 795 0286 0F       		.uleb128 0xf
+ 796 0287 10000000 		.4byte	.LVL11
+ 797 028b C3010000 		.4byte	0x1c3
+ 798 028f 9A020000 		.4byte	0x29a
+ 799 0293 10       		.uleb128 0x10
+ 800 0294 01       		.uleb128 0x1
+ 801 0295 50       		.byte	0x50
+ 802 0296 02       		.uleb128 0x2
+ 803 0297 74       		.byte	0x74
+ 804 0298 00       		.sleb128 0
+ 805 0299 00       		.byte	0
+ 806 029a 0F       		.uleb128 0xf
+ 807 029b 16000000 		.4byte	.LVL12
+ 808 029f FE010000 		.4byte	0x1fe
+ 809 02a3 AE020000 		.4byte	0x2ae
+ 810 02a7 10       		.uleb128 0x10
+ 811 02a8 01       		.uleb128 0x1
+ 812 02a9 50       		.byte	0x50
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 29
+
+
+ 813 02aa 02       		.uleb128 0x2
+ 814 02ab 09       		.byte	0x9
+ 815 02ac 80       		.byte	0x80
+ 816 02ad 00       		.byte	0
+ 817 02ae 0C       		.uleb128 0xc
+ 818 02af 1A000000 		.4byte	.LVL13
+ 819 02b3 12030000 		.4byte	0x312
+ 820 02b7 0C       		.uleb128 0xc
+ 821 02b8 28000000 		.4byte	.LVL14
+ 822 02bc 1D030000 		.4byte	0x31d
+ 823 02c0 0C       		.uleb128 0xc
+ 824 02c1 2C000000 		.4byte	.LVL15
+ 825 02c5 25020000 		.4byte	0x225
+ 826 02c9 11       		.uleb128 0x11
+ 827 02ca 32000000 		.4byte	.LVL16
+ 828 02ce EA000000 		.4byte	0xea
+ 829 02d2 10       		.uleb128 0x10
+ 830 02d3 01       		.uleb128 0x1
+ 831 02d4 50       		.byte	0x50
+ 832 02d5 01       		.uleb128 0x1
+ 833 02d6 31       		.byte	0x31
+ 834 02d7 00       		.byte	0
+ 835 02d8 00       		.byte	0
+ 836 02d9 0D       		.uleb128 0xd
+ 837 02da B5020000 		.4byte	.LASF38
+ 838 02de 01       		.byte	0x1
+ 839 02df D7       		.byte	0xd7
+ 840 02e0 00000000 		.4byte	.LFB2
+ 841 02e4 1C000000 		.4byte	.LFE2-.LFB2
+ 842 02e8 01       		.uleb128 0x1
+ 843 02e9 9C       		.byte	0x9c
+ 844 02ea 01030000 		.4byte	0x301
+ 845 02ee 0C       		.uleb128 0xc
+ 846 02ef 0C000000 		.4byte	.LVL17
+ 847 02f3 4E020000 		.4byte	0x24e
+ 848 02f7 0C       		.uleb128 0xc
+ 849 02f8 16000000 		.4byte	.LVL18
+ 850 02fc C8000000 		.4byte	0xc8
+ 851 0300 00       		.byte	0
+ 852 0301 12       		.uleb128 0x12
+ 853 0302 24030000 		.4byte	.LASF45
+ 854 0306 01       		.byte	0x1
+ 855 0307 1A       		.byte	0x1a
+ 856 0308 6B000000 		.4byte	0x6b
+ 857 030c 05       		.uleb128 0x5
+ 858 030d 03       		.byte	0x3
+ 859 030e 00000000 		.4byte	Rx_Timer_initVar
+ 860 0312 13       		.uleb128 0x13
+ 861 0313 B9010000 		.4byte	.LASF39
+ 862 0317 B9010000 		.4byte	.LASF39
+ 863 031b 03       		.byte	0x3
+ 864 031c 7D       		.byte	0x7d
+ 865 031d 13       		.uleb128 0x13
+ 866 031e FA010000 		.4byte	.LASF40
+ 867 0322 FA010000 		.4byte	.LASF40
+ 868 0326 03       		.byte	0x3
+ 869 0327 7E       		.byte	0x7e
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 30
+
+
+ 870 0328 00       		.byte	0
+ 871              		.section	.debug_abbrev,"",%progbits
+ 872              	.Ldebug_abbrev0:
+ 873 0000 01       		.uleb128 0x1
+ 874 0001 11       		.uleb128 0x11
+ 875 0002 01       		.byte	0x1
+ 876 0003 25       		.uleb128 0x25
+ 877 0004 0E       		.uleb128 0xe
+ 878 0005 13       		.uleb128 0x13
+ 879 0006 0B       		.uleb128 0xb
+ 880 0007 03       		.uleb128 0x3
+ 881 0008 0E       		.uleb128 0xe
+ 882 0009 1B       		.uleb128 0x1b
+ 883 000a 0E       		.uleb128 0xe
+ 884 000b 55       		.uleb128 0x55
+ 885 000c 17       		.uleb128 0x17
+ 886 000d 11       		.uleb128 0x11
+ 887 000e 01       		.uleb128 0x1
+ 888 000f 10       		.uleb128 0x10
+ 889 0010 17       		.uleb128 0x17
+ 890 0011 00       		.byte	0
+ 891 0012 00       		.byte	0
+ 892 0013 02       		.uleb128 0x2
+ 893 0014 24       		.uleb128 0x24
+ 894 0015 00       		.byte	0
+ 895 0016 0B       		.uleb128 0xb
+ 896 0017 0B       		.uleb128 0xb
+ 897 0018 3E       		.uleb128 0x3e
+ 898 0019 0B       		.uleb128 0xb
+ 899 001a 03       		.uleb128 0x3
+ 900 001b 0E       		.uleb128 0xe
+ 901 001c 00       		.byte	0
+ 902 001d 00       		.byte	0
+ 903 001e 03       		.uleb128 0x3
+ 904 001f 24       		.uleb128 0x24
+ 905 0020 00       		.byte	0
+ 906 0021 0B       		.uleb128 0xb
+ 907 0022 0B       		.uleb128 0xb
+ 908 0023 3E       		.uleb128 0x3e
+ 909 0024 0B       		.uleb128 0xb
+ 910 0025 03       		.uleb128 0x3
+ 911 0026 08       		.uleb128 0x8
+ 912 0027 00       		.byte	0
+ 913 0028 00       		.byte	0
+ 914 0029 04       		.uleb128 0x4
+ 915 002a 16       		.uleb128 0x16
+ 916 002b 00       		.byte	0
+ 917 002c 03       		.uleb128 0x3
+ 918 002d 0E       		.uleb128 0xe
+ 919 002e 3A       		.uleb128 0x3a
+ 920 002f 0B       		.uleb128 0xb
+ 921 0030 3B       		.uleb128 0x3b
+ 922 0031 05       		.uleb128 0x5
+ 923 0032 49       		.uleb128 0x49
+ 924 0033 13       		.uleb128 0x13
+ 925 0034 00       		.byte	0
+ 926 0035 00       		.byte	0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 31
+
+
+ 927 0036 05       		.uleb128 0x5
+ 928 0037 35       		.uleb128 0x35
+ 929 0038 00       		.byte	0
+ 930 0039 49       		.uleb128 0x49
+ 931 003a 13       		.uleb128 0x13
+ 932 003b 00       		.byte	0
+ 933 003c 00       		.byte	0
+ 934 003d 06       		.uleb128 0x6
+ 935 003e 2E       		.uleb128 0x2e
+ 936 003f 00       		.byte	0
+ 937 0040 3F       		.uleb128 0x3f
+ 938 0041 19       		.uleb128 0x19
+ 939 0042 03       		.uleb128 0x3
+ 940 0043 0E       		.uleb128 0xe
+ 941 0044 3A       		.uleb128 0x3a
+ 942 0045 0B       		.uleb128 0xb
+ 943 0046 3B       		.uleb128 0x3b
+ 944 0047 0B       		.uleb128 0xb
+ 945 0048 27       		.uleb128 0x27
+ 946 0049 19       		.uleb128 0x19
+ 947 004a 11       		.uleb128 0x11
+ 948 004b 01       		.uleb128 0x1
+ 949 004c 12       		.uleb128 0x12
+ 950 004d 06       		.uleb128 0x6
+ 951 004e 40       		.uleb128 0x40
+ 952 004f 18       		.uleb128 0x18
+ 953 0050 9742     		.uleb128 0x2117
+ 954 0052 19       		.uleb128 0x19
+ 955 0053 00       		.byte	0
+ 956 0054 00       		.byte	0
+ 957 0055 07       		.uleb128 0x7
+ 958 0056 2E       		.uleb128 0x2e
+ 959 0057 01       		.byte	0x1
+ 960 0058 3F       		.uleb128 0x3f
+ 961 0059 19       		.uleb128 0x19
+ 962 005a 03       		.uleb128 0x3
+ 963 005b 0E       		.uleb128 0xe
+ 964 005c 3A       		.uleb128 0x3a
+ 965 005d 0B       		.uleb128 0xb
+ 966 005e 3B       		.uleb128 0x3b
+ 967 005f 05       		.uleb128 0x5
+ 968 0060 27       		.uleb128 0x27
+ 969 0061 19       		.uleb128 0x19
+ 970 0062 11       		.uleb128 0x11
+ 971 0063 01       		.uleb128 0x1
+ 972 0064 12       		.uleb128 0x12
+ 973 0065 06       		.uleb128 0x6
+ 974 0066 40       		.uleb128 0x40
+ 975 0067 18       		.uleb128 0x18
+ 976 0068 9742     		.uleb128 0x2117
+ 977 006a 19       		.uleb128 0x19
+ 978 006b 01       		.uleb128 0x1
+ 979 006c 13       		.uleb128 0x13
+ 980 006d 00       		.byte	0
+ 981 006e 00       		.byte	0
+ 982 006f 08       		.uleb128 0x8
+ 983 0070 05       		.uleb128 0x5
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 32
+
+
+ 984 0071 00       		.byte	0
+ 985 0072 03       		.uleb128 0x3
+ 986 0073 0E       		.uleb128 0xe
+ 987 0074 3A       		.uleb128 0x3a
+ 988 0075 0B       		.uleb128 0xb
+ 989 0076 3B       		.uleb128 0x3b
+ 990 0077 05       		.uleb128 0x5
+ 991 0078 49       		.uleb128 0x49
+ 992 0079 13       		.uleb128 0x13
+ 993 007a 02       		.uleb128 0x2
+ 994 007b 18       		.uleb128 0x18
+ 995 007c 00       		.byte	0
+ 996 007d 00       		.byte	0
+ 997 007e 09       		.uleb128 0x9
+ 998 007f 2E       		.uleb128 0x2e
+ 999 0080 00       		.byte	0
+ 1000 0081 3F       		.uleb128 0x3f
+ 1001 0082 19       		.uleb128 0x19
+ 1002 0083 03       		.uleb128 0x3
+ 1003 0084 0E       		.uleb128 0xe
+ 1004 0085 3A       		.uleb128 0x3a
+ 1005 0086 0B       		.uleb128 0xb
+ 1006 0087 3B       		.uleb128 0x3b
+ 1007 0088 05       		.uleb128 0x5
+ 1008 0089 27       		.uleb128 0x27
+ 1009 008a 19       		.uleb128 0x19
+ 1010 008b 11       		.uleb128 0x11
+ 1011 008c 01       		.uleb128 0x1
+ 1012 008d 12       		.uleb128 0x12
+ 1013 008e 06       		.uleb128 0x6
+ 1014 008f 40       		.uleb128 0x40
+ 1015 0090 18       		.uleb128 0x18
+ 1016 0091 9742     		.uleb128 0x2117
+ 1017 0093 19       		.uleb128 0x19
+ 1018 0094 00       		.byte	0
+ 1019 0095 00       		.byte	0
+ 1020 0096 0A       		.uleb128 0xa
+ 1021 0097 2E       		.uleb128 0x2e
+ 1022 0098 00       		.byte	0
+ 1023 0099 3F       		.uleb128 0x3f
+ 1024 009a 19       		.uleb128 0x19
+ 1025 009b 03       		.uleb128 0x3
+ 1026 009c 0E       		.uleb128 0xe
+ 1027 009d 3A       		.uleb128 0x3a
+ 1028 009e 0B       		.uleb128 0xb
+ 1029 009f 3B       		.uleb128 0x3b
+ 1030 00a0 05       		.uleb128 0x5
+ 1031 00a1 27       		.uleb128 0x27
+ 1032 00a2 19       		.uleb128 0x19
+ 1033 00a3 49       		.uleb128 0x49
+ 1034 00a4 13       		.uleb128 0x13
+ 1035 00a5 11       		.uleb128 0x11
+ 1036 00a6 01       		.uleb128 0x1
+ 1037 00a7 12       		.uleb128 0x12
+ 1038 00a8 06       		.uleb128 0x6
+ 1039 00a9 40       		.uleb128 0x40
+ 1040 00aa 18       		.uleb128 0x18
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 33
+
+
+ 1041 00ab 9742     		.uleb128 0x2117
+ 1042 00ad 19       		.uleb128 0x19
+ 1043 00ae 00       		.byte	0
+ 1044 00af 00       		.byte	0
+ 1045 00b0 0B       		.uleb128 0xb
+ 1046 00b1 05       		.uleb128 0x5
+ 1047 00b2 00       		.byte	0
+ 1048 00b3 03       		.uleb128 0x3
+ 1049 00b4 0E       		.uleb128 0xe
+ 1050 00b5 3A       		.uleb128 0x3a
+ 1051 00b6 0B       		.uleb128 0xb
+ 1052 00b7 3B       		.uleb128 0x3b
+ 1053 00b8 05       		.uleb128 0x5
+ 1054 00b9 49       		.uleb128 0x49
+ 1055 00ba 13       		.uleb128 0x13
+ 1056 00bb 02       		.uleb128 0x2
+ 1057 00bc 17       		.uleb128 0x17
+ 1058 00bd 00       		.byte	0
+ 1059 00be 00       		.byte	0
+ 1060 00bf 0C       		.uleb128 0xc
+ 1061 00c0 898201   		.uleb128 0x4109
+ 1062 00c3 00       		.byte	0
+ 1063 00c4 11       		.uleb128 0x11
+ 1064 00c5 01       		.uleb128 0x1
+ 1065 00c6 31       		.uleb128 0x31
+ 1066 00c7 13       		.uleb128 0x13
+ 1067 00c8 00       		.byte	0
+ 1068 00c9 00       		.byte	0
+ 1069 00ca 0D       		.uleb128 0xd
+ 1070 00cb 2E       		.uleb128 0x2e
+ 1071 00cc 01       		.byte	0x1
+ 1072 00cd 3F       		.uleb128 0x3f
+ 1073 00ce 19       		.uleb128 0x19
+ 1074 00cf 03       		.uleb128 0x3
+ 1075 00d0 0E       		.uleb128 0xe
+ 1076 00d1 3A       		.uleb128 0x3a
+ 1077 00d2 0B       		.uleb128 0xb
+ 1078 00d3 3B       		.uleb128 0x3b
+ 1079 00d4 0B       		.uleb128 0xb
+ 1080 00d5 27       		.uleb128 0x27
+ 1081 00d6 19       		.uleb128 0x19
+ 1082 00d7 11       		.uleb128 0x11
+ 1083 00d8 01       		.uleb128 0x1
+ 1084 00d9 12       		.uleb128 0x12
+ 1085 00da 06       		.uleb128 0x6
+ 1086 00db 40       		.uleb128 0x40
+ 1087 00dc 18       		.uleb128 0x18
+ 1088 00dd 9742     		.uleb128 0x2117
+ 1089 00df 19       		.uleb128 0x19
+ 1090 00e0 01       		.uleb128 0x1
+ 1091 00e1 13       		.uleb128 0x13
+ 1092 00e2 00       		.byte	0
+ 1093 00e3 00       		.byte	0
+ 1094 00e4 0E       		.uleb128 0xe
+ 1095 00e5 34       		.uleb128 0x34
+ 1096 00e6 00       		.byte	0
+ 1097 00e7 03       		.uleb128 0x3
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 34
+
+
+ 1098 00e8 0E       		.uleb128 0xe
+ 1099 00e9 3A       		.uleb128 0x3a
+ 1100 00ea 0B       		.uleb128 0xb
+ 1101 00eb 3B       		.uleb128 0x3b
+ 1102 00ec 0B       		.uleb128 0xb
+ 1103 00ed 49       		.uleb128 0x49
+ 1104 00ee 13       		.uleb128 0x13
+ 1105 00ef 02       		.uleb128 0x2
+ 1106 00f0 17       		.uleb128 0x17
+ 1107 00f1 00       		.byte	0
+ 1108 00f2 00       		.byte	0
+ 1109 00f3 0F       		.uleb128 0xf
+ 1110 00f4 898201   		.uleb128 0x4109
+ 1111 00f7 01       		.byte	0x1
+ 1112 00f8 11       		.uleb128 0x11
+ 1113 00f9 01       		.uleb128 0x1
+ 1114 00fa 31       		.uleb128 0x31
+ 1115 00fb 13       		.uleb128 0x13
+ 1116 00fc 01       		.uleb128 0x1
+ 1117 00fd 13       		.uleb128 0x13
+ 1118 00fe 00       		.byte	0
+ 1119 00ff 00       		.byte	0
+ 1120 0100 10       		.uleb128 0x10
+ 1121 0101 8A8201   		.uleb128 0x410a
+ 1122 0104 00       		.byte	0
+ 1123 0105 02       		.uleb128 0x2
+ 1124 0106 18       		.uleb128 0x18
+ 1125 0107 9142     		.uleb128 0x2111
+ 1126 0109 18       		.uleb128 0x18
+ 1127 010a 00       		.byte	0
+ 1128 010b 00       		.byte	0
+ 1129 010c 11       		.uleb128 0x11
+ 1130 010d 898201   		.uleb128 0x4109
+ 1131 0110 01       		.byte	0x1
+ 1132 0111 11       		.uleb128 0x11
+ 1133 0112 01       		.uleb128 0x1
+ 1134 0113 31       		.uleb128 0x31
+ 1135 0114 13       		.uleb128 0x13
+ 1136 0115 00       		.byte	0
+ 1137 0116 00       		.byte	0
+ 1138 0117 12       		.uleb128 0x12
+ 1139 0118 34       		.uleb128 0x34
+ 1140 0119 00       		.byte	0
+ 1141 011a 03       		.uleb128 0x3
+ 1142 011b 0E       		.uleb128 0xe
+ 1143 011c 3A       		.uleb128 0x3a
+ 1144 011d 0B       		.uleb128 0xb
+ 1145 011e 3B       		.uleb128 0x3b
+ 1146 011f 0B       		.uleb128 0xb
+ 1147 0120 49       		.uleb128 0x49
+ 1148 0121 13       		.uleb128 0x13
+ 1149 0122 3F       		.uleb128 0x3f
+ 1150 0123 19       		.uleb128 0x19
+ 1151 0124 02       		.uleb128 0x2
+ 1152 0125 18       		.uleb128 0x18
+ 1153 0126 00       		.byte	0
+ 1154 0127 00       		.byte	0
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 35
+
+
+ 1155 0128 13       		.uleb128 0x13
+ 1156 0129 2E       		.uleb128 0x2e
+ 1157 012a 00       		.byte	0
+ 1158 012b 3F       		.uleb128 0x3f
+ 1159 012c 19       		.uleb128 0x19
+ 1160 012d 3C       		.uleb128 0x3c
+ 1161 012e 19       		.uleb128 0x19
+ 1162 012f 6E       		.uleb128 0x6e
+ 1163 0130 0E       		.uleb128 0xe
+ 1164 0131 03       		.uleb128 0x3
+ 1165 0132 0E       		.uleb128 0xe
+ 1166 0133 3A       		.uleb128 0x3a
+ 1167 0134 0B       		.uleb128 0xb
+ 1168 0135 3B       		.uleb128 0x3b
+ 1169 0136 0B       		.uleb128 0xb
+ 1170 0137 00       		.byte	0
+ 1171 0138 00       		.byte	0
+ 1172 0139 00       		.byte	0
+ 1173              		.section	.debug_loc,"",%progbits
+ 1174              	.Ldebug_loc0:
+ 1175              	.LLST0:
+ 1176 0000 00000000 		.4byte	.LVL4
+ 1177 0004 02000000 		.4byte	.LVL5
+ 1178 0008 0100     		.2byte	0x1
+ 1179 000a 50       		.byte	0x50
+ 1180 000b 02000000 		.4byte	.LVL5
+ 1181 000f 14000000 		.4byte	.LVL7
+ 1182 0013 0100     		.2byte	0x1
+ 1183 0015 50       		.byte	0x50
+ 1184 0016 00000000 		.4byte	0
+ 1185 001a 00000000 		.4byte	0
+ 1186              	.LLST1:
+ 1187 001e 1A000000 		.4byte	.LVL13
+ 1188 0022 27000000 		.4byte	.LVL14-1
+ 1189 0026 0100     		.2byte	0x1
+ 1190 0028 50       		.byte	0x50
+ 1191 0029 00000000 		.4byte	0
+ 1192 002d 00000000 		.4byte	0
+ 1193              		.section	.debug_aranges,"",%progbits
+ 1194 0000 94000000 		.4byte	0x94
+ 1195 0004 0200     		.2byte	0x2
+ 1196 0006 00000000 		.4byte	.Ldebug_info0
+ 1197 000a 04       		.byte	0x4
+ 1198 000b 00       		.byte	0
+ 1199 000c 0000     		.2byte	0
+ 1200 000e 0000     		.2byte	0
+ 1201 0010 00000000 		.4byte	.LFB1
+ 1202 0014 10000000 		.4byte	.LFE1-.LFB1
+ 1203 0018 00000000 		.4byte	.LFB3
+ 1204 001c 10000000 		.4byte	.LFE3-.LFB3
+ 1205 0020 00000000 		.4byte	.LFB4
+ 1206 0024 0C000000 		.4byte	.LFE4-.LFB4
+ 1207 0028 00000000 		.4byte	.LFB5
+ 1208 002c 0C000000 		.4byte	.LFE5-.LFB5
+ 1209 0030 00000000 		.4byte	.LFB6
+ 1210 0034 0C000000 		.4byte	.LFE6-.LFB6
+ 1211 0038 00000000 		.4byte	.LFB7
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 36
+
+
+ 1212 003c 0C000000 		.4byte	.LFE7-.LFB7
+ 1213 0040 00000000 		.4byte	.LFB8
+ 1214 0044 0C000000 		.4byte	.LFE8-.LFB8
+ 1215 0048 00000000 		.4byte	.LFB9
+ 1216 004c 0C000000 		.4byte	.LFE9-.LFB9
+ 1217 0050 00000000 		.4byte	.LFB10
+ 1218 0054 0C000000 		.4byte	.LFE10-.LFB10
+ 1219 0058 00000000 		.4byte	.LFB11
+ 1220 005c 0C000000 		.4byte	.LFE11-.LFB11
+ 1221 0060 00000000 		.4byte	.LFB12
+ 1222 0064 0C000000 		.4byte	.LFE12-.LFB12
+ 1223 0068 00000000 		.4byte	.LFB13
+ 1224 006c 14000000 		.4byte	.LFE13-.LFB13
+ 1225 0070 00000000 		.4byte	.LFB14
+ 1226 0074 1C000000 		.4byte	.LFE14-.LFB14
+ 1227 0078 00000000 		.4byte	.LFB15
+ 1228 007c 14000000 		.4byte	.LFE15-.LFB15
+ 1229 0080 00000000 		.4byte	.LFB0
+ 1230 0084 3C000000 		.4byte	.LFE0-.LFB0
+ 1231 0088 00000000 		.4byte	.LFB2
+ 1232 008c 1C000000 		.4byte	.LFE2-.LFB2
+ 1233 0090 00000000 		.4byte	0
+ 1234 0094 00000000 		.4byte	0
+ 1235              		.section	.debug_ranges,"",%progbits
+ 1236              	.Ldebug_ranges0:
+ 1237 0000 00000000 		.4byte	.LFB1
+ 1238 0004 10000000 		.4byte	.LFE1
+ 1239 0008 00000000 		.4byte	.LFB3
+ 1240 000c 10000000 		.4byte	.LFE3
+ 1241 0010 00000000 		.4byte	.LFB4
+ 1242 0014 0C000000 		.4byte	.LFE4
+ 1243 0018 00000000 		.4byte	.LFB5
+ 1244 001c 0C000000 		.4byte	.LFE5
+ 1245 0020 00000000 		.4byte	.LFB6
+ 1246 0024 0C000000 		.4byte	.LFE6
+ 1247 0028 00000000 		.4byte	.LFB7
+ 1248 002c 0C000000 		.4byte	.LFE7
+ 1249 0030 00000000 		.4byte	.LFB8
+ 1250 0034 0C000000 		.4byte	.LFE8
+ 1251 0038 00000000 		.4byte	.LFB9
+ 1252 003c 0C000000 		.4byte	.LFE9
+ 1253 0040 00000000 		.4byte	.LFB10
+ 1254 0044 0C000000 		.4byte	.LFE10
+ 1255 0048 00000000 		.4byte	.LFB11
+ 1256 004c 0C000000 		.4byte	.LFE11
+ 1257 0050 00000000 		.4byte	.LFB12
+ 1258 0054 0C000000 		.4byte	.LFE12
+ 1259 0058 00000000 		.4byte	.LFB13
+ 1260 005c 14000000 		.4byte	.LFE13
+ 1261 0060 00000000 		.4byte	.LFB14
+ 1262 0064 1C000000 		.4byte	.LFE14
+ 1263 0068 00000000 		.4byte	.LFB15
+ 1264 006c 14000000 		.4byte	.LFE15
+ 1265 0070 00000000 		.4byte	.LFB0
+ 1266 0074 3C000000 		.4byte	.LFE0
+ 1267 0078 00000000 		.4byte	.LFB2
+ 1268 007c 1C000000 		.4byte	.LFE2
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 37
+
+
+ 1269 0080 00000000 		.4byte	0
+ 1270 0084 00000000 		.4byte	0
+ 1271              		.section	.debug_line,"",%progbits
+ 1272              	.Ldebug_line0:
+ 1273 0000 86010000 		.section	.debug_str,"MS",%progbits,1
+ 1273      02005000 
+ 1273      00000201 
+ 1273      FB0E0D00 
+ 1273      01010101 
+ 1274              	.LASF31:
+ 1275 0000 52785F54 		.ascii	"Rx_Timer_WriteCounter\000"
+ 1275      696D6572 
+ 1275      5F577269 
+ 1275      7465436F 
+ 1275      756E7465 
+ 1276              	.LASF15:
+ 1277 0016 72656733 		.ascii	"reg32\000"
+ 1277      3200
+ 1278              	.LASF24:
+ 1279 001c 52785F54 		.ascii	"Rx_Timer_WriteControlRegister\000"
+ 1279      696D6572 
+ 1279      5F577269 
+ 1279      7465436F 
+ 1279      6E74726F 
+ 1280              	.LASF29:
+ 1281 003a 70657269 		.ascii	"period\000"
+ 1281      6F6400
+ 1282              	.LASF3:
+ 1283 0041 73686F72 		.ascii	"short unsigned int\000"
+ 1283      7420756E 
+ 1283      7369676E 
+ 1283      65642069 
+ 1283      6E7400
+ 1284              	.LASF13:
+ 1285 0054 63686172 		.ascii	"char\000"
+ 1285      00
+ 1286              	.LASF30:
+ 1287 0059 52785F54 		.ascii	"Rx_Timer_ReadCapture\000"
+ 1287      696D6572 
+ 1287      5F526561 
+ 1287      64436170 
+ 1287      74757265 
+ 1288              	.LASF12:
+ 1289 006e 646F7562 		.ascii	"double\000"
+ 1289      6C6500
+ 1290              	.LASF11:
+ 1291 0075 666C6F61 		.ascii	"float\000"
+ 1291      7400
+ 1292              	.LASF32:
+ 1293 007b 636F756E 		.ascii	"counter\000"
+ 1293      74657200 
+ 1294              	.LASF7:
+ 1295 0083 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1295      206C6F6E 
+ 1295      6720756E 
+ 1295      7369676E 
+ 1295      65642069 
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 38
+
+
+ 1296              	.LASF1:
+ 1297 009a 756E7369 		.ascii	"unsigned char\000"
+ 1297      676E6564 
+ 1297      20636861 
+ 1297      7200
+ 1298              	.LASF23:
+ 1299 00a8 52785F54 		.ascii	"Rx_Timer_SetInterruptMode\000"
+ 1299      696D6572 
+ 1299      5F536574 
+ 1299      496E7465 
+ 1299      72727570 
+ 1300              	.LASF27:
+ 1301 00c2 52785F54 		.ascii	"Rx_Timer_ReadPeriod\000"
+ 1301      696D6572 
+ 1301      5F526561 
+ 1301      64506572 
+ 1301      696F6400 
+ 1302              	.LASF14:
+ 1303 00d6 72656738 		.ascii	"reg8\000"
+ 1303      00
+ 1304              	.LASF42:
+ 1305 00db 47656E65 		.ascii	"Generated_Source\\PSoC5\\Rx_Timer.c\000"
+ 1305      72617465 
+ 1305      645F536F 
+ 1305      75726365 
+ 1305      5C50536F 
+ 1306              	.LASF18:
+ 1307 00fd 52785F54 		.ascii	"Rx_Timer_Enable\000"
+ 1307      696D6572 
+ 1307      5F456E61 
+ 1307      626C6500 
+ 1308              	.LASF5:
+ 1309 010d 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1309      20756E73 
+ 1309      69676E65 
+ 1309      6420696E 
+ 1309      7400
+ 1310              	.LASF9:
+ 1311 011f 75696E74 		.ascii	"uint8\000"
+ 1311      3800
+ 1312              	.LASF26:
+ 1313 0125 636F6E74 		.ascii	"control\000"
+ 1313      726F6C00 
+ 1314              	.LASF35:
+ 1315 012d 63617074 		.ascii	"captureMode\000"
+ 1315      7572654D 
+ 1315      6F646500 
+ 1316              	.LASF37:
+ 1317 0139 52785F54 		.ascii	"Rx_Timer_Init\000"
+ 1317      696D6572 
+ 1317      5F496E69 
+ 1317      7400
+ 1318              	.LASF36:
+ 1319 0147 52785F54 		.ascii	"Rx_Timer_ClearFIFO\000"
+ 1319      696D6572 
+ 1319      5F436C65 
+ 1319      61724649 
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 39
+
+
+ 1319      464F00
+ 1320              	.LASF20:
+ 1321 015a 52785F54 		.ascii	"Rx_Timer_SoftwareCapture\000"
+ 1321      696D6572 
+ 1321      5F536F66 
+ 1321      74776172 
+ 1321      65436170 
+ 1322              	.LASF43:
+ 1323 0173 583A5C70 		.ascii	"X:\\projects\\PVCC-Air-Handlers\\AHU_1.cydsn\000"
+ 1323      726F6A65 
+ 1323      6374735C 
+ 1323      50564343 
+ 1323      2D416972 
+ 1324              	.LASF28:
+ 1325 019d 52785F54 		.ascii	"Rx_Timer_WritePeriod\000"
+ 1325      696D6572 
+ 1325      5F577269 
+ 1325      74655065 
+ 1325      72696F64 
+ 1326              	.LASF10:
+ 1327 01b2 75696E74 		.ascii	"uint32\000"
+ 1327      333200
+ 1328              	.LASF39:
+ 1329 01b9 4379456E 		.ascii	"CyEnterCriticalSection\000"
+ 1329      74657243 
+ 1329      72697469 
+ 1329      63616C53 
+ 1329      65637469 
+ 1330              	.LASF8:
+ 1331 01d0 756E7369 		.ascii	"unsigned int\000"
+ 1331      676E6564 
+ 1331      20696E74 
+ 1331      00
+ 1332              	.LASF22:
+ 1333 01dd 52785F54 		.ascii	"Rx_Timer_ReadControlRegister\000"
+ 1333      696D6572 
+ 1333      5F526561 
+ 1333      64436F6E 
+ 1333      74726F6C 
+ 1334              	.LASF40:
+ 1335 01fa 43794578 		.ascii	"CyExitCriticalSection\000"
+ 1335      69744372 
+ 1335      69746963 
+ 1335      616C5365 
+ 1335      6374696F 
+ 1336              	.LASF41:
+ 1337 0210 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1337      43313120 
+ 1337      352E342E 
+ 1337      31203230 
+ 1337      31363036 
+ 1338 0243 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1338      20726576 
+ 1338      6973696F 
+ 1338      6E203233 
+ 1338      37373135 
+ 1339 0276 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 40
+
+
+ 1339      66756E63 
+ 1339      74696F6E 
+ 1339      2D736563 
+ 1339      74696F6E 
+ 1340              	.LASF17:
+ 1341 029e 73697A65 		.ascii	"sizetype\000"
+ 1341      74797065 
+ 1341      00
+ 1342              	.LASF6:
+ 1343 02a7 6C6F6E67 		.ascii	"long long int\000"
+ 1343      206C6F6E 
+ 1343      6720696E 
+ 1343      7400
+ 1344              	.LASF38:
+ 1345 02b5 52785F54 		.ascii	"Rx_Timer_Start\000"
+ 1345      696D6572 
+ 1345      5F537461 
+ 1345      727400
+ 1346              	.LASF25:
+ 1347 02c4 696E7465 		.ascii	"interruptMode\000"
+ 1347      72727570 
+ 1347      744D6F64 
+ 1347      6500
+ 1348              	.LASF21:
+ 1349 02d2 52785F54 		.ascii	"Rx_Timer_ReadStatusRegister\000"
+ 1349      696D6572 
+ 1349      5F526561 
+ 1349      64537461 
+ 1349      74757352 
+ 1350              	.LASF19:
+ 1351 02ee 52785F54 		.ascii	"Rx_Timer_Stop\000"
+ 1351      696D6572 
+ 1351      5F53746F 
+ 1351      7000
+ 1352              	.LASF2:
+ 1353 02fc 73686F72 		.ascii	"short int\000"
+ 1353      7420696E 
+ 1353      7400
+ 1354              	.LASF4:
+ 1355 0306 6C6F6E67 		.ascii	"long int\000"
+ 1355      20696E74 
+ 1355      00
+ 1356              	.LASF33:
+ 1357 030f 52785F54 		.ascii	"Rx_Timer_ReadCounter\000"
+ 1357      696D6572 
+ 1357      5F526561 
+ 1357      64436F75 
+ 1357      6E746572 
+ 1358              	.LASF45:
+ 1359 0324 52785F54 		.ascii	"Rx_Timer_initVar\000"
+ 1359      696D6572 
+ 1359      5F696E69 
+ 1359      74566172 
+ 1359      00
+ 1360              	.LASF16:
+ 1361 0335 6C6F6E67 		.ascii	"long double\000"
+ 1361      20646F75 
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9ws4ON.s 			page 41
+
+
+ 1361      626C6500 
+ 1362              	.LASF0:
+ 1363 0341 7369676E 		.ascii	"signed char\000"
+ 1363      65642063 
+ 1363      68617200 
+ 1364              	.LASF44:
+ 1365 034d 52785F54 		.ascii	"Rx_Timer_interruptState\000"
+ 1365      696D6572 
+ 1365      5F696E74 
+ 1365      65727275 
+ 1365      70745374 
+ 1366              	.LASF34:
+ 1367 0365 52785F54 		.ascii	"Rx_Timer_SetCaptureMode\000"
+ 1367      696D6572 
+ 1367      5F536574 
+ 1367      43617074 
+ 1367      7572654D 
+ 1368              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
