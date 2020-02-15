@@ -1,6 +1,6 @@
-#AHU
+# AHU
 
-##Air Handler monitor using PSoC 5LP
+## Air Handler monitor using PSoC 5LP
 
 This is code for PSoC Creator using a PSoC 5LP chip to remotely monitor an air handler at PVCC. This is part of a larger system of devices, all talking via Wemos D1 Minis to a Raspberry Pi running a Python monitoring program.
 
@@ -12,8 +12,8 @@ This specific monitor is for AHU that have PT-100s, and consists of the PSoC, an
 
 The hardware is setup for up to 8 of the MAX31865 modules, where each module is connected to a PT-100 RTD temperature probe. The monitor program only reports the probes it can find, not modules that don't exist or are errored out. The pressure sensors detect whether or not the nearby air compressor is working, and what pressure it is putting out. Air compressors fail for a number of reasons, and they are scattered throughout the building where they are rarely seen. The second pressure sensor is monitoring the AHU to ensure that the blower fan is actually moving air. It's a monitor that can detect broken fan belts, fire alarm systems that have disable air handlers, etc. The RIBU1Cs are connected as straight GPIO inputs. If the line is grounded, then the A/C is running (because the RIB relay shorted it to ground). Otherwise the line floats high. Finally, there is a 1-wire setup that will poll multiple DS18B20s scattered throughout nearby hallways (and outside) to monitor area temperatures.
 
-All of these programs are really being used on a daily basis in a nursing home. A total of five air handlers are being monitored, along with about 18 hallway locations (and the outside temperature). The Python 3 program talking to these monitors uses TkInter to display the status of everything on a 5" HDMI screen connected to the Raspberry Pi (2). SQLite is used to store the data so history can be referred to. The Pi doesn't talk to any ethernet devices (due to corporate IT limitations). All communications is done with RS485 connections to each monitoring board.
+All of these programs are really being used on a daily basis in a nursing home. A total of five air handlers are being monitored, along with about 18 hallway locations (and the outside temperature). The Python 3 program talking to these monitors uses TkInter to display the status of everything on a touch screen connected to the Raspberry Pi (4B). SQLite is used to store the data so history can be examined. The Pi gets around the limitations of not being physically connected to the network by using the guest WiFi APs, and acts as an mqtt server. All communications to the tunnels is done with RS485 connections, since WiFi doesn't work in the tunnels.  All other communications is done using WiFi, in short (2-3 second) network connections.
 
 Not all monitors are the same. Each air handler is different, due to the nature of the building. Some air handlers use PT-100 probes because of the distance to each monitoring point, while others use K-type thermocouples with MAX31855 boards. All have the ability to use DS18B20 sensors. One AHU does not have anything at all to do with air compressors, and no way has been found yet to monitor air pressure in the ductwork for this AHU that is physically located outside. Monitors for the tunnels to detect steam line breaks are all the same, except for the ID.
 
-Please feel free to use what's here as examples. This whole project uses Cypress PSoC chips, ST Micro STM8S103F3 and STM32F103C8 chips. It was put together as inexpensively as possible.
+Please feel free to use what's here as examples. This whole project uses Cypress PSoC 5LP chips, ST Micro STM32F103C8 chips, and Wemos D1 minis. It was put together as inexpensively as possible.
