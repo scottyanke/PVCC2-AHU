@@ -150,10 +150,7 @@ void process_holding_registers(_Bool force)
           if (force || checkDiff(newTemp, last_registers[j][i * 4] / 100.0, 0.55))  // only update if something changed
           {
             last_registers[j][i * 4] = registers[j][i * 4];
-            CyDelay(20);
-            sprintf(temp_message, "T|%03d|%06.2f|%04x%04x%04x|%c|%c\r\n", modbus_staleness,newTemp,registers[j][(i*4)+1], registers[j][(i*4)+2], registers[j][(i*4)+3],MODBUS_BASE_ADDR + j,myId);
-            Wemos_PutString(temp_message);  // send to mqtt after queuing
-            CyDelay(20);
+            CyDelay(25);
             sprintf(temp_message, "T|%03d|%06.2f|%04x%04x%04x|%c|%c\r\n", modbus_staleness,newTemp,registers[j][(i*4)+1], registers[j][(i*4)+2], registers[j][(i*4)+3],MODBUS_BASE_ADDR + j,myId);
             Wemos_PutString(temp_message);  // send to mqtt after queuing
           }
@@ -171,9 +168,6 @@ void process_holding_registers(_Bool force)
           last_registers[j][26] = registers[j][26];
           last_registers[j][27] = registers[j][27];
           last_registers[j][28] = registers[j][28];
-          CyDelay(100);
-          sprintf(temp_message, "H|%03d|%06.2f|%05.2f|%05.2f|%c|%c\r\n", modbus_staleness,newTemp,registers[j][26] / 10.0, registers[j][27] / 10.0,MODBUS_BASE_ADDR + j,myId);
-          Wemos_PutString(temp_message);  // send to mqtt later
           CyDelay(100);
           sprintf(temp_message, "H|%03d|%06.2f|%05.2f|%05.2f|%c|%c\r\n", modbus_staleness,newTemp,registers[j][26] / 10.0, registers[j][27] / 10.0,MODBUS_BASE_ADDR + j,myId);
           Wemos_PutString(temp_message);  // send to mqtt later
@@ -223,11 +217,12 @@ void printBinary(uint8_t inByte, char *ts)
 int main(void)
 {
   uint8_t i;
+  uint8_t forced;
   char s[20];
   char ts[128];
   double f1;
   uint32 ReadingResult;
-  uint32_t Adc_result;
+  uint32 Adc_result;
   float fAdc;
   float temperature;    // temperature of the DS18B20s directly connected to this device
   ds18b20_devices devices;
@@ -299,24 +294,28 @@ int main(void)
         sprintf(ts,"R|000|%s|%c\r\n",version,myId);
         Wemos_PutString(ts);  // done just to clear everything
         if (wemos_buffer[0] == '1') // A 1 just requests whatever has changed
-            process_holding_registers(false);    // this queues up the changed data for mqtt
-          else  // A 2 forces everthing to report, in case a change is missing
+        {
+          forced = 0;
+          process_holding_registers(false);    // this queues up the changed data for mqtt
+        }  
+        else  // A 2 forces everthing to report, in case a change is missing
+        {
+          forced = 1;
+          process_holding_registers(true);    // this queues up all the data for mqtt
+          for (i = 0; i < 8; i++)
           {
-            process_holding_registers(true);    // this queues up all the data for mqtt
-            for (i = 0; i < 8; i++)
-            {
-              last31855[i] = -20.0;
-              lastDS18B20[i] = 0.0;
-              if (i < 4)
-                last_Adc_result[i] = 0.01;  // this is a number it can never be
-            }
-            lastPins = 0;
+            last31855[i] = -20.0;
+            lastDS18B20[i] = 0.0;
+            if (i < 4)
+              last_Adc_result[i] = 0.01;  // this is a number it can never be
           }
+          lastPins = 0;
+        }
         i = DINP_Read() << DINP_WIDTH; // get the values from the digital pins
         printBinary(i,s);
         s[DINP_WIDTH] = 0; // the WIDTH is the actual number of pins being looked at
         sprintf(ts,"P|000|%s|%c\r\n",s,myId);    // report on the status of the air conditioners
-        if (i != lastPins)
+        if (forced || i != lastPins)
         {
           lastPins = i;
           Wemos_PutString(ts);
@@ -330,7 +329,7 @@ int main(void)
           if (Adc_result > 1000000 || Adc_result < 80000) // used to eliminate the extreme edges
             Adc_result = 0;
           fAdc = round((ADC_CountsTo_Volts(Adc_result) * 1.052) * 10) / 10;
-          if (last_Adc_result[i] != fAdc) // only show what has changed
+          if (forced || last_Adc_result[i] != fAdc) // only show what has changed
           {
             sprintf(ts,"A|000|%06.2lf|%06lu|%d|%c\r\n",fAdc,Adc_result,i,myId);
             CyDelay(20);
@@ -348,7 +347,7 @@ int main(void)
             if (f1 < 100 && f1 > -30 && f1 != 0.0)  // account for bad readings
             {
               sprintf(ts,"M|000|%06.2lf|%d|%c\r\n",f1,i,myId);
-              if (checkDiff(f1,last31855[i],0.5))
+              if (forced || checkDiff(f1,last31855[i],0.5))
               {
                 last31855[i] = f1;
                 CyDelay(20);
@@ -381,7 +380,6 @@ int main(void)
           }
         }
 
-
         for (i = 0; i < devices.size; ++i) // get the temperatures from all of the DS18B20s that responded
         {
           temperature = ds18b20_read_temperature(devices.devices[i]);
@@ -391,7 +389,7 @@ int main(void)
               temperature,address.address[2],address.address[3],
               address.address[4],address.address[5],address.address[6],
               address.address[7],myId);
-          if (checkDiff(temperature,lastDS18B20[i],0.5))
+          if (forced || checkDiff(temperature,lastDS18B20[i],0.5))
           {
             CyDelay(20);
             Wemos_PutString(ts);
@@ -402,55 +400,55 @@ int main(void)
         CyDelay(20);
         Wemos_PutString("DONE\r\n");  // Nothing more to send
         wemos_buffer[0] = 0;  // Clear the received character buffer
+        forced = 0;
         CyDelay(50);
         LED_Write(0);   // turn the communications indicator light off
+      }
+    } // end of communicating with wemos
+    if (esc && (Global_time - esc_time > 2000))  // give it 2 seconds for a character to follow the escape
+    {
+      esc = 0;  // reset the esc flag, since it should have been followed by the id within 2 seconds
+      wemos_pos = 0;
+      wemos_buffer[0] = 0;
+      Wemos_PutString("E|000|esc timed out\r\n");
+      Wemos_ClearRxBuffer();
+      LED_Write(0);
     }
-  } // end of communicating with wemos
-  if (esc && (Global_time - esc_time > 2000))  // give it 2 seconds for a character to follow the escape
-  {
-    esc = 0;  // reset the esc flag, since it should have been followed by the id within 2 seconds
-    wemos_pos = 0;
-    wemos_buffer[0] = 0;
-    Wemos_PutString("E|000|esc timed out\r\n");
-    Wemos_ClearRxBuffer();
-//CySoftwareReset();  // maybe, just maybe, we might have to do this
-    LED_Write(0);
-  }
-  switch( modbus_state )
-  {
-    case 0:
-      if (Global_time > modbus_wait)
-      {
-        modbus_state++; // wait state
-      }
-      break;
-    case 1:
-      LED_Write(1);   // turn the communications indicator light on
-      for (i = 0; i < 60; i++)
-        registers[modbus_slave][i] = 0;
-      telegram.u8id = MODBUS_BASE_ADDR + modbus_slave; // slave address
-      telegram.u8fct = 3; // function code (this one is registers read)
-      telegram.u16RegAdd = 0; // start address in slave
-      telegram.u16CoilsNo = 40; // number of elements (coils or registers) to read
-      telegram.au16reg = &registers[modbus_slave][0]; // pointer to a memory array in the Arduino
-      Modbus_query( telegram ); // send query (only once)
-      modbus_state++;   // now looking for responses
-      modbus_slave++;   // set up for the next slave
-      break;
-    case 2:
-      Modbus_poll(); // check incoming messages
-      if (Modbus_getState() == COM_IDLE)  // COM_IDLE is after we've received our response
-      {
-        modbus_state = 0;
-        if (modbus_slave > (MODBUS_COUNT - 1))
+    switch( modbus_state )
+    {
+      case 0:
+        if (Global_time > modbus_wait)
         {
-          last_modbus_time = Global_time / 1000;  // how many seconds since the last modbus read was done?
-          modbus_wait = Global_time + TIME_BETWEEN_POLLING;  // reset for the next loop
-          modbus_slave = 0; // setup for the next time we wake up
-          LED_Write(0);   // Turn the light back off
+          modbus_state++; // wait state
         }
-      }
-      break;
+        break;
+      case 1:
+        LED_Write(1);   // turn the communications indicator light on
+        for (i = 0; i < 60; i++)
+          registers[modbus_slave][i] = 0;
+        telegram.u8id = MODBUS_BASE_ADDR + modbus_slave; // slave address
+        telegram.u8fct = 3; // function code (this one is registers read)
+        telegram.u16RegAdd = 0; // start address in slave
+        telegram.u16CoilsNo = 40; // number of elements (coils or registers) to read
+        telegram.au16reg = &registers[modbus_slave][0]; // pointer to a memory array in the Arduino
+        Modbus_query( telegram ); // send query (only once)
+        modbus_state++;   // now looking for responses
+        modbus_slave++;   // set up for the next slave
+        break;
+      case 2:
+        Modbus_poll(); // check incoming messages
+        if (Modbus_getState() == COM_IDLE)  // COM_IDLE is after we've received our response
+        {
+          modbus_state = 0;
+          if (modbus_slave > (MODBUS_COUNT - 1))
+          {
+            last_modbus_time = Global_time / 1000;  // how many seconds since the last modbus read was done?
+            modbus_wait = Global_time + TIME_BETWEEN_POLLING;  // reset for the next loop
+            modbus_slave = 0; // setup for the next time we wake up
+            LED_Write(0);   // Turn the light back off
+          }
+        }
+        break;
     }  // end of waking up on modbus_state
   }   // end of looping forever
 }

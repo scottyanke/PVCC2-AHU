@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 1
 
 
    1              		.syntax unified
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
   28:Generated_Source\PSoC5/I2C.c **** 
   29:Generated_Source\PSoC5/I2C.c **** /*******************************************************************************
   30:Generated_Source\PSoC5/I2C.c **** * Function Name: I2C_Init
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 2
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 2
 
 
   31:Generated_Source\PSoC5/I2C.c **** ********************************************************************************
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
   55 001a 0024     		movs	r4, #0
   56 001c 0133     		adds	r3, r3, #1
   57 001e 1C70     		strb	r4, [r3]
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 3
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 3
 
 
   58:Generated_Source\PSoC5/I2C.c **** 
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
   74 003a 074B     		ldr	r3, .L3+12
   75 003c 1A70     		strb	r2, [r3]
   96:Generated_Source\PSoC5/I2C.c **** 
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 4
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 4
 
 
   97:Generated_Source\PSoC5/I2C.c **** #if (I2C_MODE_SLAVE_ENABLED)
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  120:Generated_Source\PSoC5/I2C.c **** * Summary:
  121:Generated_Source\PSoC5/I2C.c **** *  Enables I2C operations.
  122:Generated_Source\PSoC5/I2C.c **** *
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 5
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 5
 
 
  123:Generated_Source\PSoC5/I2C.c **** * Parameters:
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  141              		.global	I2C_Start
  142              		.thumb
  143              		.thumb_func
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 6
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 6
 
 
  144              		.type	I2C_Start, %function
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  150              		@ frame_needed = 0, uses_anonymous_args = 0
  151 0000 08B5     		push	{r3, lr}
  152              		.cfi_def_cfa_offset 8
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 7
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 7
 
 
  153              		.cfi_offset 3, -8
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  207:Generated_Source\PSoC5/I2C.c **** *  Disables I2C hardware and disables I2C interrupt. Disables Active mode power
  208:Generated_Source\PSoC5/I2C.c **** *  template bits or clock gating as appropriate.
  209:Generated_Source\PSoC5/I2C.c **** *
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 8
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 8
 
 
  210:Generated_Source\PSoC5/I2C.c **** * Parameters:
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  221 0022 3378     		ldrb	r3, [r6]	@ zero_extendqisi2
  222 0024 6371     		strb	r3, [r4, #5]
  234:Generated_Source\PSoC5/I2C.c **** 
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 9
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 9
 
 
  235:Generated_Source\PSoC5/I2C.c ****         /* Calculate number of cycles to reset block */
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  258              		.loc 1 253 0
  259 0064 E378     		ldrb	r3, [r4, #3]	@ zero_extendqisi2
  260 0066 88F80030 		strb	r3, [r8]
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 10
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 10
 
 
  254:Generated_Source\PSoC5/I2C.c ****         I2C_ADDR_REG    = I2C_backup.addr;
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  287 0094 00000000 		.word	I2C_backup
  288 0098 DB490040 		.word	1073760731
  289 009c DC490040 		.word	1073760732
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 11
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 11
 
 
  290 00a0 D6490040 		.word	1073760726
@@ -630,48 +630,48 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  316 0006 00000000 		.4byte	.Ldebug_abbrev0
  317 000a 04       		.byte	0x4
  318 000b 01       		.uleb128 0x1
- 319 000c 9A000000 		.4byte	.LASF42
+ 319 000c BC000000 		.4byte	.LASF42
  320 0010 0C       		.byte	0xc
- 321 0011 A0020000 		.4byte	.LASF43
- 322 0015 44010000 		.4byte	.LASF44
+ 321 0011 98020000 		.4byte	.LASF43
+ 322 0015 1F000000 		.4byte	.LASF44
  323 0019 00000000 		.4byte	.Ldebug_ranges0+0
  324 001d 00000000 		.4byte	0
  325 0021 00000000 		.4byte	.Ldebug_line0
  326 0025 02       		.uleb128 0x2
  327 0026 01       		.byte	0x1
  328 0027 06       		.byte	0x6
- 329 0028 FB010000 		.4byte	.LASF0
+ 329 0028 F3010000 		.4byte	.LASF0
  330 002c 02       		.uleb128 0x2
  331 002d 01       		.byte	0x1
  332 002e 08       		.byte	0x8
- 333 002f 8C000000 		.4byte	.LASF1
+ 333 002f AE000000 		.4byte	.LASF1
  334 0033 02       		.uleb128 0x2
  335 0034 02       		.byte	0x2
  336 0035 05       		.byte	0x5
- 337 0036 43020000 		.4byte	.LASF2
+ 337 0036 3B020000 		.4byte	.LASF2
  338 003a 02       		.uleb128 0x2
  339 003b 02       		.byte	0x2
  340 003c 07       		.byte	0x7
- 341 003d 2E000000 		.4byte	.LASF3
+ 341 003d 50000000 		.4byte	.LASF3
  342 0041 02       		.uleb128 0x2
  343 0042 04       		.byte	0x4
  344 0043 05       		.byte	0x5
- 345 0044 62020000 		.4byte	.LASF4
+ 345 0044 5A020000 		.4byte	.LASF4
  346 0048 02       		.uleb128 0x2
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 12
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 12
 
 
  347 0049 04       		.byte	0x4
  348 004a 07       		.byte	0x7
- 349 004b 2D010000 		.4byte	.LASF5
+ 349 004b 4F010000 		.4byte	.LASF5
  350 004f 02       		.uleb128 0x2
  351 0050 08       		.byte	0x8
  352 0051 05       		.byte	0x5
- 353 0052 19020000 		.4byte	.LASF6
+ 353 0052 11020000 		.4byte	.LASF6
  354 0056 02       		.uleb128 0x2
  355 0057 08       		.byte	0x8
  356 0058 07       		.byte	0x7
- 357 0059 75000000 		.4byte	.LASF7
+ 357 0059 97000000 		.4byte	.LASF7
  358 005d 03       		.uleb128 0x3
  359 005e 04       		.byte	0x4
  360 005f 05       		.byte	0x5
@@ -679,36 +679,36 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  362 0064 02       		.uleb128 0x2
  363 0065 04       		.byte	0x4
  364 0066 07       		.byte	0x7
- 365 0067 A0010000 		.4byte	.LASF8
+ 365 0067 98010000 		.4byte	.LASF8
  366 006b 04       		.uleb128 0x4
- 367 006c 4D020000 		.4byte	.LASF9
+ 367 006c 45020000 		.4byte	.LASF9
  368 0070 02       		.byte	0x2
  369 0071 E401     		.2byte	0x1e4
  370 0073 2C000000 		.4byte	0x2c
  371 0077 04       		.uleb128 0x4
- 372 0078 80010000 		.4byte	.LASF10
+ 372 0078 78010000 		.4byte	.LASF10
  373 007c 02       		.byte	0x2
  374 007d E501     		.2byte	0x1e5
  375 007f 3A000000 		.4byte	0x3a
  376 0083 04       		.uleb128 0x4
- 377 0084 90010000 		.4byte	.LASF11
+ 377 0084 88010000 		.4byte	.LASF11
  378 0088 02       		.byte	0x2
  379 0089 E601     		.2byte	0x1e6
  380 008b 48000000 		.4byte	0x48
  381 008f 02       		.uleb128 0x2
  382 0090 04       		.byte	0x4
  383 0091 04       		.byte	0x4
- 384 0092 6F000000 		.4byte	.LASF12
+ 384 0092 91000000 		.4byte	.LASF12
  385 0096 02       		.uleb128 0x2
  386 0097 08       		.byte	0x8
  387 0098 04       		.byte	0x4
- 388 0099 79010000 		.4byte	.LASF13
+ 388 0099 71010000 		.4byte	.LASF13
  389 009d 02       		.uleb128 0x2
  390 009e 01       		.byte	0x1
  391 009f 08       		.byte	0x8
- 392 00a0 27020000 		.4byte	.LASF14
+ 392 00a0 1F020000 		.4byte	.LASF14
  393 00a4 04       		.uleb128 0x4
- 394 00a5 28010000 		.4byte	.LASF15
+ 394 00a5 4A010000 		.4byte	.LASF15
  395 00a9 02       		.byte	0x2
  396 00aa 8E02     		.2byte	0x28e
  397 00ac B0000000 		.4byte	0xb0
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  401 00b6 19000000 		.4byte	.LASF16
  402 00ba 02       		.byte	0x2
  403 00bb 9002     		.2byte	0x290
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 13
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 13
 
 
  404 00bd C1000000 		.4byte	0xc1
@@ -727,24 +727,24 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  407 00c6 02       		.uleb128 0x2
  408 00c7 08       		.byte	0x8
  409 00c8 04       		.byte	0x4
- 410 00c9 77020000 		.4byte	.LASF17
+ 410 00c9 6F020000 		.4byte	.LASF17
  411 00cd 02       		.uleb128 0x2
  412 00ce 04       		.byte	0x4
  413 00cf 07       		.byte	0x7
- 414 00d0 10020000 		.4byte	.LASF18
+ 414 00d0 08020000 		.4byte	.LASF18
  415 00d4 06       		.uleb128 0x6
  416 00d5 06       		.byte	0x6
  417 00d6 03       		.byte	0x3
  418 00d7 76       		.byte	0x76
  419 00d8 25010000 		.4byte	0x125
  420 00dc 07       		.uleb128 0x7
- 421 00dd 6B020000 		.4byte	.LASF19
+ 421 00dd 63020000 		.4byte	.LASF19
  422 00e1 03       		.byte	0x3
  423 00e2 78       		.byte	0x78
  424 00e3 6B000000 		.4byte	0x6b
  425 00e7 00       		.byte	0
  426 00e8 07       		.uleb128 0x7
- 427 00e9 2C020000 		.4byte	.LASF20
+ 427 00e9 24020000 		.4byte	.LASF20
  428 00ed 03       		.byte	0x3
  429 00ee 7B       		.byte	0x7b
  430 00ef 6B000000 		.4byte	0x6b
@@ -756,34 +756,34 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  436 00fb 6B000000 		.4byte	0x6b
  437 00ff 02       		.byte	0x2
  438 0100 07       		.uleb128 0x7
- 439 0101 3F010000 		.4byte	.LASF21
+ 439 0101 61010000 		.4byte	.LASF21
  440 0105 03       		.byte	0x3
  441 0106 7D       		.byte	0x7d
  442 0107 6B000000 		.4byte	0x6b
  443 010b 03       		.byte	0x3
  444 010c 07       		.uleb128 0x7
- 445 010d D4010000 		.4byte	.LASF22
+ 445 010d CC010000 		.4byte	.LASF22
  446 0111 03       		.byte	0x3
  447 0112 7E       		.byte	0x7e
  448 0113 6B000000 		.4byte	0x6b
  449 0117 04       		.byte	0x4
  450 0118 07       		.uleb128 0x7
- 451 0119 DC010000 		.4byte	.LASF23
+ 451 0119 D4010000 		.4byte	.LASF23
  452 011d 03       		.byte	0x3
  453 011e 7F       		.byte	0x7f
  454 011f 6B000000 		.4byte	0x6b
  455 0123 05       		.byte	0x5
  456 0124 00       		.byte	0
  457 0125 09       		.uleb128 0x9
- 458 0126 31020000 		.4byte	.LASF24
+ 458 0126 29020000 		.4byte	.LASF24
  459 012a 03       		.byte	0x3
  460 012b 89       		.byte	0x89
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 14
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 14
 
 
  461 012c D4000000 		.4byte	0xd4
  462 0130 0A       		.uleb128 0xa
- 463 0131 07020000 		.4byte	.LASF25
+ 463 0131 FF010000 		.4byte	.LASF25
  464 0135 01       		.byte	0x1
  465 0136 31       		.byte	0x31
  466 0137 00000000 		.4byte	.LFB0
@@ -819,7 +819,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  496 016d 00       		.byte	0
  497 016e 00       		.byte	0
  498 016f 0A       		.uleb128 0xa
- 499 0170 6E010000 		.4byte	.LASF26
+ 499 0170 66010000 		.4byte	.LASF26
  500 0174 01       		.byte	0x1
  501 0175 85       		.byte	0x85
  502 0176 00000000 		.4byte	.LFB1
@@ -828,7 +828,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  505 017f 9C       		.byte	0x9c
  506 0180 A6010000 		.4byte	0x1a6
  507 0184 0E       		.uleb128 0xe
- 508 0185 97010000 		.4byte	.LASF29
+ 508 0185 8F010000 		.4byte	.LASF29
  509 0189 01       		.byte	0x1
  510 018a 88       		.byte	0x88
  511 018b 6B000000 		.4byte	0x6b
@@ -838,13 +838,13 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  515 0198 8B020000 		.4byte	0x28b
  516 019c 0F       		.uleb128 0xf
  517 019d 1E000000 		.4byte	.LVL3
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 15
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 15
 
 
  518 01a1 96020000 		.4byte	0x296
  519 01a5 00       		.byte	0
  520 01a6 0A       		.uleb128 0xa
- 521 01a7 52000000 		.4byte	.LASF27
+ 521 01a7 74000000 		.4byte	.LASF27
  522 01ab 01       		.byte	0x1
  523 01ac BD       		.byte	0xbd
  524 01ad 00000000 		.4byte	.LFB2
@@ -860,7 +860,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  534 01c9 6F010000 		.4byte	0x16f
  535 01cd 00       		.byte	0
  536 01ce 0A       		.uleb128 0xa
- 537 01cf 87010000 		.4byte	.LASF28
+ 537 01cf 7F010000 		.4byte	.LASF28
  538 01d3 01       		.byte	0x1
  539 01d4 D9       		.byte	0xd9
  540 01d5 00000000 		.4byte	.LFB3
@@ -872,13 +872,13 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  546 01e4 0E000000 		.4byte	.LBB2
  547 01e8 6A000000 		.4byte	.LBE2-.LBB2
  548 01ec 0E       		.uleb128 0xe
- 549 01ed 97010000 		.4byte	.LASF29
+ 549 01ed 8F010000 		.4byte	.LASF29
  550 01f1 01       		.byte	0x1
  551 01f2 E3       		.byte	0xe3
  552 01f3 6B000000 		.4byte	0x6b
  553 01f7 13000000 		.4byte	.LLST1
  554 01fb 0E       		.uleb128 0xe
- 555 01fc 41000000 		.4byte	.LASF30
+ 555 01fc 63000000 		.4byte	.LASF30
  556 0200 01       		.byte	0x1
  557 0201 E4       		.byte	0xe4
  558 0202 77000000 		.4byte	0x77
@@ -895,10 +895,10 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  569 0225 00       		.byte	0
  570 0226 00       		.byte	0
  571 0227 11       		.uleb128 0x11
- 572 0228 BD020000 		.4byte	.LASF31
+ 572 0228 B5020000 		.4byte	.LASF31
  573 022c 01       		.byte	0x1
  574 022d 18       		.byte	0x18
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 16
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 16
 
 
  575 022e 6B000000 		.4byte	0x6b
@@ -911,7 +911,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  582 023e 21       		.byte	0x21
  583 023f 25010000 		.4byte	0x125
  584 0243 11       		.uleb128 0x11
- 585 0244 83020000 		.4byte	.LASF33
+ 585 0244 7B020000 		.4byte	.LASF33
  586 0248 01       		.byte	0x1
  587 0249 1A       		.byte	0x1a
  588 024a B0000000 		.4byte	0xb0
@@ -919,38 +919,38 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  590 024f 03       		.byte	0x3
  591 0250 00000000 		.4byte	I2C_state
  592 0254 12       		.uleb128 0x12
- 593 0255 53020000 		.4byte	.LASF34
+ 593 0255 4B020000 		.4byte	.LASF34
  594 0259 04       		.byte	0x4
  595 025a 27       		.byte	0x27
  596 025b B0000000 		.4byte	0xb0
  597 025f 12       		.uleb128 0x12
- 598 0260 5C000000 		.4byte	.LASF35
+ 598 0260 7E000000 		.4byte	.LASF35
  599 0264 04       		.byte	0x4
  600 0265 2D       		.byte	0x2d
  601 0266 B0000000 		.4byte	0xb0
  602 026a 12       		.uleb128 0x12
- 603 026b 8D020000 		.4byte	.LASF36
+ 603 026b 85020000 		.4byte	.LASF36
  604 026f 04       		.byte	0x4
  605 0270 32       		.byte	0x32
  606 0271 B0000000 		.4byte	0xb0
  607 0275 13       		.uleb128 0x13
- 608 0276 C3010000 		.4byte	.LASF37
- 609 027a C3010000 		.4byte	.LASF37
+ 608 0276 BB010000 		.4byte	.LASF37
+ 609 027a BB010000 		.4byte	.LASF37
  610 027e 05       		.byte	0x5
  611 027f 8B       		.byte	0x8b
  612 0280 13       		.uleb128 0x13
- 613 0281 1F000000 		.4byte	.LASF38
- 614 0285 1F000000 		.4byte	.LASF38
+ 613 0281 41000000 		.4byte	.LASF38
+ 614 0285 41000000 		.4byte	.LASF38
  615 0289 05       		.byte	0x5
  616 028a 88       		.byte	0x88
  617 028b 13       		.uleb128 0x13
- 618 028c E4010000 		.4byte	.LASF39
- 619 0290 E4010000 		.4byte	.LASF39
+ 618 028c DC010000 		.4byte	.LASF39
+ 619 0290 DC010000 		.4byte	.LASF39
  620 0294 05       		.byte	0x5
  621 0295 7D       		.byte	0x7d
  622 0296 13       		.uleb128 0x13
- 623 0297 AD010000 		.4byte	.LASF40
- 624 029b AD010000 		.4byte	.LASF40
+ 623 0297 A5010000 		.4byte	.LASF40
+ 624 029b A5010000 		.4byte	.LASF40
  625 029f 05       		.byte	0x5
  626 02a0 7E       		.byte	0x7e
  627 02a1 13       		.uleb128 0x13
@@ -958,7 +958,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  629 02a6 00000000 		.4byte	.LASF41
  630 02aa 05       		.byte	0x5
  631 02ab 79       		.byte	0x79
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 17
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 17
 
 
  632 02ac 00       		.byte	0
@@ -1018,7 +1018,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  686 0033 13       		.uleb128 0x13
  687 0034 00       		.byte	0
  688 0035 00       		.byte	0
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 18
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 18
 
 
  689 0036 05       		.uleb128 0x5
@@ -1078,7 +1078,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  743 006c 0E       		.uleb128 0xe
  744 006d 3A       		.uleb128 0x3a
  745 006e 0B       		.uleb128 0xb
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 19
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 19
 
 
  746 006f 3B       		.uleb128 0x3b
@@ -1138,7 +1138,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  800 00ad 11       		.uleb128 0x11
  801 00ae 01       		.uleb128 0x1
  802 00af 31       		.uleb128 0x31
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 20
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 20
 
 
  803 00b0 13       		.uleb128 0x13
@@ -1198,7 +1198,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  857 00e8 34       		.uleb128 0x34
  858 00e9 00       		.byte	0
  859 00ea 03       		.uleb128 0x3
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 21
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 21
 
 
  860 00eb 0E       		.uleb128 0xe
@@ -1258,7 +1258,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  914              		.section	.debug_aranges,"",%progbits
  915 0000 34000000 		.4byte	0x34
  916 0004 0200     		.2byte	0x2
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 22
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 22
 
 
  917 0006 00000000 		.4byte	.Ldebug_info0
@@ -1307,214 +1307,214 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 1
  951              	.LASF16:
  952 0019 72656733 		.ascii	"reg32\000"
  952      3200
- 953              	.LASF38:
- 954 001f 4379496E 		.ascii	"CyIntSetVector\000"
- 954      74536574 
- 954      56656374 
- 954      6F7200
- 955              	.LASF3:
- 956 002e 73686F72 		.ascii	"short unsigned int\000"
- 956      7420756E 
- 956      7369676E 
- 956      65642069 
- 956      6E7400
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 23
+ 953              	.LASF44:
+ 954 001f 583A5C70 		.ascii	"X:\\projects\\PVCC2-AHU\\AHU_2.cydsn\000"
+ 954      726F6A65 
+ 954      6374735C 
+ 954      50564343 
+ 954      322D4148 
+ 955              	.LASF38:
+ 956 0041 4379496E 		.ascii	"CyIntSetVector\000"
+ 956      74536574 
+ 956      56656374 
+ 956      6F7200
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 23
 
 
- 957              	.LASF30:
- 958 0041 626C6F63 		.ascii	"blockResetCycles\000"
- 958      6B526573 
- 958      65744379 
- 958      636C6573 
- 958      00
- 959              	.LASF27:
- 960 0052 4932435F 		.ascii	"I2C_Start\000"
- 960      53746172 
- 960      7400
- 961              	.LASF35:
- 962 005c 4932435F 		.ascii	"I2C_mstrRdBufIndex\000"
- 962      6D737472 
- 962      52644275 
- 962      66496E64 
- 962      657800
- 963              	.LASF12:
- 964 006f 666C6F61 		.ascii	"float\000"
- 964      7400
- 965              	.LASF7:
- 966 0075 6C6F6E67 		.ascii	"long long unsigned int\000"
- 966      206C6F6E 
- 966      6720756E 
- 966      7369676E 
- 966      65642069 
- 967              	.LASF1:
- 968 008c 756E7369 		.ascii	"unsigned char\000"
- 968      676E6564 
- 968      20636861 
- 968      7200
- 969              	.LASF42:
- 970 009a 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
- 970      43313120 
- 970      352E342E 
- 970      31203230 
- 970      31363036 
- 971 00cd 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
- 971      20726576 
- 971      6973696F 
- 971      6E203233 
- 971      37373135 
- 972 0100 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
- 972      66756E63 
- 972      74696F6E 
- 972      2D736563 
- 972      74696F6E 
- 973              	.LASF15:
- 974 0128 72656738 		.ascii	"reg8\000"
- 974      00
- 975              	.LASF5:
- 976 012d 6C6F6E67 		.ascii	"long unsigned int\000"
- 976      20756E73 
- 976      69676E65 
- 976      6420696E 
- 976      7400
- 977              	.LASF21:
- 978 013f 61646472 		.ascii	"addr\000"
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 24
+ 957              	.LASF3:
+ 958 0050 73686F72 		.ascii	"short unsigned int\000"
+ 958      7420756E 
+ 958      7369676E 
+ 958      65642069 
+ 958      6E7400
+ 959              	.LASF30:
+ 960 0063 626C6F63 		.ascii	"blockResetCycles\000"
+ 960      6B526573 
+ 960      65744379 
+ 960      636C6573 
+ 960      00
+ 961              	.LASF27:
+ 962 0074 4932435F 		.ascii	"I2C_Start\000"
+ 962      53746172 
+ 962      7400
+ 963              	.LASF35:
+ 964 007e 4932435F 		.ascii	"I2C_mstrRdBufIndex\000"
+ 964      6D737472 
+ 964      52644275 
+ 964      66496E64 
+ 964      657800
+ 965              	.LASF12:
+ 966 0091 666C6F61 		.ascii	"float\000"
+ 966      7400
+ 967              	.LASF7:
+ 968 0097 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 968      206C6F6E 
+ 968      6720756E 
+ 968      7369676E 
+ 968      65642069 
+ 969              	.LASF1:
+ 970 00ae 756E7369 		.ascii	"unsigned char\000"
+ 970      676E6564 
+ 970      20636861 
+ 970      7200
+ 971              	.LASF42:
+ 972 00bc 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 972      43313120 
+ 972      352E342E 
+ 972      31203230 
+ 972      31363036 
+ 973 00ef 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 973      20726576 
+ 973      6973696F 
+ 973      6E203233 
+ 973      37373135 
+ 974 0122 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 974      66756E63 
+ 974      74696F6E 
+ 974      2D736563 
+ 974      74696F6E 
+ 975              	.LASF15:
+ 976 014a 72656738 		.ascii	"reg8\000"
+ 976      00
+ 977              	.LASF5:
+ 978 014f 6C6F6E67 		.ascii	"long unsigned int\000"
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 24
 
 
- 978      00
- 979              	.LASF44:
- 980 0144 583A5C70 		.ascii	"X:\\projects\\PVCC-Air-Handlers\\AHU_2.cydsn\000"
- 980      726F6A65 
- 980      6374735C 
- 980      50564343 
- 980      2D416972 
+ 978      20756E73 
+ 978      69676E65 
+ 978      6420696E 
+ 978      7400
+ 979              	.LASF21:
+ 980 0161 61646472 		.ascii	"addr\000"
+ 980      00
  981              	.LASF26:
- 982 016e 4932435F 		.ascii	"I2C_Enable\000"
+ 982 0166 4932435F 		.ascii	"I2C_Enable\000"
  982      456E6162 
  982      6C6500
  983              	.LASF13:
- 984 0179 646F7562 		.ascii	"double\000"
+ 984 0171 646F7562 		.ascii	"double\000"
  984      6C6500
  985              	.LASF10:
- 986 0180 75696E74 		.ascii	"uint16\000"
+ 986 0178 75696E74 		.ascii	"uint16\000"
  986      313600
  987              	.LASF28:
- 988 0187 4932435F 		.ascii	"I2C_Stop\000"
+ 988 017f 4932435F 		.ascii	"I2C_Stop\000"
  988      53746F70 
  988      00
  989              	.LASF11:
- 990 0190 75696E74 		.ascii	"uint32\000"
+ 990 0188 75696E74 		.ascii	"uint32\000"
  990      333200
  991              	.LASF29:
- 992 0197 696E7453 		.ascii	"intState\000"
+ 992 018f 696E7453 		.ascii	"intState\000"
  992      74617465 
  992      00
  993              	.LASF8:
- 994 01a0 756E7369 		.ascii	"unsigned int\000"
+ 994 0198 756E7369 		.ascii	"unsigned int\000"
  994      676E6564 
  994      20696E74 
  994      00
  995              	.LASF40:
- 996 01ad 43794578 		.ascii	"CyExitCriticalSection\000"
+ 996 01a5 43794578 		.ascii	"CyExitCriticalSection\000"
  996      69744372 
  996      69746963 
  996      616C5365 
  996      6374696F 
  997              	.LASF37:
- 998 01c3 4379496E 		.ascii	"CyIntSetPriority\000"
+ 998 01bb 4379496E 		.ascii	"CyIntSetPriority\000"
  998      74536574 
  998      5072696F 
  998      72697479 
  998      00
  999              	.LASF22:
- 1000 01d4 636C6B44 		.ascii	"clkDiv1\000"
+ 1000 01cc 636C6B44 		.ascii	"clkDiv1\000"
  1000      69763100 
  1001              	.LASF23:
- 1002 01dc 636C6B44 		.ascii	"clkDiv2\000"
+ 1002 01d4 636C6B44 		.ascii	"clkDiv2\000"
  1002      69763200 
  1003              	.LASF39:
- 1004 01e4 4379456E 		.ascii	"CyEnterCriticalSection\000"
+ 1004 01dc 4379456E 		.ascii	"CyEnterCriticalSection\000"
  1004      74657243 
  1004      72697469 
  1004      63616C53 
  1004      65637469 
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 25
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 25
 
 
  1005              	.LASF0:
- 1006 01fb 7369676E 		.ascii	"signed char\000"
+ 1006 01f3 7369676E 		.ascii	"signed char\000"
  1006      65642063 
  1006      68617200 
  1007              	.LASF25:
- 1008 0207 4932435F 		.ascii	"I2C_Init\000"
+ 1008 01ff 4932435F 		.ascii	"I2C_Init\000"
  1008      496E6974 
  1008      00
  1009              	.LASF18:
- 1010 0210 73697A65 		.ascii	"sizetype\000"
+ 1010 0208 73697A65 		.ascii	"sizetype\000"
  1010      74797065 
  1010      00
  1011              	.LASF6:
- 1012 0219 6C6F6E67 		.ascii	"long long int\000"
+ 1012 0211 6C6F6E67 		.ascii	"long long int\000"
  1012      206C6F6E 
  1012      6720696E 
  1012      7400
  1013              	.LASF14:
- 1014 0227 63686172 		.ascii	"char\000"
+ 1014 021f 63686172 		.ascii	"char\000"
  1014      00
  1015              	.LASF20:
- 1016 022c 78636667 		.ascii	"xcfg\000"
+ 1016 0224 78636667 		.ascii	"xcfg\000"
  1016      00
  1017              	.LASF24:
- 1018 0231 4932435F 		.ascii	"I2C_BACKUP_STRUCT\000"
+ 1018 0229 4932435F 		.ascii	"I2C_BACKUP_STRUCT\000"
  1018      4241434B 
  1018      55505F53 
  1018      54525543 
  1018      5400
  1019              	.LASF2:
- 1020 0243 73686F72 		.ascii	"short int\000"
+ 1020 023b 73686F72 		.ascii	"short int\000"
  1020      7420696E 
  1020      7400
  1021              	.LASF9:
- 1022 024d 75696E74 		.ascii	"uint8\000"
+ 1022 0245 75696E74 		.ascii	"uint8\000"
  1022      3800
  1023              	.LASF34:
- 1024 0253 4932435F 		.ascii	"I2C_mstrStatus\000"
+ 1024 024b 4932435F 		.ascii	"I2C_mstrStatus\000"
  1024      6D737472 
  1024      53746174 
  1024      757300
  1025              	.LASF4:
- 1026 0262 6C6F6E67 		.ascii	"long int\000"
+ 1026 025a 6C6F6E67 		.ascii	"long int\000"
  1026      20696E74 
  1026      00
  1027              	.LASF19:
- 1028 026b 656E6162 		.ascii	"enableState\000"
+ 1028 0263 656E6162 		.ascii	"enableState\000"
  1028      6C655374 
  1028      61746500 
  1029              	.LASF17:
- 1030 0277 6C6F6E67 		.ascii	"long double\000"
+ 1030 026f 6C6F6E67 		.ascii	"long double\000"
  1030      20646F75 
  1030      626C6500 
  1031              	.LASF33:
- 1032 0283 4932435F 		.ascii	"I2C_state\000"
+ 1032 027b 4932435F 		.ascii	"I2C_state\000"
  1032      73746174 
  1032      6500
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccmO1BBv.s 			page 26
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccT0GhBb.s 			page 26
 
 
  1033              	.LASF36:
- 1034 028d 4932435F 		.ascii	"I2C_mstrWrBufIndex\000"
+ 1034 0285 4932435F 		.ascii	"I2C_mstrWrBufIndex\000"
  1034      6D737472 
  1034      57724275 
  1034      66496E64 
  1034      657800
  1035              	.LASF43:
- 1036 02a0 47656E65 		.ascii	"Generated_Source\\PSoC5\\I2C.c\000"
+ 1036 0298 47656E65 		.ascii	"Generated_Source\\PSoC5\\I2C.c\000"
  1036      72617465 
  1036      645F536F 
  1036      75726365 
  1036      5C50536F 
  1037              	.LASF31:
- 1038 02bd 4932435F 		.ascii	"I2C_initVar\000"
+ 1038 02b5 4932435F 		.ascii	"I2C_initVar\000"
  1038      696E6974 
  1038      56617200 
  1039              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

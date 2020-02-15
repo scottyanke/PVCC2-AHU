@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 1
 
 
    1              		.syntax unified
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
   28:Generated_Source\PSoC5/Wemos.c **** 
   29:Generated_Source\PSoC5/Wemos.c **** #if (Wemos_TX_INTERRUPT_ENABLED && Wemos_TX_ENABLED)
   30:Generated_Source\PSoC5/Wemos.c ****     volatile uint8 Wemos_txBuffer[Wemos_TX_BUFFER_SIZE];
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 2
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 2
 
 
   31:Generated_Source\PSoC5/Wemos.c ****     volatile uint8 Wemos_txBufferRead = 0u;
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
   85:Generated_Source\PSoC5/Wemos.c ****     Wemos_Enable();
   86:Generated_Source\PSoC5/Wemos.c **** }
   87:Generated_Source\PSoC5/Wemos.c **** 
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 3
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 3
 
 
   88:Generated_Source\PSoC5/Wemos.c **** 
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  129:Generated_Source\PSoC5/Wemos.c ****     #if(Wemos_TX_ENABLED)
  130:Generated_Source\PSoC5/Wemos.c ****         #if (Wemos_TX_INTERRUPT_ENABLED)
  131:Generated_Source\PSoC5/Wemos.c ****             /* Set TX interrupt vector and priority */
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 4
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 4
 
 
  132:Generated_Source\PSoC5/Wemos.c ****             (void) CyIntSetVector(Wemos_TX_VECT_NUM, &Wemos_TXISR);
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  158:Generated_Source\PSoC5/Wemos.c ****             (uint8)(Wemos_PARITY_TYPE << Wemos_CTRL_PARITY_TYPE0_SHIFT) );
  159:Generated_Source\PSoC5/Wemos.c ****     #endif /* End Wemos_PARITY_TYPE_SW */
  160:Generated_Source\PSoC5/Wemos.c **** }
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 5
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 5
 
 
  161:Generated_Source\PSoC5/Wemos.c **** 
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
   90 0018 43F01003 		orr	r3, r3, #16
   91 001c 1370     		strb	r3, [r2]
  194:Generated_Source\PSoC5/Wemos.c **** 
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 6
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 6
 
 
  195:Generated_Source\PSoC5/Wemos.c ****         #if (Wemos_RX_INTERRUPT_ENABLED)
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  118              		.type	Wemos_Start, %function
  119              	Wemos_Start:
  120              	.LFB0:
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 7
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 7
 
 
   77:Generated_Source\PSoC5/Wemos.c ****     /* If not initialized then initialize all required hardware and software */
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  233:Generated_Source\PSoC5/Wemos.c **** * Parameters:
  234:Generated_Source\PSoC5/Wemos.c **** *  None.
  235:Generated_Source\PSoC5/Wemos.c **** *
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 8
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 8
 
 
  236:Generated_Source\PSoC5/Wemos.c **** * Return:
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  264:Generated_Source\PSoC5/Wemos.c ****         #if (Wemos_RX_INTERRUPT_ENABLED)
  265:Generated_Source\PSoC5/Wemos.c ****             Wemos_DisableRxInt();
  266:Generated_Source\PSoC5/Wemos.c ****         #endif /* (Wemos_RX_INTERRUPT_ENABLED) */
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 9
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 9
 
 
  267:Generated_Source\PSoC5/Wemos.c ****     #endif /* (Wemos_RX_ENABLED || Wemos_HD_ENABLED) */
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  294:Generated_Source\PSoC5/Wemos.c **** *******************************************************************************/
  295:Generated_Source\PSoC5/Wemos.c **** uint8 Wemos_ReadControlRegister(void) 
  296:Generated_Source\PSoC5/Wemos.c **** {
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 10
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 10
 
 
  213              		.loc 1 296 0
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  243              		.align	2
  244              		.global	Wemos_SetRxInterruptMode
  245              		.thumb
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 11
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 11
 
 
  246              		.thumb_func
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  259 0004 7047     		bx	lr
  260              	.L21:
  261 0006 00BF     		.align	2
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 12
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 12
 
 
  262              	.L20:
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  398:Generated_Source\PSoC5/Wemos.c ****         uint8 locRxBufferRead;
  399:Generated_Source\PSoC5/Wemos.c ****         uint8 locRxBufferWrite;
  400:Generated_Source\PSoC5/Wemos.c **** 
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 13
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 13
 
 
  401:Generated_Source\PSoC5/Wemos.c ****         /* Protect variables that could change on interrupt */
@@ -778,7 +778,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  451:Generated_Source\PSoC5/Wemos.c **** 
  452:Generated_Source\PSoC5/Wemos.c ****         return(rxData);
  453:Generated_Source\PSoC5/Wemos.c ****     }
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 14
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 14
 
 
  284              		.loc 1 453 0
@@ -838,7 +838,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  305              		@ link register save eliminated.
  487:Generated_Source\PSoC5/Wemos.c ****         uint8 status;
  488:Generated_Source\PSoC5/Wemos.c **** 
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 15
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 15
 
 
  489:Generated_Source\PSoC5/Wemos.c ****         status = Wemos_RXSTATUS_REG & Wemos_RX_HW_MASK;
@@ -898,7 +898,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  520:Generated_Source\PSoC5/Wemos.c ****     *  Wemos_rxBuffer - RAM buffer pointer for save received data.
  521:Generated_Source\PSoC5/Wemos.c ****     *  Wemos_rxBufferWrite - cyclic index for write to rxBuffer,
  522:Generated_Source\PSoC5/Wemos.c ****     *     checked to identify new data.
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 16
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 16
 
 
  523:Generated_Source\PSoC5/Wemos.c ****     *  Wemos_rxBufferRead - cyclic index for read from rxBuffer,
@@ -958,7 +958,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  571:Generated_Source\PSoC5/Wemos.c ****                     #else
  572:Generated_Source\PSoC5/Wemos.c ****                         Wemos_RXSTATUS_MASK_REG |= Wemos_RX_STS_FIFO_NOTEMPTY;
  573:Generated_Source\PSoC5/Wemos.c ****                     #endif /* end Wemos_HD_ENABLED */
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 17
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 17
 
 
  574:Generated_Source\PSoC5/Wemos.c ****                 #endif /* Wemos_RX_INTERRUPT_ENABLED and Hardware flow control*/
@@ -1018,7 +1018,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  358              	.L31:
  604:Generated_Source\PSoC5/Wemos.c ****                             Wemos_RX_STS_STOP_ERROR | Wemos_RX_STS_OVERRUN)) != 0u)
  605:Generated_Source\PSoC5/Wemos.c ****             {
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 18
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 18
 
 
  606:Generated_Source\PSoC5/Wemos.c ****                 rxData = 0u;
@@ -1078,7 +1078,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  383              		@ frame_needed = 0, uses_anonymous_args = 0
  384 0000 10B5     		push	{r4, lr}
  385              		.cfi_def_cfa_offset 8
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 19
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 19
 
 
  386              		.cfi_offset 4, -8
@@ -1138,7 +1138,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  667:Generated_Source\PSoC5/Wemos.c ****     * Return:
  668:Generated_Source\PSoC5/Wemos.c ****     *  uint8: Number of bytes in the RX buffer. 
  669:Generated_Source\PSoC5/Wemos.c ****     *    Return value type depends on RX Buffer Size parameter.
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 20
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 20
 
 
  670:Generated_Source\PSoC5/Wemos.c ****     *
@@ -1198,7 +1198,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  414              		.loc 1 718 0
  415 0000 044B     		ldr	r3, .L39
  416 0002 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 21
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 21
 
 
  417 0004 13F0200F 		tst	r3, #32
@@ -1258,7 +1258,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  749:Generated_Source\PSoC5/Wemos.c ****     *  Setting the pointers to zero makes the system believe there is no data to
  750:Generated_Source\PSoC5/Wemos.c ****     *  read and writing will resume at address 0 overwriting any data that may
  751:Generated_Source\PSoC5/Wemos.c ****     *  have remained in the RAM.
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 22
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 22
 
 
  752:Generated_Source\PSoC5/Wemos.c ****     *
@@ -1318,7 +1318,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  767:Generated_Source\PSoC5/Wemos.c ****     #if (Wemos_RX_INTERRUPT_ENABLED)
  768:Generated_Source\PSoC5/Wemos.c **** 
  769:Generated_Source\PSoC5/Wemos.c ****         /* Protect variables that could change on interrupt. */
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 23
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 23
 
 
  770:Generated_Source\PSoC5/Wemos.c ****         Wemos_DisableRxInt();
@@ -1378,7 +1378,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  488              	.LFE13:
  489              		.size	Wemos_SetRxAddressMode, .-Wemos_SetRxAddressMode
  490 0002 00BF     		.section	.text.Wemos_SetRxAddress1,"ax",%progbits
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 24
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 24
 
 
  491              		.align	2
@@ -1438,7 +1438,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  502              		@ link register save eliminated.
  503              	.LVL29:
  859:Generated_Source\PSoC5/Wemos.c ****         Wemos_RXADDRESS1_REG = address;
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 25
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 25
 
 
  504              		.loc 1 859 0
@@ -1498,7 +1498,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  538              	.LFE15:
  539              		.size	Wemos_SetRxAddress2, .-Wemos_SetRxAddress2
  540              		.section	.text.Wemos_SetTxInterruptMode,"ax",%progbits
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 26
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 26
 
 
  541              		.align	2
@@ -1558,7 +1558,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  564              		.size	Wemos_SetTxInterruptMode, .-Wemos_SetTxInterruptMode
  565              		.section	.text.Wemos_WriteTxData,"ax",%progbits
  566              		.align	2
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 27
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 27
 
 
  567              		.global	Wemos_WriteTxData
@@ -1618,7 +1618,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  949:Generated_Source\PSoC5/Wemos.c ****             /* Protect variables that could change on interrupt. */
  950:Generated_Source\PSoC5/Wemos.c ****             Wemos_DisableTxInt();
  951:Generated_Source\PSoC5/Wemos.c **** 
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 28
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 28
 
 
  952:Generated_Source\PSoC5/Wemos.c ****             if( (Wemos_txBufferRead == Wemos_txBufferWrite) &&
@@ -1678,7 +1678,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  985:Generated_Source\PSoC5/Wemos.c ****     ********************************************************************************
  986:Generated_Source\PSoC5/Wemos.c ****     *
  987:Generated_Source\PSoC5/Wemos.c ****     * Summary:
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 29
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 29
 
 
  988:Generated_Source\PSoC5/Wemos.c ****     *  Reads the status register for the TX portion of the UART.
@@ -1738,7 +1738,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
 1017:Generated_Source\PSoC5/Wemos.c ****     *
 1018:Generated_Source\PSoC5/Wemos.c ****     * Parameters:
 1019:Generated_Source\PSoC5/Wemos.c ****     *  txDataByte: Byte containing the data to transmit
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 30
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 30
 
 
 1020:Generated_Source\PSoC5/Wemos.c ****     *
@@ -1798,7 +1798,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
 1067:Generated_Source\PSoC5/Wemos.c ****         while( (locTxBufferWrite < locTxBufferRead) ? (locTxBufferWrite == (locTxBufferRead - 1u)) 
 1068:Generated_Source\PSoC5/Wemos.c ****                                 ((locTxBufferWrite - locTxBufferRead) ==
 1069:Generated_Source\PSoC5/Wemos.c ****                                 (uint8)(Wemos_TX_BUFFER_SIZE - 1u)) );
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 31
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 31
 
 
 1070:Generated_Source\PSoC5/Wemos.c **** 
@@ -1858,7 +1858,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  646              		.align	2
  647              	.L64:
  648 0010 6B640040 		.word	1073767531
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 32
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 32
 
 
  649 0014 49640040 		.word	1073767497
@@ -1918,7 +1918,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  670              		.cfi_offset 5, -8
  671              		.cfi_offset 14, -4
  672              	.LVL35:
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 33
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 33
 
 
 1147:Generated_Source\PSoC5/Wemos.c ****         uint16 bufIndex = 0u;
@@ -1978,7 +1978,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
 1157:Generated_Source\PSoC5/Wemos.c ****             }
 1158:Generated_Source\PSoC5/Wemos.c ****         }
 1159:Generated_Source\PSoC5/Wemos.c ****     }
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 34
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 34
 
 
 1160:Generated_Source\PSoC5/Wemos.c **** 
@@ -2038,7 +2038,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  732              		.cfi_offset 14, -4
 1198:Generated_Source\PSoC5/Wemos.c ****         {
 1199:Generated_Source\PSoC5/Wemos.c ****             while(bufIndex < byteCount)
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 35
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 35
 
 
 1200:Generated_Source\PSoC5/Wemos.c ****             {
@@ -2098,7 +2098,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
 1203:Generated_Source\PSoC5/Wemos.c ****             }
 1204:Generated_Source\PSoC5/Wemos.c ****         }
 1205:Generated_Source\PSoC5/Wemos.c ****     }
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 36
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 36
 
 
 1206:Generated_Source\PSoC5/Wemos.c **** 
@@ -2158,7 +2158,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  804 0014 FFF7FEFF 		bl	Wemos_PutChar
  805              	.LVL54:
  806              	.L82:
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 37
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 37
 
 
  807 0018 08BD     		pop	{r3, pc}
@@ -2218,7 +2218,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  823              		.loc 1 1275 0
  824              		.cfi_startproc
  825              		@ args = 0, pretend = 0, frame = 0
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 38
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 38
 
 
  826              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -2278,7 +2278,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  844 0016 0420     		movs	r0, #4
  845 0018 7047     		bx	lr
  846              	.L90:
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 39
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 39
 
 
 1311:Generated_Source\PSoC5/Wemos.c ****         }
@@ -2338,7 +2338,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
 1345:Generated_Source\PSoC5/Wemos.c ****     *  Setting the pointers to zero makes the system believe there is no data to
 1346:Generated_Source\PSoC5/Wemos.c ****     *  read and writing will resume at address 0 overwriting any data that may have
 1347:Generated_Source\PSoC5/Wemos.c ****     *  remained in the RAM.
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 40
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 40
 
 
 1348:Generated_Source\PSoC5/Wemos.c ****     *
@@ -2398,7 +2398,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
 1363:Generated_Source\PSoC5/Wemos.c **** 
 1364:Generated_Source\PSoC5/Wemos.c ****     #if (Wemos_TX_INTERRUPT_ENABLED)
 1365:Generated_Source\PSoC5/Wemos.c **** 
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 41
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 41
 
 
 1366:Generated_Source\PSoC5/Wemos.c ****         /* Protect variables that could change on interrupt. */
@@ -2458,7 +2458,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
 1420:Generated_Source\PSoC5/Wemos.c ****     *     SendBreak(0);     - initialize Break signal transmission
 1421:Generated_Source\PSoC5/Wemos.c ****     *         Add your code here to use CPU time
 1422:Generated_Source\PSoC5/Wemos.c ****     *     SendBreak(1);     - complete Break operation
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 42
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 42
 
 
 1423:Generated_Source\PSoC5/Wemos.c ****     *  3) Same to 2) but user may want to initialize and use the interrupt to
@@ -2518,7 +2518,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
 1466:Generated_Source\PSoC5/Wemos.c ****             }
 1467:Generated_Source\PSoC5/Wemos.c **** 
 1468:Generated_Source\PSoC5/Wemos.c ****             if( (retMode == Wemos_WAIT_FOR_COMPLETE_REINIT) ||
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 43
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 43
 
 
 1469:Generated_Source\PSoC5/Wemos.c ****                 (retMode == Wemos_SEND_WAIT_REINIT) )
@@ -2578,7 +2578,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
 1509:Generated_Source\PSoC5/Wemos.c ****                 Wemos_TXDATA_REG = 0u;
  931              		.loc 1 1509 0
  932 0018 0022     		movs	r2, #0
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 44
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 44
 
 
  933 001a F03B     		subs	r3, r3, #240
@@ -2638,7 +2638,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  966 003e 0228     		cmp	r0, #2
  967 0040 03D8     		bhi	.L97
 1530:Generated_Source\PSoC5/Wemos.c ****                 (retMode == Wemos_SEND_WAIT_REINIT) )
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 45
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 45
 
 
 1531:Generated_Source\PSoC5/Wemos.c ****             {
@@ -2698,7 +2698,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
 1560:Generated_Source\PSoC5/Wemos.c ****     *                                    byte as a data.
 1561:Generated_Source\PSoC5/Wemos.c ****     *       Wemos_SET_MARK  - Configure the transmitter to send the next
 1562:Generated_Source\PSoC5/Wemos.c ****     *                                    byte as an address.
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 46
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 46
 
 
 1563:Generated_Source\PSoC5/Wemos.c ****     *
@@ -2745,48 +2745,48 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1023 0006 00000000 		.4byte	.Ldebug_abbrev0
  1024 000a 04       		.byte	0x4
  1025 000b 01       		.uleb128 0x1
- 1026 000c 06030000 		.4byte	.LASF64
+ 1026 000c FE020000 		.4byte	.LASF64
  1027 0010 0C       		.byte	0xc
- 1028 0011 51020000 		.4byte	.LASF65
- 1029 0015 57000000 		.4byte	.LASF66
+ 1028 0011 49020000 		.4byte	.LASF65
+ 1029 0015 59010000 		.4byte	.LASF66
  1030 0019 00000000 		.4byte	.Ldebug_ranges0+0
  1031 001d 00000000 		.4byte	0
  1032 0021 00000000 		.4byte	.Ldebug_line0
  1033 0025 02       		.uleb128 0x2
  1034 0026 01       		.byte	0x1
  1035 0027 06       		.byte	0x6
- 1036 0028 04010000 		.4byte	.LASF0
+ 1036 0028 DA000000 		.4byte	.LASF0
  1037 002c 02       		.uleb128 0x2
  1038 002d 01       		.byte	0x1
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 47
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 47
 
 
  1039 002e 08       		.byte	0x8
- 1040 002f EE020000 		.4byte	.LASF1
+ 1040 002f E6020000 		.4byte	.LASF1
  1041 0033 02       		.uleb128 0x2
  1042 0034 02       		.byte	0x2
  1043 0035 05       		.byte	0x5
- 1044 0036 FC020000 		.4byte	.LASF2
+ 1044 0036 F4020000 		.4byte	.LASF2
  1045 003a 02       		.uleb128 0x2
  1046 003b 02       		.byte	0x2
  1047 003c 07       		.byte	0x7
- 1048 003d 20020000 		.4byte	.LASF3
+ 1048 003d 18020000 		.4byte	.LASF3
  1049 0041 02       		.uleb128 0x2
  1050 0042 04       		.byte	0x4
  1051 0043 05       		.byte	0x5
- 1052 0044 4A010000 		.4byte	.LASF4
+ 1052 0044 20010000 		.4byte	.LASF4
  1053 0048 02       		.uleb128 0x2
  1054 0049 04       		.byte	0x4
  1055 004a 07       		.byte	0x7
- 1056 004b BD010000 		.4byte	.LASF5
+ 1056 004b B5010000 		.4byte	.LASF5
  1057 004f 02       		.uleb128 0x2
  1058 0050 08       		.byte	0x8
  1059 0051 05       		.byte	0x5
- 1060 0052 F6000000 		.4byte	.LASF6
+ 1060 0052 CC000000 		.4byte	.LASF6
  1061 0056 02       		.uleb128 0x2
  1062 0057 08       		.byte	0x8
  1063 0058 07       		.byte	0x7
- 1064 0059 81000000 		.4byte	.LASF7
+ 1064 0059 57000000 		.4byte	.LASF7
  1065 005d 03       		.uleb128 0x3
  1066 005e 04       		.byte	0x4
  1067 005f 05       		.byte	0x5
@@ -2794,9 +2794,9 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1069 0064 02       		.uleb128 0x2
  1070 0065 04       		.byte	0x4
  1071 0066 07       		.byte	0x7
- 1072 0067 B0010000 		.4byte	.LASF8
+ 1072 0067 A8010000 		.4byte	.LASF8
  1073 006b 04       		.uleb128 0x4
- 1074 006c 53010000 		.4byte	.LASF9
+ 1074 006c 29010000 		.4byte	.LASF9
  1075 0070 02       		.byte	0x2
  1076 0071 E401     		.2byte	0x1e4
  1077 0073 2C000000 		.4byte	0x2c
@@ -2808,25 +2808,25 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1083 0083 02       		.uleb128 0x2
  1084 0084 04       		.byte	0x4
  1085 0085 04       		.byte	0x4
- 1086 0086 E3020000 		.4byte	.LASF11
+ 1086 0086 DB020000 		.4byte	.LASF11
  1087 008a 02       		.uleb128 0x2
  1088 008b 08       		.byte	0x8
  1089 008c 04       		.byte	0x4
- 1090 008d 68010000 		.4byte	.LASF12
+ 1090 008d 3E010000 		.4byte	.LASF12
  1091 0091 04       		.uleb128 0x4
- 1092 0092 FC030000 		.4byte	.LASF13
+ 1092 0092 F4030000 		.4byte	.LASF13
  1093 0096 02       		.byte	0x2
  1094 0097 F501     		.2byte	0x1f5
  1095 0099 9D000000 		.4byte	0x9d
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 48
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 48
 
 
  1096 009d 02       		.uleb128 0x2
  1097 009e 01       		.byte	0x1
  1098 009f 08       		.byte	0x8
- 1099 00a0 D5030000 		.4byte	.LASF14
+ 1099 00a0 CD030000 		.4byte	.LASF14
  1100 00a4 04       		.uleb128 0x4
- 1101 00a5 E9020000 		.4byte	.LASF15
+ 1101 00a5 E1020000 		.4byte	.LASF15
  1102 00a9 02       		.byte	0x2
  1103 00aa 8E02     		.2byte	0x28e
  1104 00ac B0000000 		.4byte	0xb0
@@ -2835,13 +2835,13 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1107 00b5 02       		.uleb128 0x2
  1108 00b6 08       		.byte	0x8
  1109 00b7 04       		.byte	0x4
- 1110 00b8 A8020000 		.4byte	.LASF16
+ 1110 00b8 A0020000 		.4byte	.LASF16
  1111 00bc 02       		.uleb128 0x2
  1112 00bd 04       		.byte	0x4
  1113 00be 07       		.byte	0x7
- 1114 00bf 9F020000 		.4byte	.LASF17
+ 1114 00bf 97020000 		.4byte	.LASF17
  1115 00c3 06       		.uleb128 0x6
- 1116 00c4 9E030000 		.4byte	.LASF67
+ 1116 00c4 96030000 		.4byte	.LASF67
  1117 00c8 01       		.byte	0x1
  1118 00c9 6A       		.byte	0x6a
  1119 00ca 00000000 		.4byte	.LFB1
@@ -2849,7 +2849,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1121 00d2 01       		.uleb128 0x1
  1122 00d3 9C       		.byte	0x9c
  1123 00d4 07       		.uleb128 0x7
- 1124 00d5 BC020000 		.4byte	.LASF18
+ 1124 00d5 B4020000 		.4byte	.LASF18
  1125 00d9 01       		.byte	0x1
  1126 00da B7       		.byte	0xb7
  1127 00db 00000000 		.4byte	.LFB2
@@ -2858,7 +2858,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1130 00e4 9C       		.byte	0x9c
  1131 00e5 1B010000 		.4byte	0x11b
  1132 00e9 08       		.uleb128 0x8
- 1133 00ea 32040000 		.4byte	.LASF21
+ 1133 00ea 2A040000 		.4byte	.LASF21
  1134 00ee 01       		.byte	0x1
  1135 00ef B9       		.byte	0xb9
  1136 00f0 6B000000 		.4byte	0x6b
@@ -2878,7 +2878,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1150 0116 02       		.uleb128 0x2
  1151 0117 74       		.byte	0x74
  1152 0118 00       		.sleb128 0
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 49
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 49
 
 
  1153 0119 00       		.byte	0
@@ -2900,7 +2900,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1169 013e D4000000 		.4byte	0xd4
  1170 0142 00       		.byte	0
  1171 0143 07       		.uleb128 0x7
- 1172 0144 9D010000 		.4byte	.LASF20
+ 1172 0144 95010000 		.4byte	.LASF20
  1173 0148 01       		.byte	0x1
  1174 0149 F0       		.byte	0xf0
  1175 014a 00000000 		.4byte	.LFB3
@@ -2909,7 +2909,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1178 0153 9C       		.byte	0x9c
  1179 0154 8A010000 		.4byte	0x18a
  1180 0158 08       		.uleb128 0x8
- 1181 0159 32040000 		.4byte	.LASF21
+ 1181 0159 2A040000 		.4byte	.LASF21
  1182 015d 01       		.byte	0x1
  1183 015e F2       		.byte	0xf2
  1184 015f 6B000000 		.4byte	0x6b
@@ -2932,19 +2932,19 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1201 0188 00       		.byte	0
  1202 0189 00       		.byte	0
  1203 018a 0C       		.uleb128 0xc
- 1204 018b 83010000 		.4byte	.LASF44
+ 1204 018b 7B010000 		.4byte	.LASF44
  1205 018f 01       		.byte	0x1
  1206 0190 2701     		.2byte	0x127
  1207 0192 6B000000 		.4byte	0x6b
  1208 0196 00000000 		.4byte	.LFB4
  1209 019a 04000000 		.4byte	.LFE4-.LFB4
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 50
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 50
 
 
  1210 019e 01       		.uleb128 0x1
  1211 019f 9C       		.byte	0x9c
  1212 01a0 0D       		.uleb128 0xd
- 1213 01a1 DB000000 		.4byte	.LASF22
+ 1213 01a1 B1000000 		.4byte	.LASF22
  1214 01a5 01       		.byte	0x1
  1215 01a6 3F01     		.2byte	0x13f
  1216 01a8 00000000 		.4byte	.LFB5
@@ -2953,7 +2953,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1219 01b1 9C       		.byte	0x9c
  1220 01b2 C5010000 		.4byte	0x1c5
  1221 01b6 0E       		.uleb128 0xe
- 1222 01b7 7B010000 		.4byte	.LASF24
+ 1222 01b7 51010000 		.4byte	.LASF24
  1223 01bb 01       		.byte	0x1
  1224 01bc 3F01     		.2byte	0x13f
  1225 01be 6B000000 		.4byte	0x6b
@@ -2961,7 +2961,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1227 01c3 50       		.byte	0x50
  1228 01c4 00       		.byte	0
  1229 01c5 0D       		.uleb128 0xd
- 1230 01c6 C2000000 		.4byte	.LASF23
+ 1230 01c6 98000000 		.4byte	.LASF23
  1231 01ca 01       		.byte	0x1
  1232 01cb 6701     		.2byte	0x167
  1233 01cd 00000000 		.4byte	.LFB6
@@ -2970,7 +2970,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1236 01d6 9C       		.byte	0x9c
  1237 01d7 EA010000 		.4byte	0x1ea
  1238 01db 0E       		.uleb128 0xe
- 1239 01dc 4A020000 		.4byte	.LASF25
+ 1239 01dc 42020000 		.4byte	.LASF25
  1240 01e0 01       		.byte	0x1
  1241 01e1 6701     		.2byte	0x167
  1242 01e3 6B000000 		.4byte	0x6b
@@ -2978,7 +2978,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1244 01e8 50       		.byte	0x50
  1245 01e9 00       		.byte	0
  1246 01ea 0F       		.uleb128 0xf
- 1247 01eb D2020000 		.4byte	.LASF27
+ 1247 01eb CA020000 		.4byte	.LASF27
  1248 01ef 01       		.byte	0x1
  1249 01f0 8801     		.2byte	0x188
  1250 01f2 6B000000 		.4byte	0x6b
@@ -2988,7 +2988,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1254 01ff 9C       		.byte	0x9c
  1255 0200 13020000 		.4byte	0x213
  1256 0204 10       		.uleb128 0x10
- 1257 0205 A9030000 		.4byte	.LASF26
+ 1257 0205 A1030000 		.4byte	.LASF26
  1258 0209 01       		.byte	0x1
  1259 020a 8A01     		.2byte	0x18a
  1260 020c 6B000000 		.4byte	0x6b
@@ -2996,9 +2996,9 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1262 0211 50       		.byte	0x50
  1263 0212 00       		.byte	0
  1264 0213 0F       		.uleb128 0xf
- 1265 0214 CF010000 		.4byte	.LASF28
+ 1265 0214 C7010000 		.4byte	.LASF28
  1266 0218 01       		.byte	0x1
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 51
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 51
 
 
  1267 0219 E501     		.2byte	0x1e5
@@ -3009,14 +3009,14 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1272 0228 9C       		.byte	0x9c
  1273 0229 3E020000 		.4byte	0x23e
  1274 022d 11       		.uleb128 0x11
- 1275 022e 43040000 		.4byte	.LASF29
+ 1275 022e 3B040000 		.4byte	.LASF29
  1276 0232 01       		.byte	0x1
  1277 0233 E701     		.2byte	0x1e7
  1278 0235 6B000000 		.4byte	0x6b
  1279 0239 26000000 		.4byte	.LLST2
  1280 023d 00       		.byte	0
  1281 023e 0F       		.uleb128 0xf
- 1282 023f F9010000 		.4byte	.LASF30
+ 1282 023f F1010000 		.4byte	.LASF30
  1283 0243 01       		.byte	0x1
  1284 0244 1402     		.2byte	0x214
  1285 0246 6B000000 		.4byte	0x6b
@@ -3026,13 +3026,13 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1289 0253 9C       		.byte	0x9c
  1290 0254 77020000 		.4byte	0x277
  1291 0258 11       		.uleb128 0x11
- 1292 0259 A9030000 		.4byte	.LASF26
+ 1292 0259 A1030000 		.4byte	.LASF26
  1293 025d 01       		.byte	0x1
  1294 025e 1602     		.2byte	0x216
  1295 0260 6B000000 		.4byte	0x6b
  1296 0264 3E000000 		.4byte	.LLST3
  1297 0268 10       		.uleb128 0x10
- 1298 0269 C9020000 		.4byte	.LASF31
+ 1298 0269 C1020000 		.4byte	.LASF31
  1299 026d 01       		.byte	0x1
  1300 026e 1702     		.2byte	0x217
  1301 0270 6B000000 		.4byte	0x6b
@@ -3040,7 +3040,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1303 0275 53       		.byte	0x53
  1304 0276 00       		.byte	0
  1305 0277 0F       		.uleb128 0xf
- 1306 0278 4A040000 		.4byte	.LASF32
+ 1306 0278 42040000 		.4byte	.LASF32
  1307 027c 01       		.byte	0x1
  1308 027d 7A02     		.2byte	0x27a
  1309 027f 77000000 		.4byte	0x77
@@ -3057,8 +3057,8 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1320 029f EA010000 		.4byte	0x1ea
  1321 02a3 00       		.byte	0
  1322 02a4 0F       		.uleb128 0xf
- 1323 02a5 66040000 		.4byte	.LASF33
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 52
+ 1323 02a5 5E040000 		.4byte	.LASF33
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 52
 
 
  1324 02a9 01       		.byte	0x1
@@ -3070,7 +3070,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1330 02b9 9C       		.byte	0x9c
  1331 02ba CD020000 		.4byte	0x2cd
  1332 02be 10       		.uleb128 0x10
- 1333 02bf 1B020000 		.4byte	.LASF34
+ 1333 02bf 13020000 		.4byte	.LASF34
  1334 02c3 01       		.byte	0x1
  1335 02c4 AE02     		.2byte	0x2ae
  1336 02c6 6B000000 		.4byte	0x6b
@@ -3078,7 +3078,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1338 02cb 50       		.byte	0x50
  1339 02cc 00       		.byte	0
  1340 02cd 0D       		.uleb128 0xd
- 1341 02ce E8030000 		.4byte	.LASF35
+ 1341 02ce E0030000 		.4byte	.LASF35
  1342 02d2 01       		.byte	0x1
  1343 02d3 F502     		.2byte	0x2f5
  1344 02d5 00000000 		.4byte	.LFB12
@@ -3087,7 +3087,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1347 02de 9C       		.byte	0x9c
  1348 02df 06030000 		.4byte	0x306
  1349 02e3 11       		.uleb128 0x11
- 1350 02e4 32040000 		.4byte	.LASF21
+ 1350 02e4 2A040000 		.4byte	.LASF21
  1351 02e8 01       		.byte	0x1
  1352 02e9 F702     		.2byte	0x2f7
  1353 02eb 6B000000 		.4byte	0x6b
@@ -3100,7 +3100,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1360 0301 F5050000 		.4byte	0x5f5
  1361 0305 00       		.byte	0
  1362 0306 0D       		.uleb128 0xd
- 1363 0307 02040000 		.4byte	.LASF36
+ 1363 0307 FA030000 		.4byte	.LASF36
  1364 030b 01       		.byte	0x1
  1365 030c 2D03     		.2byte	0x32d
  1366 030e 00000000 		.4byte	.LFB13
@@ -3109,7 +3109,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1369 0317 9C       		.byte	0x9c
  1370 0318 2B030000 		.4byte	0x32b
  1371 031c 0E       		.uleb128 0xe
- 1372 031d 6F010000 		.4byte	.LASF37
+ 1372 031d 45010000 		.4byte	.LASF37
  1373 0321 01       		.byte	0x1
  1374 0322 2D03     		.2byte	0x32d
  1375 0324 6B000000 		.4byte	0x6b
@@ -3117,8 +3117,8 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1377 0329 50       		.byte	0x50
  1378 032a 00       		.byte	0
  1379 032b 0D       		.uleb128 0xd
- 1380 032c 10010000 		.4byte	.LASF38
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 53
+ 1380 032c E6000000 		.4byte	.LASF38
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 53
 
 
  1381 0330 01       		.byte	0x1
@@ -3129,7 +3129,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1386 033c 9C       		.byte	0x9c
  1387 033d 50030000 		.4byte	0x350
  1388 0341 0E       		.uleb128 0xe
- 1389 0342 B4020000 		.4byte	.LASF39
+ 1389 0342 AC020000 		.4byte	.LASF39
  1390 0346 01       		.byte	0x1
  1391 0347 5903     		.2byte	0x359
  1392 0349 6B000000 		.4byte	0x6b
@@ -3137,7 +3137,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1394 034e 50       		.byte	0x50
  1395 034f 00       		.byte	0
  1396 0350 0D       		.uleb128 0xd
- 1397 0351 07020000 		.4byte	.LASF40
+ 1397 0351 FF010000 		.4byte	.LASF40
  1398 0355 01       		.byte	0x1
  1399 0356 6D03     		.2byte	0x36d
  1400 0358 00000000 		.4byte	.LFB15
@@ -3146,7 +3146,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1403 0361 9C       		.byte	0x9c
  1404 0362 75030000 		.4byte	0x375
  1405 0366 0E       		.uleb128 0xe
- 1406 0367 B4020000 		.4byte	.LASF39
+ 1406 0367 AC020000 		.4byte	.LASF39
  1407 036b 01       		.byte	0x1
  1408 036c 6D03     		.2byte	0x36d
  1409 036e 6B000000 		.4byte	0x6b
@@ -3154,7 +3154,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1411 0373 50       		.byte	0x50
  1412 0374 00       		.byte	0
  1413 0375 0D       		.uleb128 0xd
- 1414 0376 19040000 		.4byte	.LASF41
+ 1414 0376 11040000 		.4byte	.LASF41
  1415 037a 01       		.byte	0x1
  1416 037b 8C03     		.2byte	0x38c
  1417 037d 00000000 		.4byte	.LFB16
@@ -3163,7 +3163,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1420 0386 9C       		.byte	0x9c
  1421 0387 9A030000 		.4byte	0x39a
  1422 038b 0E       		.uleb128 0xe
- 1423 038c 4A020000 		.4byte	.LASF25
+ 1423 038c 42020000 		.4byte	.LASF25
  1424 0390 01       		.byte	0x1
  1425 0391 8C03     		.2byte	0x38c
  1426 0393 6B000000 		.4byte	0x6b
@@ -3171,14 +3171,14 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1428 0398 50       		.byte	0x50
  1429 0399 00       		.byte	0
  1430 039a 0D       		.uleb128 0xd
- 1431 039b 24010000 		.4byte	.LASF42
+ 1431 039b FA000000 		.4byte	.LASF42
  1432 039f 01       		.byte	0x1
  1433 03a0 AE03     		.2byte	0x3ae
  1434 03a2 00000000 		.4byte	.LFB17
  1435 03a6 14000000 		.4byte	.LFE17-.LFB17
  1436 03aa 01       		.uleb128 0x1
  1437 03ab 9C       		.byte	0x9c
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 54
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 54
 
 
  1438 03ac BF030000 		.4byte	0x3bf
@@ -3200,7 +3200,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1454 03d3 01       		.uleb128 0x1
  1455 03d4 9C       		.byte	0x9c
  1456 03d5 0D       		.uleb128 0xd
- 1457 03d6 DA030000 		.4byte	.LASF46
+ 1457 03d6 D2030000 		.4byte	.LASF46
  1458 03da 01       		.byte	0x1
  1459 03db 1104     		.2byte	0x411
  1460 03dd 00000000 		.4byte	.LFB19
@@ -3217,7 +3217,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1471 03f8 50       		.byte	0x50
  1472 03f9 00       		.byte	0
  1473 03fa 0D       		.uleb128 0xd
- 1474 03fb B0030000 		.4byte	.LASF47
+ 1474 03fb A8030000 		.4byte	.LASF47
  1475 03ff 01       		.byte	0x1
  1476 0400 7904     		.2byte	0x479
  1477 0402 00000000 		.4byte	.LFB20
@@ -3232,13 +3232,13 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1486 0418 3A040000 		.4byte	0x43a
  1487 041c 87000000 		.4byte	.LLST5
  1488 0420 11       		.uleb128 0x11
- 1489 0421 33020000 		.4byte	.LASF49
+ 1489 0421 2B020000 		.4byte	.LASF49
  1490 0425 01       		.byte	0x1
  1491 0426 7B04     		.2byte	0x47b
  1492 0428 77000000 		.4byte	0x77
  1493 042c C9000000 		.4byte	.LLST6
  1494 0430 09       		.uleb128 0x9
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 55
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 55
 
 
  1495 0431 0E000000 		.4byte	.LVL37
@@ -3250,7 +3250,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1501 0440 14       		.uleb128 0x14
  1502 0441 91000000 		.4byte	0x91
  1503 0445 0D       		.uleb128 0xd
- 1504 0446 59010000 		.4byte	.LASF50
+ 1504 0446 2F010000 		.4byte	.LASF50
  1505 044a 01       		.byte	0x1
  1506 044b A704     		.2byte	0x4a7
  1507 044d 00000000 		.4byte	.LFB21
@@ -3265,13 +3265,13 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1516 0463 95040000 		.4byte	0x495
  1517 0467 0A010000 		.4byte	.LLST7
  1518 046b 12       		.uleb128 0x12
- 1519 046c 94030000 		.4byte	.LASF51
+ 1519 046c 8C030000 		.4byte	.LASF51
  1520 0470 01       		.byte	0x1
  1521 0471 A704     		.2byte	0x4a7
  1522 0473 6B000000 		.4byte	0x6b
  1523 0477 4C010000 		.4byte	.LLST8
  1524 047b 11       		.uleb128 0x11
- 1525 047c 33020000 		.4byte	.LASF49
+ 1525 047c 2B020000 		.4byte	.LASF49
  1526 0480 01       		.byte	0x1
  1527 0481 AA04     		.2byte	0x4aa
  1528 0483 6B000000 		.4byte	0x6b
@@ -3286,7 +3286,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1537 049b 14       		.uleb128 0x14
  1538 049c 6B000000 		.4byte	0x6b
  1539 04a0 0D       		.uleb128 0xd
- 1540 04a1 58040000 		.4byte	.LASF52
+ 1540 04a1 50040000 		.4byte	.LASF52
  1541 04a5 01       		.byte	0x1
  1542 04a6 CE04     		.2byte	0x4ce
  1543 04a8 00000000 		.4byte	.LFB22
@@ -3298,7 +3298,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1549 04b7 1D000000 		.4byte	.LASF43
  1550 04bb 01       		.byte	0x1
  1551 04bc CE04     		.2byte	0x4ce
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 56
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 56
 
 
  1552 04be 6B000000 		.4byte	0x6b
@@ -3327,7 +3327,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1575 04f0 00       		.byte	0
  1576 04f1 00       		.byte	0
  1577 04f2 0F       		.uleb128 0xf
- 1578 04f3 AC000000 		.4byte	.LASF53
+ 1578 04f3 82000000 		.4byte	.LASF53
  1579 04f7 01       		.byte	0x1
  1580 04f8 F904     		.2byte	0x4f9
  1581 04fa 6B000000 		.4byte	0x6b
@@ -3337,14 +3337,14 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1585 0507 9C       		.byte	0x9c
  1586 0508 1D050000 		.4byte	0x51d
  1587 050c 11       		.uleb128 0x11
- 1588 050d 1B020000 		.4byte	.LASF34
+ 1588 050d 13020000 		.4byte	.LASF34
  1589 0511 01       		.byte	0x1
  1590 0512 FC04     		.2byte	0x4fc
  1591 0514 6B000000 		.4byte	0x6b
  1592 0518 E8010000 		.4byte	.LLST11
  1593 051c 00       		.byte	0
  1594 051d 0D       		.uleb128 0xd
- 1595 051e 36010000 		.4byte	.LASF54
+ 1595 051e 0C010000 		.4byte	.LASF54
  1596 0522 01       		.byte	0x1
  1597 0523 4A05     		.2byte	0x54a
  1598 0525 00000000 		.4byte	.LFB24
@@ -3353,12 +3353,12 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1601 052e 9C       		.byte	0x9c
  1602 052f 56050000 		.4byte	0x556
  1603 0533 11       		.uleb128 0x11
- 1604 0534 32040000 		.4byte	.LASF21
+ 1604 0534 2A040000 		.4byte	.LASF21
  1605 0538 01       		.byte	0x1
  1606 0539 4C05     		.2byte	0x54c
  1607 053b 6B000000 		.4byte	0x6b
  1608 053f 06020000 		.4byte	.LLST12
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 57
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 57
 
 
  1609 0543 09       		.uleb128 0x9
@@ -3369,7 +3369,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1614 0551 F5050000 		.4byte	0x5f5
  1615 0555 00       		.byte	0
  1616 0556 0D       		.uleb128 0xd
- 1617 0557 78020000 		.4byte	.LASF55
+ 1617 0557 70020000 		.4byte	.LASF55
  1618 055b 01       		.byte	0x1
  1619 055c A005     		.2byte	0x5a0
  1620 055e 00000000 		.4byte	.LFB25
@@ -3378,7 +3378,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1623 0567 9C       		.byte	0x9c
  1624 0568 A9050000 		.4byte	0x5a9
  1625 056c 12       		.uleb128 0x12
- 1626 056d A8010000 		.4byte	.LASF56
+ 1626 056d A0010000 		.4byte	.LASF56
  1627 0571 01       		.byte	0x1
  1628 0572 A005     		.2byte	0x5a0
  1629 0574 6B000000 		.4byte	0x6b
@@ -3387,7 +3387,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1632 057d 06000000 		.4byte	.LBB2
  1633 0581 52000000 		.4byte	.LBE2-.LBB2
  1634 0585 11       		.uleb128 0x11
- 1635 0586 70020000 		.4byte	.LASF57
+ 1635 0586 68020000 		.4byte	.LASF57
  1636 058a 01       		.byte	0x1
  1637 058b A805     		.2byte	0x5a8
  1638 058d 6B000000 		.4byte	0x6b
@@ -3403,7 +3403,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1648 05a7 00       		.byte	0
  1649 05a8 00       		.byte	0
  1650 05a9 0D       		.uleb128 0xd
- 1651 05aa 88020000 		.4byte	.LASF59
+ 1651 05aa 80020000 		.4byte	.LASF59
  1652 05ae 01       		.byte	0x1
  1653 05af 2406     		.2byte	0x624
  1654 05b1 00000000 		.4byte	.LFB26
@@ -3412,18 +3412,18 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1657 05ba 9C       		.byte	0x9c
  1658 05bb CE050000 		.4byte	0x5ce
  1659 05bf 0E       		.uleb128 0xe
- 1660 05c0 6F010000 		.4byte	.LASF37
+ 1660 05c0 45010000 		.4byte	.LASF37
  1661 05c4 01       		.byte	0x1
  1662 05c5 2406     		.2byte	0x624
  1663 05c7 6B000000 		.4byte	0x6b
  1664 05cb 01       		.uleb128 0x1
  1665 05cc 50       		.byte	0x50
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 58
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 58
 
 
  1666 05cd 00       		.byte	0
  1667 05ce 17       		.uleb128 0x17
- 1668 05cf 3C020000 		.4byte	.LASF68
+ 1668 05cf 34020000 		.4byte	.LASF68
  1669 05d3 01       		.byte	0x1
  1670 05d4 1B       		.byte	0x1b
  1671 05d5 6B000000 		.4byte	0x6b
@@ -3431,13 +3431,13 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1673 05da 03       		.byte	0x3
  1674 05db 00000000 		.4byte	Wemos_initVar
  1675 05df 18       		.uleb128 0x18
- 1676 05e0 E2010000 		.4byte	.LASF60
- 1677 05e4 E2010000 		.4byte	.LASF60
+ 1676 05e0 DA010000 		.4byte	.LASF60
+ 1677 05e4 DA010000 		.4byte	.LASF60
  1678 05e8 03       		.byte	0x3
  1679 05e9 7D       		.byte	0x7d
  1680 05ea 18       		.uleb128 0x18
- 1681 05eb C0030000 		.4byte	.LASF61
- 1682 05ef C0030000 		.4byte	.LASF61
+ 1681 05eb B8030000 		.4byte	.LASF61
+ 1682 05ef B8030000 		.4byte	.LASF61
  1683 05f3 04       		.byte	0x4
  1684 05f4 27       		.byte	0x27
  1685 05f5 18       		.uleb128 0x18
@@ -3446,8 +3446,8 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1688 05fe 03       		.byte	0x3
  1689 05ff 7E       		.byte	0x7e
  1690 0600 18       		.uleb128 0x18
- 1691 0601 98000000 		.4byte	.LASF63
- 1692 0605 98000000 		.4byte	.LASF63
+ 1691 0601 6E000000 		.4byte	.LASF63
+ 1692 0605 6E000000 		.4byte	.LASF63
  1693 0609 04       		.byte	0x4
  1694 060a 28       		.byte	0x28
  1695 060b 00       		.byte	0
@@ -3478,7 +3478,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1720 0016 0B       		.uleb128 0xb
  1721 0017 0B       		.uleb128 0xb
  1722 0018 3E       		.uleb128 0x3e
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 59
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 59
 
 
  1723 0019 0B       		.uleb128 0xb
@@ -3538,7 +3538,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1777 004f 18       		.uleb128 0x18
  1778 0050 9742     		.uleb128 0x2117
  1779 0052 19       		.uleb128 0x19
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 60
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 60
 
 
  1780 0053 00       		.byte	0
@@ -3598,7 +3598,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1834 008e 11       		.uleb128 0x11
  1835 008f 01       		.uleb128 0x1
  1836 0090 31       		.uleb128 0x31
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 61
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 61
 
 
  1837 0091 13       		.uleb128 0x13
@@ -3658,7 +3658,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1891 00cb 40       		.uleb128 0x40
  1892 00cc 18       		.uleb128 0x18
  1893 00cd 9742     		.uleb128 0x2117
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 62
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 62
 
 
  1894 00cf 19       		.uleb128 0x19
@@ -3718,7 +3718,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  1948 0106 3B       		.uleb128 0x3b
  1949 0107 05       		.uleb128 0x5
  1950 0108 49       		.uleb128 0x49
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 63
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 63
 
 
  1951 0109 13       		.uleb128 0x13
@@ -3778,7 +3778,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  2005 0141 11       		.uleb128 0x11
  2006 0142 01       		.uleb128 0x1
  2007 0143 31       		.uleb128 0x31
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 64
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 64
 
 
  2008 0144 13       		.uleb128 0x13
@@ -3838,7 +3838,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  2062 0008 0100     		.2byte	0x1
  2063 000a 54       		.byte	0x54
  2064 000b 00000000 		.4byte	0
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 65
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 65
 
 
  2065 000f 00000000 		.4byte	0
@@ -3898,7 +3898,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  2119 0096 14000000 		.4byte	.LVL40
  2120 009a 0100     		.2byte	0x1
  2121 009c 55       		.byte	0x55
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 66
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 66
 
 
  2122 009d 14000000 		.4byte	.LVL40
@@ -3958,7 +3958,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  2176 012a 50       		.byte	0x50
  2177 012b 1C000000 		.4byte	.LVL49
  2178 012f 22000000 		.4byte	.LVL50
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 67
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 67
 
 
  2179 0133 0100     		.2byte	0x1
@@ -4018,7 +4018,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  2233 01b3 9F       		.byte	0x9f
  2234 01b4 1C000000 		.4byte	.LVL49
  2235 01b8 22000000 		.4byte	.LVL50
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 68
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 68
 
 
  2236 01bc 0100     		.2byte	0x1
@@ -4078,7 +4078,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  2290 0244 53       		.byte	0x53
  2291 0245 34000000 		.4byte	.LVL62
  2292 0249 3A000000 		.4byte	.LVL63
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 69
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 69
 
 
  2293 024d 0100     		.2byte	0x1
@@ -4138,7 +4138,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  2347 00b8 00000000 		.4byte	.LFB21
  2348 00bc 28000000 		.4byte	.LFE21-.LFB21
  2349 00c0 00000000 		.4byte	.LFB22
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 70
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 70
 
 
  2350 00c4 20000000 		.4byte	.LFE22-.LFB22
@@ -4198,7 +4198,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  2404 00a4 24000000 		.4byte	.LFE20
  2405 00a8 00000000 		.4byte	.LFB21
  2406 00ac 28000000 		.4byte	.LFE21
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 71
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 71
 
 
  2407 00b0 00000000 		.4byte	.LFB22
@@ -4250,326 +4250,326 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 1
  2435 004b 57656D6F 		.ascii	"Wemos_Start\000"
  2435      735F5374 
  2435      61727400 
- 2436              	.LASF66:
- 2437 0057 583A5C70 		.ascii	"X:\\projects\\PVCC-Air-Handlers\\AHU_1.cydsn\000"
- 2437      726F6A65 
- 2437      6374735C 
- 2437      50564343 
- 2437      2D416972 
- 2438              	.LASF7:
- 2439 0081 6C6F6E67 		.ascii	"long long unsigned int\000"
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 72
+ 2436              	.LASF7:
+ 2437 0057 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2437      206C6F6E 
+ 2437      6720756E 
+ 2437      7369676E 
+ 2437      65642069 
+ 2438              	.LASF63:
+ 2439 006e 57656D6F 		.ascii	"Wemos_IntClock_Stop\000"
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 72
 
 
- 2439      206C6F6E 
- 2439      6720756E 
- 2439      7369676E 
- 2439      65642069 
- 2440              	.LASF63:
- 2441 0098 57656D6F 		.ascii	"Wemos_IntClock_Stop\000"
- 2441      735F496E 
- 2441      74436C6F 
- 2441      636B5F53 
- 2441      746F7000 
- 2442              	.LASF53:
- 2443 00ac 57656D6F 		.ascii	"Wemos_GetTxBufferSize\000"
- 2443      735F4765 
- 2443      74547842 
- 2443      75666665 
- 2443      7253697A 
- 2444              	.LASF23:
- 2445 00c2 57656D6F 		.ascii	"Wemos_SetRxInterruptMode\000"
- 2445      735F5365 
- 2445      74527849 
- 2445      6E746572 
- 2445      72757074 
- 2446              	.LASF22:
- 2447 00db 57656D6F 		.ascii	"Wemos_WriteControlRegister\000"
- 2447      735F5772 
- 2447      69746543 
- 2447      6F6E7472 
- 2447      6F6C5265 
- 2448              	.LASF6:
- 2449 00f6 6C6F6E67 		.ascii	"long long int\000"
- 2449      206C6F6E 
- 2449      6720696E 
- 2449      7400
- 2450              	.LASF0:
- 2451 0104 7369676E 		.ascii	"signed char\000"
- 2451      65642063 
- 2451      68617200 
- 2452              	.LASF38:
- 2453 0110 57656D6F 		.ascii	"Wemos_SetRxAddress1\000"
- 2453      735F5365 
- 2453      74527841 
- 2453      64647265 
- 2453      73733100 
- 2454              	.LASF42:
- 2455 0124 57656D6F 		.ascii	"Wemos_WriteTxData\000"
- 2455      735F5772 
- 2455      69746554 
- 2455      78446174 
- 2455      6100
- 2456              	.LASF54:
- 2457 0136 57656D6F 		.ascii	"Wemos_ClearTxBuffer\000"
- 2457      735F436C 
- 2457      65617254 
- 2457      78427566 
- 2457      66657200 
- 2458              	.LASF4:
- 2459 014a 6C6F6E67 		.ascii	"long int\000"
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 73
+ 2439      735F496E 
+ 2439      74436C6F 
+ 2439      636B5F53 
+ 2439      746F7000 
+ 2440              	.LASF53:
+ 2441 0082 57656D6F 		.ascii	"Wemos_GetTxBufferSize\000"
+ 2441      735F4765 
+ 2441      74547842 
+ 2441      75666665 
+ 2441      7253697A 
+ 2442              	.LASF23:
+ 2443 0098 57656D6F 		.ascii	"Wemos_SetRxInterruptMode\000"
+ 2443      735F5365 
+ 2443      74527849 
+ 2443      6E746572 
+ 2443      72757074 
+ 2444              	.LASF22:
+ 2445 00b1 57656D6F 		.ascii	"Wemos_WriteControlRegister\000"
+ 2445      735F5772 
+ 2445      69746543 
+ 2445      6F6E7472 
+ 2445      6F6C5265 
+ 2446              	.LASF6:
+ 2447 00cc 6C6F6E67 		.ascii	"long long int\000"
+ 2447      206C6F6E 
+ 2447      6720696E 
+ 2447      7400
+ 2448              	.LASF0:
+ 2449 00da 7369676E 		.ascii	"signed char\000"
+ 2449      65642063 
+ 2449      68617200 
+ 2450              	.LASF38:
+ 2451 00e6 57656D6F 		.ascii	"Wemos_SetRxAddress1\000"
+ 2451      735F5365 
+ 2451      74527841 
+ 2451      64647265 
+ 2451      73733100 
+ 2452              	.LASF42:
+ 2453 00fa 57656D6F 		.ascii	"Wemos_WriteTxData\000"
+ 2453      735F5772 
+ 2453      69746554 
+ 2453      78446174 
+ 2453      6100
+ 2454              	.LASF54:
+ 2455 010c 57656D6F 		.ascii	"Wemos_ClearTxBuffer\000"
+ 2455      735F436C 
+ 2455      65617254 
+ 2455      78427566 
+ 2455      66657200 
+ 2456              	.LASF4:
+ 2457 0120 6C6F6E67 		.ascii	"long int\000"
+ 2457      20696E74 
+ 2457      00
+ 2458              	.LASF9:
+ 2459 0129 75696E74 		.ascii	"uint8\000"
+ 2459      3800
+ 2460              	.LASF50:
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 73
 
 
- 2459      20696E74 
- 2459      00
- 2460              	.LASF9:
- 2461 0153 75696E74 		.ascii	"uint8\000"
- 2461      3800
- 2462              	.LASF50:
- 2463 0159 57656D6F 		.ascii	"Wemos_PutArray\000"
- 2463      735F5075 
- 2463      74417272 
- 2463      617900
- 2464              	.LASF12:
- 2465 0168 646F7562 		.ascii	"double\000"
- 2465      6C6500
- 2466              	.LASF37:
- 2467 016f 61646472 		.ascii	"addressMode\000"
- 2467      6573734D 
- 2467      6F646500 
- 2468              	.LASF24:
- 2469 017b 636F6E74 		.ascii	"control\000"
- 2469      726F6C00 
+ 2461 012f 57656D6F 		.ascii	"Wemos_PutArray\000"
+ 2461      735F5075 
+ 2461      74417272 
+ 2461      617900
+ 2462              	.LASF12:
+ 2463 013e 646F7562 		.ascii	"double\000"
+ 2463      6C6500
+ 2464              	.LASF37:
+ 2465 0145 61646472 		.ascii	"addressMode\000"
+ 2465      6573734D 
+ 2465      6F646500 
+ 2466              	.LASF24:
+ 2467 0151 636F6E74 		.ascii	"control\000"
+ 2467      726F6C00 
+ 2468              	.LASF66:
+ 2469 0159 583A5C70 		.ascii	"X:\\projects\\PVCC2-AHU\\AHU_1.cydsn\000"
+ 2469      726F6A65 
+ 2469      6374735C 
+ 2469      50564343 
+ 2469      322D4148 
  2470              	.LASF44:
- 2471 0183 57656D6F 		.ascii	"Wemos_ReadControlRegister\000"
+ 2471 017b 57656D6F 		.ascii	"Wemos_ReadControlRegister\000"
  2471      735F5265 
  2471      6164436F 
  2471      6E74726F 
  2471      6C526567 
  2472              	.LASF20:
- 2473 019d 57656D6F 		.ascii	"Wemos_Stop\000"
+ 2473 0195 57656D6F 		.ascii	"Wemos_Stop\000"
  2473      735F5374 
  2473      6F7000
  2474              	.LASF56:
- 2475 01a8 7265744D 		.ascii	"retMode\000"
+ 2475 01a0 7265744D 		.ascii	"retMode\000"
  2475      6F646500 
  2476              	.LASF8:
- 2477 01b0 756E7369 		.ascii	"unsigned int\000"
+ 2477 01a8 756E7369 		.ascii	"unsigned int\000"
  2477      676E6564 
  2477      20696E74 
  2477      00
  2478              	.LASF5:
- 2479 01bd 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2479 01b5 6C6F6E67 		.ascii	"long unsigned int\000"
  2479      20756E73 
  2479      69676E65 
  2479      6420696E 
  2479      7400
  2480              	.LASF28:
- 2481 01cf 57656D6F 		.ascii	"Wemos_ReadRxStatus\000"
+ 2481 01c7 57656D6F 		.ascii	"Wemos_ReadRxStatus\000"
  2481      735F5265 
  2481      61645278 
  2481      53746174 
  2481      757300
  2482              	.LASF60:
- 2483 01e2 4379456E 		.ascii	"CyEnterCriticalSection\000"
+ 2483 01da 4379456E 		.ascii	"CyEnterCriticalSection\000"
  2483      74657243 
  2483      72697469 
  2483      63616C53 
  2483      65637469 
  2484              	.LASF30:
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 74
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 74
 
 
- 2485 01f9 57656D6F 		.ascii	"Wemos_GetChar\000"
+ 2485 01f1 57656D6F 		.ascii	"Wemos_GetChar\000"
  2485      735F4765 
  2485      74436861 
  2485      7200
  2486              	.LASF40:
- 2487 0207 57656D6F 		.ascii	"Wemos_SetRxAddress2\000"
+ 2487 01ff 57656D6F 		.ascii	"Wemos_SetRxAddress2\000"
  2487      735F5365 
  2487      74527841 
  2487      64647265 
  2487      73733200 
  2488              	.LASF34:
- 2489 021b 73697A65 		.ascii	"size\000"
+ 2489 0213 73697A65 		.ascii	"size\000"
  2489      00
  2490              	.LASF3:
- 2491 0220 73686F72 		.ascii	"short unsigned int\000"
+ 2491 0218 73686F72 		.ascii	"short unsigned int\000"
  2491      7420756E 
  2491      7369676E 
  2491      65642069 
  2491      6E7400
  2492              	.LASF49:
- 2493 0233 62756649 		.ascii	"bufIndex\000"
+ 2493 022b 62756649 		.ascii	"bufIndex\000"
  2493      6E646578 
  2493      00
  2494              	.LASF68:
- 2495 023c 57656D6F 		.ascii	"Wemos_initVar\000"
+ 2495 0234 57656D6F 		.ascii	"Wemos_initVar\000"
  2495      735F696E 
  2495      69745661 
  2495      7200
  2496              	.LASF25:
- 2497 024a 696E7453 		.ascii	"intSrc\000"
+ 2497 0242 696E7453 		.ascii	"intSrc\000"
  2497      726300
  2498              	.LASF65:
- 2499 0251 47656E65 		.ascii	"Generated_Source\\PSoC5\\Wemos.c\000"
+ 2499 0249 47656E65 		.ascii	"Generated_Source\\PSoC5\\Wemos.c\000"
  2499      72617465 
  2499      645F536F 
  2499      75726365 
  2499      5C50536F 
  2500              	.LASF57:
- 2501 0270 746D7053 		.ascii	"tmpStat\000"
+ 2501 0268 746D7053 		.ascii	"tmpStat\000"
  2501      74617400 
  2502              	.LASF55:
- 2503 0278 57656D6F 		.ascii	"Wemos_SendBreak\000"
+ 2503 0270 57656D6F 		.ascii	"Wemos_SendBreak\000"
  2503      735F5365 
  2503      6E644272 
  2503      65616B00 
  2504              	.LASF59:
- 2505 0288 57656D6F 		.ascii	"Wemos_SetTxAddressMode\000"
+ 2505 0280 57656D6F 		.ascii	"Wemos_SetTxAddressMode\000"
  2505      735F5365 
  2505      74547841 
  2505      64647265 
  2505      73734D6F 
  2506              	.LASF17:
- 2507 029f 73697A65 		.ascii	"sizetype\000"
+ 2507 0297 73697A65 		.ascii	"sizetype\000"
  2507      74797065 
  2507      00
  2508              	.LASF16:
- 2509 02a8 6C6F6E67 		.ascii	"long double\000"
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 75
+ 2509 02a0 6C6F6E67 		.ascii	"long double\000"
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 75
 
 
  2509      20646F75 
  2509      626C6500 
  2510              	.LASF39:
- 2511 02b4 61646472 		.ascii	"address\000"
+ 2511 02ac 61646472 		.ascii	"address\000"
  2511      65737300 
  2512              	.LASF18:
- 2513 02bc 57656D6F 		.ascii	"Wemos_Enable\000"
+ 2513 02b4 57656D6F 		.ascii	"Wemos_Enable\000"
  2513      735F456E 
  2513      61626C65 
  2513      00
  2514              	.LASF31:
- 2515 02c9 72785374 		.ascii	"rxStatus\000"
+ 2515 02c1 72785374 		.ascii	"rxStatus\000"
  2515      61747573 
  2515      00
  2516              	.LASF27:
- 2517 02d2 57656D6F 		.ascii	"Wemos_ReadRxData\000"
+ 2517 02ca 57656D6F 		.ascii	"Wemos_ReadRxData\000"
  2517      735F5265 
  2517      61645278 
  2517      44617461 
  2517      00
  2518              	.LASF11:
- 2519 02e3 666C6F61 		.ascii	"float\000"
+ 2519 02db 666C6F61 		.ascii	"float\000"
  2519      7400
  2520              	.LASF15:
- 2521 02e9 72656738 		.ascii	"reg8\000"
+ 2521 02e1 72656738 		.ascii	"reg8\000"
  2521      00
  2522              	.LASF1:
- 2523 02ee 756E7369 		.ascii	"unsigned char\000"
+ 2523 02e6 756E7369 		.ascii	"unsigned char\000"
  2523      676E6564 
  2523      20636861 
  2523      7200
  2524              	.LASF2:
- 2525 02fc 73686F72 		.ascii	"short int\000"
+ 2525 02f4 73686F72 		.ascii	"short int\000"
  2525      7420696E 
  2525      7400
  2526              	.LASF64:
- 2527 0306 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 2527 02fe 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
  2527      43313120 
  2527      352E342E 
  2527      31203230 
  2527      31363036 
- 2528 0339 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 2528 0331 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
  2528      20726576 
  2528      6973696F 
  2528      6E203233 
  2528      37373135 
- 2529 036c 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 2529 0364 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
  2529      66756E63 
  2529      74696F6E 
  2529      2D736563 
  2529      74696F6E 
  2530              	.LASF51:
- 2531 0394 62797465 		.ascii	"byteCount\000"
+ 2531 038c 62797465 		.ascii	"byteCount\000"
  2531      436F756E 
  2531      7400
  2532              	.LASF67:
- 2533 039e 57656D6F 		.ascii	"Wemos_Init\000"
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 76
+ 2533 0396 57656D6F 		.ascii	"Wemos_Init\000"
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 76
 
 
  2533      735F496E 
  2533      697400
  2534              	.LASF26:
- 2535 03a9 72784461 		.ascii	"rxData\000"
+ 2535 03a1 72784461 		.ascii	"rxData\000"
  2535      746100
  2536              	.LASF47:
- 2537 03b0 57656D6F 		.ascii	"Wemos_PutString\000"
+ 2537 03a8 57656D6F 		.ascii	"Wemos_PutString\000"
  2537      735F5075 
  2537      74537472 
  2537      696E6700 
  2538              	.LASF61:
- 2539 03c0 57656D6F 		.ascii	"Wemos_IntClock_Start\000"
+ 2539 03b8 57656D6F 		.ascii	"Wemos_IntClock_Start\000"
  2539      735F496E 
  2539      74436C6F 
  2539      636B5F53 
  2539      74617274 
  2540              	.LASF14:
- 2541 03d5 63686172 		.ascii	"char\000"
+ 2541 03cd 63686172 		.ascii	"char\000"
  2541      00
  2542              	.LASF46:
- 2543 03da 57656D6F 		.ascii	"Wemos_PutChar\000"
+ 2543 03d2 57656D6F 		.ascii	"Wemos_PutChar\000"
  2543      735F5075 
  2543      74436861 
  2543      7200
  2544              	.LASF35:
- 2545 03e8 57656D6F 		.ascii	"Wemos_ClearRxBuffer\000"
+ 2545 03e0 57656D6F 		.ascii	"Wemos_ClearRxBuffer\000"
  2545      735F436C 
  2545      65617252 
  2545      78427566 
  2545      66657200 
  2546              	.LASF13:
- 2547 03fc 63686172 		.ascii	"char8\000"
+ 2547 03f4 63686172 		.ascii	"char8\000"
  2547      3800
  2548              	.LASF36:
- 2549 0402 57656D6F 		.ascii	"Wemos_SetRxAddressMode\000"
+ 2549 03fa 57656D6F 		.ascii	"Wemos_SetRxAddressMode\000"
  2549      735F5365 
  2549      74527841 
  2549      64647265 
  2549      73734D6F 
  2550              	.LASF41:
- 2551 0419 57656D6F 		.ascii	"Wemos_SetTxInterruptMode\000"
+ 2551 0411 57656D6F 		.ascii	"Wemos_SetTxInterruptMode\000"
  2551      735F5365 
  2551      74547849 
  2551      6E746572 
  2551      72757074 
  2552              	.LASF21:
- 2553 0432 656E6162 		.ascii	"enableInterrupts\000"
+ 2553 042a 656E6162 		.ascii	"enableInterrupts\000"
  2553      6C65496E 
  2553      74657272 
  2553      75707473 
  2553      00
  2554              	.LASF29:
- 2555 0443 73746174 		.ascii	"status\000"
+ 2555 043b 73746174 		.ascii	"status\000"
  2555      757300
  2556              	.LASF32:
- 2557 044a 57656D6F 		.ascii	"Wemos_GetByte\000"
+ 2557 0442 57656D6F 		.ascii	"Wemos_GetByte\000"
  2557      735F4765 
-ARM GAS  C:\Users\scott\AppData\Local\Temp\ccZlPTrJ.s 			page 77
+ARM GAS  C:\Users\scott\AppData\Local\Temp\cc9gC1DN.s 			page 77
 
 
  2557      74427974 
  2557      6500
  2558              	.LASF52:
- 2559 0458 57656D6F 		.ascii	"Wemos_PutCRLF\000"
+ 2559 0450 57656D6F 		.ascii	"Wemos_PutCRLF\000"
  2559      735F5075 
  2559      7443524C 
  2559      4600
  2560              	.LASF33:
- 2561 0466 57656D6F 		.ascii	"Wemos_GetRxBufferSize\000"
+ 2561 045e 57656D6F 		.ascii	"Wemos_GetRxBufferSize\000"
  2561      735F4765 
  2561      74527842 
  2561      75666665 

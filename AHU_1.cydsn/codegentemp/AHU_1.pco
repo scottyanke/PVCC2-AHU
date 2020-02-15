@@ -1,12 +1,12 @@
 # AHU_1
-# 2020-02-04 02:06:20Z
+# 2020-02-15 16:32:58Z
 
 set_location "ClockBlock" clockblockcell -1 -1 0
 set_io "RS485_En(0)" iocell 12 5
 set_io "Tx(0)" iocell 12 7
 set_io "relay(0)" iocell 3 3
 set_io "Rx(0)" iocell 12 6
-set_io "MOSI(0)" iocell 2 6
+set_io "MOSI0(0)" iocell 2 6
 set_io "MAX31865_CS(0)" iocell 1 0
 set_io "MAX31865_CS(1)" iocell 1 1
 set_io "MAX31865_CS(2)" iocell 1 2
@@ -15,8 +15,8 @@ set_io "MAX31865_CS(4)" iocell 1 4
 set_io "MAX31865_CS(5)" iocell 1 5
 set_io "MAX31865_CS(6)" iocell 1 6
 set_io "MAX31865_CS(7)" iocell 1 7
-set_io "SCLK(0)" iocell 2 7
-set_io "MISO(0)" iocell 2 5
+set_io "SCLK0(0)" iocell 2 7
+set_io "MISO0(0)" iocell 2 5
 set_io "LED(0)" iocell 2 1
 set_io "Wemos_Rx(0)" iocell 12 3
 set_io "A1(0)" iocell 0 1

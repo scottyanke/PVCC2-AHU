@@ -158,10 +158,6 @@ void process_holding_registers(_Bool force)
           CyDelay(100);  // done to let the buffer clear
           sprintf(temp_message, "H|%03d|%06.2f|%05.2f|%05.2f|%c|%c\r\n", modbus_staleness,newTemp,registers[j][26] / 10.0, registers[j][27] / 10.0,MODBUS_BASE_ADDR + j,myId);
           Wemos_PutString(temp_message);  // send to mqtt later
-          // try sending twice just to see what happens
-          CyDelay(100);  // done to let the buffer clear
-          sprintf(temp_message, "H|%03d|%06.2f|%05.2f|%05.2f|%c|%c\r\n", modbus_staleness,newTemp,registers[j][26] / 10.0, registers[j][27] / 10.0,MODBUS_BASE_ADDR + j,myId);
-          Wemos_PutString(temp_message);  // send to mqtt later
         }
       }
 
@@ -173,7 +169,7 @@ void process_holding_registers(_Bool force)
           if (force || checkDiff(newTemp, last_registers[j][i * 4] / 100.0, 0.55))  // only update if something changed
           {
             last_registers[j][i * 4] = registers[j][i * 4];
-            CyDelay(100);  // done to let the buffer clear
+            CyDelay(200);  // done to let the buffer clear
             sprintf(temp_message, "T|%03d|%06.2f|%04x%04x%04x|%c|%c\r\n", modbus_staleness,newTemp,registers[j][(i*4)+1], registers[j][(i*4)+2], registers[j][(i*4)+3],MODBUS_BASE_ADDR + j,myId);
             Wemos_PutString(temp_message);  // send to mqtt after queuing
           }
@@ -223,10 +219,11 @@ int main(void)
 {
   uint8_t i;
   uint8_t fault;  // used to check faults on the RTDs
+  uint8_t forced;
   char s[20];   // essentially just used to report pin states
   char ts[128]; // a temporary string used for brief periods to send messages
   double f1;
-  uint32_t Adc_result;
+  uint32 Adc_result;
   float fAdc;
   float temperature;    // temperature of the DS18B20s directly connected to this device
   ds18b20_devices devices;  // the structure of DS18B20s found on this device by a search
@@ -238,6 +235,7 @@ int main(void)
   rs485_pos = 0;
   Global_time = 0;
   rx_timed_out = 0;
+  forced = 0;
   sprintf(version,"%02d%02d%02d-%02d%02d", BUILD_YEAR - 2000, BUILD_MONTH, BUILD_DAY, BUILD_HOUR, BUILD_MIN);
   CyDelay(6000); // Just take a short pause to let the wemos start
   myId = DIP_Read();    // Find out what device this is supposed to be reported as
@@ -291,7 +289,7 @@ int main(void)
       wemos_pos = 0;
       if (wemos_buffer[0] == '1' || wemos_buffer[0] == '2')  // process requests
       {
-        CyDelay(50);            // Needed to let the other side turn around and listen
+        CyDelay(500);           // Needed to let the other side turn around and listen
         LED_Write(1);           // light the led just to show we received a request for this id, for debugging
         one_wire_reset_pulse(); // do this for all of the DS18B20's
         // do this here because of timing, the DS18B20's can convert while other devices report
@@ -301,24 +299,28 @@ int main(void)
         sprintf(ts,"R|000|%s|%c\r\n",version,myId);
         Wemos_PutString(ts);  // done just to clear everything
         if (wemos_buffer[0] == '1') // A 1 just requests whatever has changed
-            process_holding_registers(false);    // this queues up the changed data for mqtt
-          else  // A 2 forces everthing to report, in case a change is missing
+        {
+          forced = 0;
+          process_holding_registers(false);    // this queues up the changed data for mqtt
+        }
+        else  // A 2 forces everthing to report, in case a change is missing
+        {
+          forced = 1;
+          process_holding_registers(true);    // this queues up all the data for mqtt
+          for (i = 0; i < 8; i++) // clear all last values so we get past the checkDiff function
           {
-            process_holding_registers(true);    // this queues up all the data for mqtt
-            for (i = 0; i < 8; i++) // clear all last values so we get past the checkDiff function
-            {
-              last31865[i] = -20.0;
-              lastDS18B20[i] = 0.0;
-              if (i < 4)
-                last_Adc_result[i] = 1;
-              lastPins = 0;
-            }
+            last31865[i] = -20.0;
+            lastDS18B20[i] = 0.0;
+            if (i < 4)
+              last_Adc_result[i] = 1;
+            lastPins = 0;
           }
+        }
         i = DINP_Read() << DINP_WIDTH; // get the values from the digital pins
         printBinary(i,s);
         s[DINP_WIDTH] = 0; // the WIDTH is the actual number of pins being looked at
         sprintf(ts,"P|000|%s|%c\r\n",s,myId);    // report on the status of the air conditioners
-        if (i != lastPins)
+        if (i != lastPins || forced)
         {
           lastPins = i;
           CyDelay(20);
@@ -334,7 +336,7 @@ int main(void)
           if (Adc_result > 1000000 || Adc_result < 80000) // used to eliminate the extreme edges
             Adc_result = 0;
           fAdc = round((ADC_CountsTo_Volts(Adc_result) * 1.052) * 10) / 10;
-          if (last_Adc_result[i] != fAdc) // only show what has changed
+          if (last_Adc_result[i] != fAdc || forced) // only show what has changed
           {
             sprintf(ts,"A|000|%06.2lf|%06lu|%d|%c\r\n",fAdc,Adc_result,i,myId);
             CyDelay(20);
@@ -346,25 +348,41 @@ int main(void)
         for (i = 0; i < 8; i++)     // get the temperatures from up to 8 devices
         {
           fault = max31865_readFault(i);
-          CyDelay(5);
+          CyDelay(25);
           if (fault > 1)
           {
-/*
+
             if (fault & MAX31865_FAULT_HIGHTHRESH)
+            {
               sprintf(ts,"E|000|Fault - RTD High Threshold|%d|%c\r\n",i,myId);
+              Wemos_PutString(ts);
+            }
             if (fault & MAX31865_FAULT_LOWTHRESH)
+            {
               sprintf(ts,"E|000|Fault - RTD Low Threshold|%d|%c\r\n",i,myId);
+              Wemos_PutString(ts);
+            }
             if (fault & MAX31865_FAULT_REFINLOW)
+            {
               sprintf(ts,"E|000|Fault - REFIN- > 0.85 x Bias|%d|%c\r\n",i,myId);
+              Wemos_PutString(ts);
+            }
             if (fault & MAX31865_FAULT_REFINHIGH)
+            {
               sprintf(ts,"E|000|Fault - REFIN- < 0.85 x Bias - FORCE- open|%d|%c\r\n",i,myId);
+              Wemos_PutString(ts);
+            }
             if (fault & MAX31865_FAULT_RTDINLOW)
+            {
               sprintf(ts,"E|000|Fault - RTDIN- < 0.85 x Bias - FORCE- open|%d|%c\r\n",i,myId);
+              Wemos_PutString(ts);
+            }
             if (fault & MAX31865_FAULT_OVUV)
+            {
               sprintf(ts,"E|000|Fault - Under/Over voltage|%d|%c\r\n",i,myId);
-*/
+              Wemos_PutString(ts);
+            }
             max31865_clearFault(i);
-            //Wemos_PutString(ts);
             CyDelay(10);
           }
           else
@@ -373,7 +391,7 @@ int main(void)
             if (f1 < 100 && f1 > -30 && f1 != 0.0)  // account for bad readings
             {
               sprintf(ts,"M|000|%06.2lf|%d|%c\r\n",f1,i,myId);
-              if (checkDiff(f1,last31865[i],0.5) && f1 != 0.0)
+              if (forced || (checkDiff(f1,last31865[i],0.5) && f1 != 0.0))
               {
                 last31865[i] = f1;
                 CyDelay(20);
@@ -393,7 +411,7 @@ int main(void)
               temperature,address.address[2],address.address[3],
               address.address[4],address.address[5],address.address[6],
               address.address[7],myId);
-          if (checkDiff(temperature,lastDS18B20[i],0.5))
+          if (forced || checkDiff(temperature,lastDS18B20[i],0.5))
           {
             CyDelay(20);
             Wemos_PutString(ts);
@@ -404,6 +422,7 @@ int main(void)
         CyDelay(20);
         Wemos_PutString("DONE\r\n");  // Nothing more to send
         wemos_buffer[0] = 0;  // Clear the received character buffer
+        forced = 0;     // clear the forced flag
         CyDelay(50);
         LED_Write(0);   // turn the communications indicator light off
     }
@@ -418,6 +437,7 @@ int main(void)
     //CySoftwareReset();
     LED_Write(0);
   }
+  
   switch( modbus_state )
   {
     case 0:

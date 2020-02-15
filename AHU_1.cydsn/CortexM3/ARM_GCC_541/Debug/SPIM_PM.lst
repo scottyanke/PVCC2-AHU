@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 1
 
 
    1              		.syntax unified
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
   28:Generated_Source\PSoC5/SPIM_PM.c **** * Function Name: SPIM_SaveConfig
   29:Generated_Source\PSoC5/SPIM_PM.c **** ********************************************************************************
   30:Generated_Source\PSoC5/SPIM_PM.c **** *
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 2
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 2
 
 
   31:Generated_Source\PSoC5/SPIM_PM.c **** * Summary:
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
   50 0000 7047     		bx	lr
   51              		.cfi_endproc
   52              	.LFE1:
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 3
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 3
 
 
   53              		.size	SPIM_RestoreConfig, .-SPIM_RestoreConfig
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
   77              		.loc 1 92 0
   78 000e FFF7FEFF 		bl	SPIM_Stop
   79              	.LVL0:
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 4
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 4
 
 
   80 0012 08BD     		pop	{r3, pc}
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
  101 0000 08B5     		push	{r3, lr}
  102              		.cfi_def_cfa_offset 8
  103              		.cfi_offset 3, -8
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 5
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 5
 
 
  104              		.cfi_offset 14, -4
@@ -298,49 +298,49 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
  139 0004 0400     		.2byte	0x4
  140 0006 00000000 		.4byte	.Ldebug_abbrev0
  141 000a 04       		.byte	0x4
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 6
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 6
 
 
  142 000b 01       		.uleb128 0x1
- 143 000c 6F000000 		.4byte	.LASF26
+ 143 000c 7E000000 		.4byte	.LASF26
  144 0010 0C       		.byte	0xc
- 145 0011 61010000 		.4byte	.LASF27
- 146 0015 2C010000 		.4byte	.LASF28
+ 145 0011 46010000 		.4byte	.LASF27
+ 146 0015 29000000 		.4byte	.LASF28
  147 0019 00000000 		.4byte	.Ldebug_ranges0+0
  148 001d 00000000 		.4byte	0
  149 0021 00000000 		.4byte	.Ldebug_line0
  150 0025 02       		.uleb128 0x2
  151 0026 01       		.byte	0x1
  152 0027 06       		.byte	0x6
- 153 0028 FC010000 		.4byte	.LASF0
+ 153 0028 E1010000 		.4byte	.LASF0
  154 002c 02       		.uleb128 0x2
  155 002d 01       		.byte	0x1
  156 002e 08       		.byte	0x8
- 157 002f 61000000 		.4byte	.LASF1
+ 157 002f 70000000 		.4byte	.LASF1
  158 0033 02       		.uleb128 0x2
  159 0034 02       		.byte	0x2
  160 0035 05       		.byte	0x5
- 161 0036 D1010000 		.4byte	.LASF2
+ 161 0036 B6010000 		.4byte	.LASF2
  162 003a 02       		.uleb128 0x2
  163 003b 02       		.byte	0x2
  164 003c 07       		.byte	0x7
- 165 003d 29000000 		.4byte	.LASF3
+ 165 003d ED010000 		.4byte	.LASF3
  166 0041 02       		.uleb128 0x2
  167 0042 04       		.byte	0x4
  168 0043 05       		.byte	0x5
- 169 0044 DB010000 		.4byte	.LASF4
+ 169 0044 C0010000 		.4byte	.LASF4
  170 0048 02       		.uleb128 0x2
  171 0049 04       		.byte	0x4
  172 004a 07       		.byte	0x7
- 173 004b 02010000 		.4byte	.LASF5
+ 173 004b 11010000 		.4byte	.LASF5
  174 004f 02       		.uleb128 0x2
  175 0050 08       		.byte	0x8
  176 0051 05       		.byte	0x5
- 177 0052 AF010000 		.4byte	.LASF6
+ 177 0052 94010000 		.4byte	.LASF6
  178 0056 02       		.uleb128 0x2
  179 0057 08       		.byte	0x8
  180 0058 07       		.byte	0x7
- 181 0059 8F010000 		.4byte	.LASF7
+ 181 0059 74010000 		.4byte	.LASF7
  182 005d 03       		.uleb128 0x3
  183 005e 04       		.byte	0x4
  184 005f 05       		.byte	0x5
@@ -348,29 +348,29 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
  186 0064 02       		.uleb128 0x2
  187 0065 04       		.byte	0x4
  188 0066 07       		.byte	0x7
- 189 0067 82010000 		.4byte	.LASF8
+ 189 0067 67010000 		.4byte	.LASF8
  190 006b 04       		.uleb128 0x4
- 191 006c 14010000 		.4byte	.LASF12
+ 191 006c 23010000 		.4byte	.LASF12
  192 0070 02       		.byte	0x2
  193 0071 E401     		.2byte	0x1e4
  194 0073 2C000000 		.4byte	0x2c
  195 0077 02       		.uleb128 0x2
  196 0078 04       		.byte	0x4
  197 0079 04       		.byte	0x4
- 198 007a 5B000000 		.4byte	.LASF9
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 7
+ 198 007a 6A000000 		.4byte	.LASF9
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 7
 
 
  199 007e 02       		.uleb128 0x2
  200 007f 08       		.byte	0x8
  201 0080 04       		.byte	0x4
- 202 0081 25010000 		.4byte	.LASF10
+ 202 0081 34010000 		.4byte	.LASF10
  203 0085 02       		.uleb128 0x2
  204 0086 01       		.byte	0x1
  205 0087 08       		.byte	0x8
- 206 0088 BD010000 		.4byte	.LASF11
+ 206 0088 A2010000 		.4byte	.LASF11
  207 008c 04       		.uleb128 0x4
- 208 008d FD000000 		.4byte	.LASF13
+ 208 008d 0C010000 		.4byte	.LASF13
  209 0091 02       		.byte	0x2
  210 0092 8E02     		.2byte	0x28e
  211 0094 98000000 		.4byte	0x98
@@ -379,36 +379,36 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
  214 009d 02       		.uleb128 0x2
  215 009e 08       		.byte	0x8
  216 009f 04       		.byte	0x4
- 217 00a0 F0010000 		.4byte	.LASF14
+ 217 00a0 D5010000 		.4byte	.LASF14
  218 00a4 02       		.uleb128 0x2
  219 00a5 04       		.byte	0x4
  220 00a6 07       		.byte	0x7
- 221 00a7 A6010000 		.4byte	.LASF15
+ 221 00a7 8B010000 		.4byte	.LASF15
  222 00ab 06       		.uleb128 0x6
  223 00ac 02       		.byte	0x2
  224 00ad 03       		.byte	0x3
  225 00ae 40       		.byte	0x40
  226 00af CC000000 		.4byte	0xcc
  227 00b3 07       		.uleb128 0x7
- 228 00b4 4F000000 		.4byte	.LASF16
+ 228 00b4 5E000000 		.4byte	.LASF16
  229 00b8 03       		.byte	0x3
  230 00b9 42       		.byte	0x42
  231 00ba 6B000000 		.4byte	0x6b
  232 00be 00       		.byte	0
  233 00bf 07       		.uleb128 0x7
- 234 00c0 56010000 		.4byte	.LASF17
+ 234 00c0 3B010000 		.4byte	.LASF17
  235 00c4 03       		.byte	0x3
  236 00c5 43       		.byte	0x43
  237 00c6 6B000000 		.4byte	0x6b
  238 00ca 01       		.byte	0x1
  239 00cb 00       		.byte	0
  240 00cc 08       		.uleb128 0x8
- 241 00cd 3C000000 		.4byte	.LASF18
+ 241 00cd 4B000000 		.4byte	.LASF18
  242 00d1 03       		.byte	0x3
  243 00d2 44       		.byte	0x44
  244 00d3 AB000000 		.4byte	0xab
  245 00d7 09       		.uleb128 0x9
- 246 00d8 08020000 		.4byte	.LASF19
+ 246 00d8 00020000 		.4byte	.LASF19
  247 00dc 01       		.byte	0x1
  248 00dd 29       		.byte	0x29
  249 00de 00000000 		.4byte	.LFB0
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
  253 00e8 09       		.uleb128 0x9
  254 00e9 16000000 		.4byte	.LASF20
  255 00ed 01       		.byte	0x1
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 8
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 8
 
 
  256 00ee 3D       		.byte	0x3d
@@ -427,7 +427,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
  259 00f7 01       		.uleb128 0x1
  260 00f8 9C       		.byte	0x9c
  261 00f9 0A       		.uleb128 0xa
- 262 00fa 1A010000 		.4byte	.LASF21
+ 262 00fa 29010000 		.4byte	.LASF21
  263 00fe 01       		.byte	0x1
  264 00ff 57       		.byte	0x57
  265 0100 00000000 		.4byte	.LFB2
@@ -440,7 +440,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
  272 0113 51010000 		.4byte	0x151
  273 0117 00       		.byte	0
  274 0118 0A       		.uleb128 0xa
- 275 0119 18020000 		.4byte	.LASF22
+ 275 0119 10020000 		.4byte	.LASF22
  276 011d 01       		.byte	0x1
  277 011e 7C       		.byte	0x7c
  278 011f 00000000 		.4byte	.LFB3
@@ -469,16 +469,16 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
  301 015a 03       		.byte	0x3
  302 015b 4E       		.byte	0x4e
  303 015c 0D       		.uleb128 0xd
- 304 015d C2010000 		.4byte	.LASF24
- 305 0161 C2010000 		.4byte	.LASF24
+ 304 015d A7010000 		.4byte	.LASF24
+ 305 0161 A7010000 		.4byte	.LASF24
  306 0165 03       		.byte	0x3
  307 0166 66       		.byte	0x66
  308 0167 0D       		.uleb128 0xd
- 309 0168 E4010000 		.4byte	.LASF25
- 310 016c E4010000 		.4byte	.LASF25
+ 309 0168 C9010000 		.4byte	.LASF25
+ 310 016c C9010000 		.4byte	.LASF25
  311 0170 03       		.byte	0x3
  312 0171 4C       		.byte	0x4c
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 9
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 9
 
 
  313 0172 00       		.byte	0
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
  367 0033 13       		.uleb128 0x13
  368 0034 00       		.byte	0
  369 0035 00       		.byte	0
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 10
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 10
 
 
  370 0036 05       		.uleb128 0x5
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
  424 006c 0E       		.uleb128 0xe
  425 006d 3A       		.uleb128 0x3a
  426 006e 0B       		.uleb128 0xb
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 11
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 11
 
 
  427 006f 3B       		.uleb128 0x3b
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
  481 00a9 0B       		.uleb128 0xb
  482 00aa 3B       		.uleb128 0x3b
  483 00ab 0B       		.uleb128 0xb
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 12
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 12
 
 
  484 00ac 49       		.uleb128 0x49
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
  538              		.section	.debug_line,"",%progbits
  539              	.Ldebug_line0:
  540 0000 9A000000 		.section	.debug_str,"MS",%progbits,1
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 13
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 13
 
 
  540      02004E00 
@@ -739,142 +739,142 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 1
  546      746F7265 
  546      436F6E66 
  546      696700
- 547              	.LASF3:
- 548 0029 73686F72 		.ascii	"short unsigned int\000"
- 548      7420756E 
- 548      7369676E 
- 548      65642069 
- 548      6E7400
+ 547              	.LASF28:
+ 548 0029 583A5C70 		.ascii	"X:\\projects\\PVCC2-AHU\\AHU_1.cydsn\000"
+ 548      726F6A65 
+ 548      6374735C 
+ 548      50564343 
+ 548      322D4148 
  549              	.LASF18:
- 550 003c 5350494D 		.ascii	"SPIM_BACKUP_STRUCT\000"
+ 550 004b 5350494D 		.ascii	"SPIM_BACKUP_STRUCT\000"
  550      5F424143 
  550      4B55505F 
  550      53545255 
  550      435400
  551              	.LASF16:
- 552 004f 656E6162 		.ascii	"enableState\000"
+ 552 005e 656E6162 		.ascii	"enableState\000"
  552      6C655374 
  552      61746500 
  553              	.LASF9:
- 554 005b 666C6F61 		.ascii	"float\000"
+ 554 006a 666C6F61 		.ascii	"float\000"
  554      7400
  555              	.LASF1:
- 556 0061 756E7369 		.ascii	"unsigned char\000"
+ 556 0070 756E7369 		.ascii	"unsigned char\000"
  556      676E6564 
  556      20636861 
  556      7200
  557              	.LASF26:
- 558 006f 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 558 007e 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
  558      43313120 
  558      352E342E 
  558      31203230 
  558      31363036 
- 559 00a2 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 559 00b1 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
  559      20726576 
  559      6973696F 
  559      6E203233 
  559      37373135 
- 560 00d5 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 560 00e4 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
  560      66756E63 
  560      74696F6E 
  560      2D736563 
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 14
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 14
 
 
  560      74696F6E 
  561              	.LASF13:
- 562 00fd 72656738 		.ascii	"reg8\000"
+ 562 010c 72656738 		.ascii	"reg8\000"
  562      00
  563              	.LASF5:
- 564 0102 6C6F6E67 		.ascii	"long unsigned int\000"
+ 564 0111 6C6F6E67 		.ascii	"long unsigned int\000"
  564      20756E73 
  564      69676E65 
  564      6420696E 
  564      7400
  565              	.LASF12:
- 566 0114 75696E74 		.ascii	"uint8\000"
+ 566 0123 75696E74 		.ascii	"uint8\000"
  566      3800
  567              	.LASF21:
- 568 011a 5350494D 		.ascii	"SPIM_Sleep\000"
+ 568 0129 5350494D 		.ascii	"SPIM_Sleep\000"
  568      5F536C65 
  568      657000
  569              	.LASF10:
- 570 0125 646F7562 		.ascii	"double\000"
+ 570 0134 646F7562 		.ascii	"double\000"
  570      6C6500
- 571              	.LASF28:
- 572 012c 583A5C70 		.ascii	"X:\\projects\\PVCC-Air-Handlers\\AHU_1.cydsn\000"
- 572      726F6A65 
- 572      6374735C 
- 572      50564343 
- 572      2D416972 
- 573              	.LASF17:
- 574 0156 636E7472 		.ascii	"cntrPeriod\000"
- 574      50657269 
- 574      6F6400
- 575              	.LASF27:
- 576 0161 47656E65 		.ascii	"Generated_Source\\PSoC5\\SPIM_PM.c\000"
- 576      72617465 
- 576      645F536F 
- 576      75726365 
- 576      5C50536F 
- 577              	.LASF8:
- 578 0182 756E7369 		.ascii	"unsigned int\000"
- 578      676E6564 
- 578      20696E74 
- 578      00
- 579              	.LASF7:
- 580 018f 6C6F6E67 		.ascii	"long long unsigned int\000"
- 580      206C6F6E 
- 580      6720756E 
- 580      7369676E 
- 580      65642069 
- 581              	.LASF15:
- 582 01a6 73697A65 		.ascii	"sizetype\000"
- 582      74797065 
- 582      00
- 583              	.LASF6:
- 584 01af 6C6F6E67 		.ascii	"long long int\000"
- 584      206C6F6E 
- 584      6720696E 
- 584      7400
- 585              	.LASF11:
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cckDEEuR.s 			page 15
+ 571              	.LASF17:
+ 572 013b 636E7472 		.ascii	"cntrPeriod\000"
+ 572      50657269 
+ 572      6F6400
+ 573              	.LASF27:
+ 574 0146 47656E65 		.ascii	"Generated_Source\\PSoC5\\SPIM_PM.c\000"
+ 574      72617465 
+ 574      645F536F 
+ 574      75726365 
+ 574      5C50536F 
+ 575              	.LASF8:
+ 576 0167 756E7369 		.ascii	"unsigned int\000"
+ 576      676E6564 
+ 576      20696E74 
+ 576      00
+ 577              	.LASF7:
+ 578 0174 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 578      206C6F6E 
+ 578      6720756E 
+ 578      7369676E 
+ 578      65642069 
+ 579              	.LASF15:
+ 580 018b 73697A65 		.ascii	"sizetype\000"
+ 580      74797065 
+ 580      00
+ 581              	.LASF6:
+ 582 0194 6C6F6E67 		.ascii	"long long int\000"
+ 582      206C6F6E 
+ 582      6720696E 
+ 582      7400
+ 583              	.LASF11:
+ 584 01a2 63686172 		.ascii	"char\000"
+ 584      00
+ 585              	.LASF24:
+ 586 01a7 5350494D 		.ascii	"SPIM_ClearFIFO\000"
+ 586      5F436C65 
+ 586      61724649 
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccJcj0qb.s 			page 15
 
 
- 586 01bd 63686172 		.ascii	"char\000"
- 586      00
- 587              	.LASF24:
- 588 01c2 5350494D 		.ascii	"SPIM_ClearFIFO\000"
- 588      5F436C65 
- 588      61724649 
- 588      464F00
- 589              	.LASF2:
- 590 01d1 73686F72 		.ascii	"short int\000"
- 590      7420696E 
- 590      7400
- 591              	.LASF4:
- 592 01db 6C6F6E67 		.ascii	"long int\000"
- 592      20696E74 
- 592      00
- 593              	.LASF25:
- 594 01e4 5350494D 		.ascii	"SPIM_Enable\000"
- 594      5F456E61 
+ 586      464F00
+ 587              	.LASF2:
+ 588 01b6 73686F72 		.ascii	"short int\000"
+ 588      7420696E 
+ 588      7400
+ 589              	.LASF4:
+ 590 01c0 6C6F6E67 		.ascii	"long int\000"
+ 590      20696E74 
+ 590      00
+ 591              	.LASF25:
+ 592 01c9 5350494D 		.ascii	"SPIM_Enable\000"
+ 592      5F456E61 
+ 592      626C6500 
+ 593              	.LASF14:
+ 594 01d5 6C6F6E67 		.ascii	"long double\000"
+ 594      20646F75 
  594      626C6500 
- 595              	.LASF14:
- 596 01f0 6C6F6E67 		.ascii	"long double\000"
- 596      20646F75 
- 596      626C6500 
- 597              	.LASF0:
- 598 01fc 7369676E 		.ascii	"signed char\000"
- 598      65642063 
- 598      68617200 
+ 595              	.LASF0:
+ 596 01e1 7369676E 		.ascii	"signed char\000"
+ 596      65642063 
+ 596      68617200 
+ 597              	.LASF3:
+ 598 01ed 73686F72 		.ascii	"short unsigned int\000"
+ 598      7420756E 
+ 598      7369676E 
+ 598      65642069 
+ 598      6E7400
  599              	.LASF19:
- 600 0208 5350494D 		.ascii	"SPIM_SaveConfig\000"
+ 600 0200 5350494D 		.ascii	"SPIM_SaveConfig\000"
  600      5F536176 
  600      65436F6E 
  600      66696700 
  601              	.LASF22:
- 602 0218 5350494D 		.ascii	"SPIM_Wakeup\000"
+ 602 0210 5350494D 		.ascii	"SPIM_Wakeup\000"
  602      5F57616B 
  602      65757000 
  603              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

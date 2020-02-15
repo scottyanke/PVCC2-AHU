@@ -74,9 +74,9 @@ All values are in Picoseconds
 3.1::Setup to Clock                     
 -------------------                     
 
-Port Name    Setup to Clk  Clock Name:Phase  
------------  ------------  ----------------  
-MISO(0)_PAD  17285         SPIM_IntClock:R   
+Port Name     Setup to Clk  Clock Name:Phase  
+------------  ------------  ----------------  
+MISO0(0)_PAD  17285         SPIM_IntClock:R   
 
 
                        3.2::Clock to Out
@@ -84,8 +84,8 @@ MISO(0)_PAD  17285         SPIM_IntClock:R
 
 Port Name        Clock to Out  Clock Name:Phase  
 ---------------  ------------  ----------------  
-MOSI(0)_PAD      23343         SPIM_IntClock:R   
-SCLK(0)_PAD      22848         SPIM_IntClock:R   
+MOSI0(0)_PAD     23343         SPIM_IntClock:R   
+SCLK0(0)_PAD     22848         SPIM_IntClock:R   
 Tx(0)_PAD        32320         RS485_IntClock:R  
 Wemos_Tx(0)_PAD  29774         Wemos_IntClock:R  
 

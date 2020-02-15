@@ -1,5 +1,5 @@
--- Project:   X:\projects\PVCC-Air-Handlers\AHU_2.cydsn\AHU_2.cyprj
--- Generated: 01/25/2020 15:02:59
+-- Project:   X:\projects\PVCC2-AHU\AHU_2.cydsn\AHU_2.cyprj
+-- Generated: 02/15/2020 10:38:02
 -- PSoC Creator  4.2
 
 ENTITY AHU_2 IS

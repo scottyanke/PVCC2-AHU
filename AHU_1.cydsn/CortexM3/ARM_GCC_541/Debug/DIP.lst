@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccASsTYY.s 			page 1
 
 
    1              		.syntax unified
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
   28:Generated_Source\PSoC5/DIP.c **** *
   29:Generated_Source\PSoC5/DIP.c **** * \brief Writes the value to the physical port (data output register), masking
   30:Generated_Source\PSoC5/DIP.c **** *  and shifting the bits appropriately. 
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 2
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccASsTYY.s 			page 2
 
 
   31:Generated_Source\PSoC5/DIP.c **** *
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
   52              		.size	DIP_Write, .-DIP_Write
   53              		.section	.text.DIP_SetDriveMode,"ax",%progbits
   54              		.align	2
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 3
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccASsTYY.s 			page 3
 
 
   55              		.global	DIP_SetDriveMode
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
   76 0010 0132     		adds	r2, r2, #1
   77 0012 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
   78 0014 03F0F103 		and	r3, r3, #241
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 4
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccASsTYY.s 			page 4
 
 
   79 0018 0343     		orrs	r3, r3, r0
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
  109              		.loc 1 117 0
  110              		.cfi_startproc
  111              		@ args = 0, pretend = 0, frame = 0
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 5
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccASsTYY.s 			page 5
 
 
  112              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
  138              		@ frame_needed = 0, uses_anonymous_args = 0
  139              		@ link register save eliminated.
  146:Generated_Source\PSoC5/DIP.c ****     return (DIP_DR & DIP_MASK) >> DIP_SHIFT;
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 6
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccASsTYY.s 			page 6
 
 
  140              		.loc 1 146 0
@@ -325,48 +325,48 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
  160 0006 00000000 		.4byte	.Ldebug_abbrev0
  161 000a 04       		.byte	0x4
  162 000b 01       		.uleb128 0x1
- 163 000c 55000000 		.4byte	.LASF20
+ 163 000c 6C000000 		.4byte	.LASF20
  164 0010 0C       		.byte	0xc
  165 0011 0F000000 		.4byte	.LASF21
- 166 0015 14010000 		.4byte	.LASF22
+ 166 0015 49010000 		.4byte	.LASF22
  167 0019 00000000 		.4byte	.Ldebug_ranges0+0
  168 001d 00000000 		.4byte	0
  169 0021 00000000 		.4byte	.Ldebug_line0
  170 0025 02       		.uleb128 0x2
  171 0026 01       		.byte	0x1
  172 0027 06       		.byte	0x6
- 173 0028 B4010000 		.4byte	.LASF0
+ 173 0028 AC010000 		.4byte	.LASF0
  174 002c 02       		.uleb128 0x2
  175 002d 01       		.byte	0x1
  176 002e 08       		.byte	0x8
- 177 002f 47000000 		.4byte	.LASF1
+ 177 002f 5E000000 		.4byte	.LASF1
  178 0033 02       		.uleb128 0x2
  179 0034 02       		.byte	0x2
  180 0035 05       		.byte	0x5
- 181 0036 9B010000 		.4byte	.LASF2
+ 181 0036 93010000 		.4byte	.LASF2
  182 003a 02       		.uleb128 0x2
  183 003b 02       		.byte	0x2
  184 003c 07       		.byte	0x7
- 185 003d FA000000 		.4byte	.LASF3
+ 185 003d 11010000 		.4byte	.LASF3
  186 0041 02       		.uleb128 0x2
  187 0042 04       		.byte	0x4
  188 0043 05       		.byte	0x5
- 189 0044 AB010000 		.4byte	.LASF4
+ 189 0044 A3010000 		.4byte	.LASF4
  190 0048 02       		.uleb128 0x2
  191 0049 04       		.byte	0x4
  192 004a 07       		.byte	0x7
- 193 004b E8000000 		.4byte	.LASF5
+ 193 004b FF000000 		.4byte	.LASF5
  194 004f 02       		.uleb128 0x2
  195 0050 08       		.byte	0x8
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 7
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccASsTYY.s 			page 7
 
 
  196 0051 05       		.byte	0x5
- 197 0052 78010000 		.4byte	.LASF6
+ 197 0052 70010000 		.4byte	.LASF6
  198 0056 02       		.uleb128 0x2
  199 0057 08       		.byte	0x8
  200 0058 07       		.byte	0x7
- 201 0059 5C010000 		.4byte	.LASF7
+ 201 0059 3D000000 		.4byte	.LASF7
  202 005d 03       		.uleb128 0x3
  203 005e 04       		.byte	0x4
  204 005f 05       		.byte	0x5
@@ -374,9 +374,9 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
  206 0064 02       		.uleb128 0x2
  207 0065 04       		.byte	0x4
  208 0066 07       		.byte	0x7
- 209 0067 4F010000 		.4byte	.LASF8
+ 209 0067 3C010000 		.4byte	.LASF8
  210 006b 04       		.uleb128 0x4
- 211 006c A5010000 		.4byte	.LASF12
+ 211 006c 9D010000 		.4byte	.LASF12
  212 0070 02       		.byte	0x2
  213 0071 E401     		.2byte	0x1e4
  214 0073 2C000000 		.4byte	0x2c
@@ -387,20 +387,20 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
  219 007e 02       		.uleb128 0x2
  220 007f 08       		.byte	0x8
  221 0080 04       		.byte	0x4
- 222 0081 0D010000 		.4byte	.LASF10
+ 222 0081 24010000 		.4byte	.LASF10
  223 0085 02       		.uleb128 0x2
  224 0086 01       		.byte	0x1
  225 0087 08       		.byte	0x8
- 226 0088 96010000 		.4byte	.LASF11
+ 226 0088 8E010000 		.4byte	.LASF11
  227 008c 04       		.uleb128 0x4
- 228 008d E3000000 		.4byte	.LASF13
+ 228 008d FA000000 		.4byte	.LASF13
  229 0091 02       		.byte	0x2
  230 0092 8E02     		.2byte	0x28e
  231 0094 98000000 		.4byte	0x98
  232 0098 05       		.uleb128 0x5
  233 0099 6B000000 		.4byte	0x6b
  234 009d 06       		.uleb128 0x6
- 235 009e 3D000000 		.4byte	.LASF14
+ 235 009e 54000000 		.4byte	.LASF14
  236 00a2 01       		.byte	0x1
  237 00a3 39       		.byte	0x39
  238 00a4 00000000 		.4byte	.LFB0
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
  250 00c2 2C000000 		.4byte	.LASF23
  251 00c6 01       		.byte	0x1
  252 00c7 3B       		.byte	0x3b
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 8
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccASsTYY.s 			page 8
 
 
  253 00c8 6B000000 		.4byte	0x6b
@@ -426,7 +426,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
  255 00cd 53       		.byte	0x53
  256 00ce 00       		.byte	0
  257 00cf 06       		.uleb128 0x6
- 258 00d0 3E010000 		.4byte	.LASF15
+ 258 00d0 2B010000 		.4byte	.LASF15
  259 00d4 01       		.byte	0x1
  260 00d5 5A       		.byte	0x5a
  261 00d6 00000000 		.4byte	.LFB1
@@ -435,7 +435,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
  264 00df 9C       		.byte	0x9c
  265 00e0 F4000000 		.4byte	0xf4
  266 00e4 07       		.uleb128 0x7
- 267 00e5 73010000 		.4byte	.LASF17
+ 267 00e5 6B010000 		.4byte	.LASF17
  268 00e9 01       		.byte	0x1
  269 00ea 5A       		.byte	0x5a
  270 00eb 6B000000 		.4byte	0x6b
@@ -451,7 +451,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
  280 0107 01       		.uleb128 0x1
  281 0108 9C       		.byte	0x9c
  282 0109 09       		.uleb128 0x9
- 283 010a 86010000 		.4byte	.LASF19
+ 283 010a 7E010000 		.4byte	.LASF19
  284 010e 01       		.byte	0x1
  285 010f 90       		.byte	0x90
  286 0110 6B000000 		.4byte	0x6b
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
  307 000d 11       		.uleb128 0x11
  308 000e 01       		.uleb128 0x1
  309 000f 10       		.uleb128 0x10
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 9
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccASsTYY.s 			page 9
 
 
  310 0010 17       		.uleb128 0x17
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
  364 0046 3B       		.uleb128 0x3b
  365 0047 0B       		.uleb128 0xb
  366 0048 27       		.uleb128 0x27
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 10
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccASsTYY.s 			page 10
 
 
  367 0049 19       		.uleb128 0x19
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
  421 0080 27       		.uleb128 0x27
  422 0081 19       		.uleb128 0x19
  423 0082 49       		.uleb128 0x49
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 11
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccASsTYY.s 			page 11
 
 
  424 0083 13       		.uleb128 0x13
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
  478 0020 00000000 		.4byte	.LFB2
  479 0024 0C000000 		.4byte	.LFE2-.LFB2
  480 0028 00000000 		.4byte	.LFB3
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 12
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccASsTYY.s 			page 12
 
 
  481 002c 0C000000 		.4byte	.LFE3-.LFB3
@@ -703,107 +703,107 @@ ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 1
  507              	.LASF9:
  508 0037 666C6F61 		.ascii	"float\000"
  508      7400
- 509              	.LASF14:
- 510 003d 4449505F 		.ascii	"DIP_Write\000"
- 510      57726974 
- 510      6500
- 511              	.LASF1:
- 512 0047 756E7369 		.ascii	"unsigned char\000"
- 512      676E6564 
- 512      20636861 
- 512      7200
- 513              	.LASF20:
- 514 0055 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
- 514      43313120 
- 514      352E342E 
- 514      31203230 
- 514      31363036 
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 13
+ 509              	.LASF7:
+ 510 003d 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 510      206C6F6E 
+ 510      6720756E 
+ 510      7369676E 
+ 510      65642069 
+ 511              	.LASF14:
+ 512 0054 4449505F 		.ascii	"DIP_Write\000"
+ 512      57726974 
+ 512      6500
+ 513              	.LASF1:
+ 514 005e 756E7369 		.ascii	"unsigned char\000"
+ 514      676E6564 
+ 514      20636861 
+ 514      7200
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccASsTYY.s 			page 13
 
 
- 515 0088 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
- 515      20726576 
- 515      6973696F 
- 515      6E203233 
- 515      37373135 
- 516 00bb 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
- 516      66756E63 
- 516      74696F6E 
- 516      2D736563 
- 516      74696F6E 
- 517              	.LASF13:
- 518 00e3 72656738 		.ascii	"reg8\000"
- 518      00
- 519              	.LASF5:
- 520 00e8 6C6F6E67 		.ascii	"long unsigned int\000"
- 520      20756E73 
- 520      69676E65 
- 520      6420696E 
- 520      7400
- 521              	.LASF3:
- 522 00fa 73686F72 		.ascii	"short unsigned int\000"
- 522      7420756E 
- 522      7369676E 
- 522      65642069 
- 522      6E7400
- 523              	.LASF10:
- 524 010d 646F7562 		.ascii	"double\000"
- 524      6C6500
- 525              	.LASF22:
- 526 0114 583A5C70 		.ascii	"X:\\projects\\PVCC-Air-Handlers\\AHU_1.cydsn\000"
- 526      726F6A65 
- 526      6374735C 
- 526      50564343 
- 526      2D416972 
+ 515              	.LASF20:
+ 516 006c 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 516      43313120 
+ 516      352E342E 
+ 516      31203230 
+ 516      31363036 
+ 517 009f 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 517      20726576 
+ 517      6973696F 
+ 517      6E203233 
+ 517      37373135 
+ 518 00d2 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 518      66756E63 
+ 518      74696F6E 
+ 518      2D736563 
+ 518      74696F6E 
+ 519              	.LASF13:
+ 520 00fa 72656738 		.ascii	"reg8\000"
+ 520      00
+ 521              	.LASF5:
+ 522 00ff 6C6F6E67 		.ascii	"long unsigned int\000"
+ 522      20756E73 
+ 522      69676E65 
+ 522      6420696E 
+ 522      7400
+ 523              	.LASF3:
+ 524 0111 73686F72 		.ascii	"short unsigned int\000"
+ 524      7420756E 
+ 524      7369676E 
+ 524      65642069 
+ 524      6E7400
+ 525              	.LASF10:
+ 526 0124 646F7562 		.ascii	"double\000"
+ 526      6C6500
  527              	.LASF15:
- 528 013e 4449505F 		.ascii	"DIP_SetDriveMode\000"
+ 528 012b 4449505F 		.ascii	"DIP_SetDriveMode\000"
  528      53657444 
  528      72697665 
  528      4D6F6465 
  528      00
  529              	.LASF8:
- 530 014f 756E7369 		.ascii	"unsigned int\000"
+ 530 013c 756E7369 		.ascii	"unsigned int\000"
  530      676E6564 
  530      20696E74 
  530      00
- 531              	.LASF7:
- 532 015c 6C6F6E67 		.ascii	"long long unsigned int\000"
- 532      206C6F6E 
- 532      6720756E 
- 532      7369676E 
- 532      65642069 
+ 531              	.LASF22:
+ 532 0149 583A5C70 		.ascii	"X:\\projects\\PVCC2-AHU\\AHU_1.cydsn\000"
+ 532      726F6A65 
+ 532      6374735C 
+ 532      50564343 
+ 532      322D4148 
  533              	.LASF17:
- 534 0173 6D6F6465 		.ascii	"mode\000"
+ 534 016b 6D6F6465 		.ascii	"mode\000"
  534      00
  535              	.LASF6:
- 536 0178 6C6F6E67 		.ascii	"long long int\000"
+ 536 0170 6C6F6E67 		.ascii	"long long int\000"
  536      206C6F6E 
-ARM GAS  C:\Users\scott\AppData\Local\Temp\cc88Slqh.s 			page 14
+ARM GAS  C:\Users\scott\AppData\Local\Temp\ccASsTYY.s 			page 14
 
 
  536      6720696E 
  536      7400
  537              	.LASF19:
- 538 0186 4449505F 		.ascii	"DIP_ReadDataReg\000"
+ 538 017e 4449505F 		.ascii	"DIP_ReadDataReg\000"
  538      52656164 
  538      44617461 
  538      52656700 
  539              	.LASF11:
- 540 0196 63686172 		.ascii	"char\000"
+ 540 018e 63686172 		.ascii	"char\000"
  540      00
  541              	.LASF2:
- 542 019b 73686F72 		.ascii	"short int\000"
+ 542 0193 73686F72 		.ascii	"short int\000"
  542      7420696E 
  542      7400
  543              	.LASF12:
- 544 01a5 75696E74 		.ascii	"uint8\000"
+ 544 019d 75696E74 		.ascii	"uint8\000"
  544      3800
  545              	.LASF4:
- 546 01ab 6C6F6E67 		.ascii	"long int\000"
+ 546 01a3 6C6F6E67 		.ascii	"long int\000"
  546      20696E74 
  546      00
  547              	.LASF0:
- 548 01b4 7369676E 		.ascii	"signed char\000"
+ 548 01ac 7369676E 		.ascii	"signed char\000"
  548      65642063 
  548      68617200 
  549              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

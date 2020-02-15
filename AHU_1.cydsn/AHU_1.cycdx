@@ -122,8 +122,8 @@
   <block name="timer_clock_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="Rx_Timer_Int" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="MAX31865_CS" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="MOSI" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="SCLK" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="MOSI0" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="SCLK0" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="Timer" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false">
     <block name="VirtualMux_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="ZeroTerminal_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
@@ -1014,7 +1014,7 @@
   <block name="A2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="timer_clock" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="ZeroTerminal_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="MISO" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="MISO0" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="Wemos_Rx_Int" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="LED" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
 </blockRegMap>
