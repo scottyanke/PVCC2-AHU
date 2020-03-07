@@ -1,8 +1,8 @@
 #include "ModbusRtu.h"
 
 extern uint32 Global_time;
-extern uint8_t rs485_pos;
-extern uint8_t rs485_buffer[];
+//extern uint8_t rs485_pos;
+//extern uint8_t rs485_buffer[];
 
 /* _____PUBLIC FUNCTIONS_____________________________________________________ */
     uint8_t u8id; //!< 0=master, 1..247=slave number
@@ -172,6 +172,7 @@ int8_t Modbus_query( modbus_t telegram )
         break;
     }
 
+    RS485_ClearTxBuffer();
     Modbus_sendTxBuffer();
     u8state = COM_WAITING;
     u8lastError = 0;
@@ -196,48 +197,47 @@ int8_t Modbus_poll()
 {
     // check if there is any incoming frame
 	uint8_t u8current;
-    u8current = rs485_pos;
+  u8current = RS485_GetRxBufferSize();
+  if ((unsigned long)(Global_time -u32timeOut) > (unsigned long)u16timeOut)
+  {
+    u8state = COM_IDLE;
+    u8lastError = NO_REPLY;
+    u16errCnt++;
+    return 0;
+  }
 
-    if ((unsigned long)(Global_time -u32timeOut) > (unsigned long)u16timeOut)
-    {
-        u8state = COM_IDLE;
-        u8lastError = NO_REPLY;
-        u16errCnt++;
-        return 0;
-    }
+  if (u8current == 0) return 0;
 
-    if (u8current == 0) return 0;
+  // check T35 after frame end or still no frame end
+  if (u8current != u8lastRec)
+  {
+    u8lastRec = u8current;
+    u32time = Global_time;
+    return 0;
+  }
+  if ((unsigned long)(Global_time -u32time) < (unsigned long)T35) return 0;
 
-    // check T35 after frame end or still no frame end
-    if (u8current != u8lastRec)
-    {
-        u8lastRec = u8current;
-        u32time = Global_time;
-        return 0;
-    }
-    if ((unsigned long)(Global_time -u32time) < (unsigned long)T35) return 0;
+  // transfer Serial buffer frame to auBuffer
+  u8lastRec = 0;
+  int8_t i8state = Modbus_getRxBuffer();
+  if (i8state < 6) //7 was incorrect for functions 1 and 2 the smallest frame could be 6 bytes long
+  {
+    u8state = COM_IDLE;
+    u16errCnt++;
+    return i8state;
+  }
 
-    // transfer Serial buffer frame to auBuffer
-    u8lastRec = 0;
-    int8_t i8state = Modbus_getRxBuffer();
-    if (i8state < 6) //7 was incorrect for functions 1 and 2 the smallest frame could be 6 bytes long
-    {
-        u8state = COM_IDLE;
-        u16errCnt++;
-        return i8state;
-    }
+  // validate message: id, CRC, FCT, exception
+  uint8_t u8exception = Modbus_validateAnswer();
+  if (u8exception != 0)
+  {
+    u8state = COM_IDLE;
+    return u8exception;
+  }
 
-    // validate message: id, CRC, FCT, exception
-    uint8_t u8exception = Modbus_validateAnswer();
-    if (u8exception != 0)
-    {
-        u8state = COM_IDLE;
-        return u8exception;
-    }
-
-    // process answer
-    switch( au8Buffer[ FUNC ] )
-    {
+  // process answer
+  switch( au8Buffer[ FUNC ] )
+  {
     case MB_FC_READ_COILS:
     case MB_FC_READ_DISCRETE_INPUT:
         // call get_FC1 to transfer the incoming message to au16regs buffer
@@ -256,9 +256,9 @@ int8_t Modbus_poll()
         break;
     default:
         break;
-    }
-    u8state = COM_IDLE;
-    return u8BufferSize;
+  }
+  u8state = COM_IDLE;
+  return u8BufferSize;
 }
 
 /* _____PRIVATE FUNCTIONS_____________________________________________________ */
@@ -282,21 +282,29 @@ void Modbus_init()
  */
 int8_t Modbus_getRxBuffer()
 {
-    _Bool bBuffOverflow = false;
+  _Bool bBuffOverflow = false;
 
-    u8BufferSize = 0;
-    memcpy(au8Buffer,rs485_buffer,rs485_pos);
-    u8BufferSize = rs485_pos;
-    rs485_pos = 0;
-    if (u8BufferSize >= MAX_BUFFER) bBuffOverflow = true;
-    u16InCnt++;
+  u8BufferSize = 0;
+  while (RS485_GetRxBufferSize() > 0) // something has been received
+  {
+    au8Buffer[u8BufferSize] = RS485_GetByte() & 0xff; // get a byte
+    Wemos_PutChar(au8Buffer[u8BufferSize]);
+    u8BufferSize++;
+    if (u8BufferSize >= MAX_BUFFER)
+      bBuffOverflow = true;
+  }
+//    memcpy(au8Buffer,rs485_buffer,rs485_pos);
+//    u8BufferSize = rs485_pos;
+//    rs485_pos = 0;
+//    if (u8BufferSize >= MAX_BUFFER) bBuffOverflow = true;
+  u16InCnt++;
 
-    if (bBuffOverflow)
-    {
-        u16errCnt++;
-        return ERR_BUFF_OVERFLOW;
-    }
-    return u8BufferSize;
+  if (bBuffOverflow)
+  {
+      u16errCnt++;
+      return ERR_BUFF_OVERFLOW;
+  }
+  return u8BufferSize;
 }
 
 /**

@@ -160,11 +160,6 @@
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\DIP.h</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\Wemos_IntClock.c</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\Wemos_IntClock.h</File>
-          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\Rx_Timer.c</File>
-          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\Rx_Timer.h</File>
-          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\Rx_Timer_PM.c</File>
-          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\Rx_Timer_Int.c</File>
-          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\Rx_Timer_Int.h</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\A1_aliases.h</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\A1.c</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\A1.h</File>

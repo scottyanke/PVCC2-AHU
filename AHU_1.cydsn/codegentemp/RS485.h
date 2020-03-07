@@ -359,7 +359,7 @@ extern uint8 RS485_initVar;
 #endif /* (RS485_RXHW_ADDRESS_ENABLED) */
 
 #define RS485_INIT_RX_INTERRUPTS_MASK \
-                                  (uint8)((1 << RS485_RX_STS_FIFO_NOTEMPTY_SHIFT) \
+                                  (uint8)((0 << RS485_RX_STS_FIFO_NOTEMPTY_SHIFT) \
                                         | (0 << RS485_RX_STS_MRKSPC_SHIFT) \
                                         | (0 << RS485_RX_STS_ADDR_MATCH_SHIFT) \
                                         | (0 << RS485_RX_STS_PAR_ERROR_SHIFT) \
@@ -368,7 +368,7 @@ extern uint8 RS485_initVar;
                                         | (0 << RS485_RX_STS_OVERRUN_SHIFT))
 
 #define RS485_INIT_TX_INTERRUPTS_MASK \
-                                  (uint8)((1 << RS485_TX_STS_COMPLETE_SHIFT) \
+                                  (uint8)((0 << RS485_TX_STS_COMPLETE_SHIFT) \
                                         | (0 << RS485_TX_STS_FIFO_EMPTY_SHIFT) \
                                         | (0 << RS485_TX_STS_FIFO_FULL_SHIFT) \
                                         | (0 << RS485_TX_STS_FIFO_NOT_FULL_SHIFT))

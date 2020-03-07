@@ -22,10 +22,10 @@
 #define MY_ID '0'
 #define TIME_BETWEEN_POLLING 295000
 // MODBUS_COUNT is the max number of modbus devices to poll
-#define MODBUS_COUNT 7
+#define MODBUS_COUNT 10
 #define MODBUS_BASE_ADDR 0x31
 
-uint8_t wemos_buffer[256];
+uint8_t wemos_buffer[128];
 uint8_t rs485_buffer[256];
 char myId;
 uint8_t rx_timed_out;
@@ -38,12 +38,11 @@ uint16_t last_modbus_time;  // At what point in the seconds counter was the modb
 uint32 esc_time;    // used to help indicate how long an escape character is valid, compared to Global_time
 char version[12];   // just used to hold to version date sent at boot time
 // data array for modbus network sharing
-uint16_t registers[MODBUS_COUNT][60];
-uint16_t last_registers[MODBUS_COUNT][60];
+uint16_t registers[MODBUS_COUNT][30];
+uint16_t last_registers[MODBUS_COUNT][30];
 uint8_t modbus_state;
 uint8_t modbus_slave;
 unsigned long modbus_wait;
-uint16_t temp_regs[40];
 float last_Adc_result[4] = {0,0,0,0}; // the last____ variables are to cut down on sending unchanged information
 float last31855[8] = {0,0,0,0,0,0,0,0};
 float lastDS18B20[10] = {0,0,0,0,0,0,0,0,0,0};
@@ -250,10 +249,10 @@ int main(void)
   Timer_Int_SetVector(Timer_ISR);
 
   RS485_Start();              // all communications are done using RS485 for modbus
-  Rx_Int_Start();             //Start the Interrupt.
-  Rx_Int_SetVector(Rx_ISR);   //Set the Vector to the ISR.
+  //Rx_Int_Start();             //Start the Interrupt.
+  //Rx_Int_SetVector(Rx_ISR);   //Set the Vector to the ISR.
 
-  Rx_Timer_Int_SetVector(Rx_Timer_ISR);
+  //Rx_Timer_Int_SetVector(Rx_Timer_ISR);
 
   CyGlobalIntEnable; /* Enable global interrupts. */
   Temp_CS_Write(0xff);    // turn all CS lines off
@@ -265,11 +264,12 @@ int main(void)
 
   wemos_pos = 0;
   Wemos_ClearRxBuffer();
+  Wemos_ClearTxBuffer();
 
   AMux_Start();
   ADC_Start();
 
-  CyDelay(5000);
+  CyDelay(3000);
   //=============================================
   // Everything up to this point was setup
   // The normal processing occurs after this point
@@ -284,15 +284,16 @@ int main(void)
       wemos_pos = 0;
       if (wemos_buffer[0] == '1' || wemos_buffer[0] == '2')  // process requests
       {
-        CyDelay(50);
+        CyDelay(500);
         LED_Write(1);           // light the led just to show we received a request for this id, for debugging
+        Wemos_ClearTxBuffer();
         one_wire_reset_pulse(); // do this for all of the DS18B20's
         // do this here because of timing, the DS18B20's can convert while other devices report
         devices = ds18b20_get_devices(1);
         ds18b20_convert_temperature_all();
 
-        sprintf(ts,"R|000|%s|%c\r\n",version,myId);
-        Wemos_PutString(ts);  // done just to clear everything
+        //sprintf(ts,"R|000|%s|%c\r\n",version,myId);
+        //Wemos_PutString(ts);  // done just to clear everything
         if (wemos_buffer[0] == '1') // A 1 just requests whatever has changed
         {
           forced = 0;
@@ -302,6 +303,7 @@ int main(void)
         {
           forced = 1;
           process_holding_registers(true);    // this queues up all the data for mqtt
+          CyDelay(250);
           for (i = 0; i < 8; i++)
           {
             last31855[i] = -20.0;
@@ -314,10 +316,10 @@ int main(void)
         i = DINP_Read() << DINP_WIDTH; // get the values from the digital pins
         printBinary(i,s);
         s[DINP_WIDTH] = 0; // the WIDTH is the actual number of pins being looked at
-        sprintf(ts,"P|000|%s|%c\r\n",s,myId);    // report on the status of the air conditioners
         if (forced || i != lastPins)
         {
           lastPins = i;
+          sprintf(ts,"P|000|%s|%c\r\n",s,myId);    // report on the status of the air conditioners
           Wemos_PutString(ts);
         }
 
@@ -331,8 +333,8 @@ int main(void)
           fAdc = round((ADC_CountsTo_Volts(Adc_result) * 1.052) * 10) / 10;
           if (forced || last_Adc_result[i] != fAdc) // only show what has changed
           {
-            sprintf(ts,"A|000|%06.2lf|%06lu|%d|%c\r\n",fAdc,Adc_result,i,myId);
             CyDelay(20);
+            sprintf(ts,"A|000|%06.2lf|%06lu|%d|%c\r\n",fAdc,Adc_result,i,myId);
             Wemos_PutString(ts);
             last_Adc_result[i] = fAdc;
           }
@@ -346,11 +348,11 @@ int main(void)
             f1 = max31855_Celsius(i); // pass all temperature values in celsius
             if (f1 < 100 && f1 > -30 && f1 != 0.0)  // account for bad readings
             {
-              sprintf(ts,"M|000|%06.2lf|%d|%c\r\n",f1,i,myId);
               if (forced || checkDiff(f1,last31855[i],0.5))
               {
                 last31855[i] = f1;
                 CyDelay(20);
+                sprintf(ts,"M|000|%06.2lf|%d|%c\r\n",f1,i,myId);
                 Wemos_PutString(ts);
               }
               CyDelay(50);
@@ -383,15 +385,14 @@ int main(void)
         for (i = 0; i < devices.size; ++i) // get the temperatures from all of the DS18B20s that responded
         {
           temperature = ds18b20_read_temperature(devices.devices[i]);
-
           address = devices.devices[i];
-          sprintf(ts,"T|000|%06.2lf|%02x%02x%02x%02x%02x%02x|%c\r\n",
-              temperature,address.address[2],address.address[3],
-              address.address[4],address.address[5],address.address[6],
-              address.address[7],myId);
           if (forced || checkDiff(temperature,lastDS18B20[i],0.5))
           {
             CyDelay(20);
+            sprintf(ts,"T|000|%06.2lf|%02x%02x%02x%02x%02x%02x|%c\r\n",
+              temperature,address.address[2],address.address[3],
+              address.address[4],address.address[5],address.address[6],
+              address.address[7],myId);
             Wemos_PutString(ts);
             lastDS18B20[i] = temperature;
           }
@@ -424,12 +425,12 @@ int main(void)
         break;
       case 1:
         LED_Write(1);   // turn the communications indicator light on
-        for (i = 0; i < 60; i++)
+        for (i = 0; i < 30; i++)
           registers[modbus_slave][i] = 0;
         telegram.u8id = MODBUS_BASE_ADDR + modbus_slave; // slave address
         telegram.u8fct = 3; // function code (this one is registers read)
         telegram.u16RegAdd = 0; // start address in slave
-        telegram.u16CoilsNo = 40; // number of elements (coils or registers) to read
+        telegram.u16CoilsNo = 30; // number of elements (coils or registers) to read
         telegram.au16reg = &registers[modbus_slave][0]; // pointer to a memory array in the Arduino
         Modbus_query( telegram ); // send query (only once)
         modbus_state++;   // now looking for responses

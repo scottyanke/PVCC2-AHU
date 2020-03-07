@@ -27,13 +27,12 @@
 #define MODBUS_BASE_ADDR 0x31
 
 uint8_t wemos_buffer[256];
-uint8_t rs485_buffer[256];
+//uint8_t rs485_buffer[256];
 char temp_message[128];
 char myId;
-uint8_t rx_timed_out;
 uint8_t slave_id;
 uint8_t wemos_pos = 0;    // where in the receive buffer are we?
-uint8_t rs485_pos;    // where in the receive buffer are we?
+//uint8_t rs485_pos;    // where in the receive buffer are we?
 uint8_t esc;        // flag to indicate whether an escape character was received
 uint32 Global_time; // constantly updated by the timer interrupt, used for exact delays
 uint16_t last_modbus_time;  // At what point in the seconds counter was the modbus read
@@ -44,7 +43,7 @@ uint16_t registers[MODBUS_COUNT][60];
 uint16_t last_registers[MODBUS_COUNT][60];
 uint8_t modbus_state;
 uint8_t modbus_slave;
-unsigned long modbus_wait;
+uint32 modbus_wait;
 uint16_t temp_regs[40];
 float last_Adc_result[4] = {0,0,0,0}; // the last____ variables are to cut down on sending unchanged information
 float last31865[8] = {0,0,0,0,0,0,0,0};
@@ -62,14 +61,7 @@ CY_ISR(Timer_ISR){  // interrupt routine to update the Global_time value
     Global_time++;
     Timer_Int_ClearPending();
 }
-CY_ISR(Rx_Timer_ISR)
-{
-  if (Rx_Timer_STATUS_TC & Rx_Timer_ReadStatusRegister())
-  {
-    rx_timed_out = 1;
-  }
-  Rx_Timer_Int_ClearPending();
-}
+/*
 CY_ISR(Rx_ISR){     //ISR for 'On Byte Recd.'
 	uint16 GetB;    //16bit var for storing GetByte's return.
 	RS485_ReadRxStatus();   //Read it to clear interrupts.
@@ -77,9 +69,8 @@ CY_ISR(Rx_ISR){     //ISR for 'On Byte Recd.'
   rs485_buffer[rs485_pos++] = (GetB & 0xff);  // put the character in the buffer
   if (rs485_pos > 254)
       rs485_pos = 254;
-  Rx_Timer_Stop();
-  Rx_Timer_Start();
 }
+*/
 CY_ISR(Wemos_Rx_ISR){     //ISR for 'On Byte Recd.'
 	uint16 GetB;    //16bit var for storing GetByte's return.
 	Wemos_ReadRxStatus();   //Read it to clear interrupts.
@@ -136,11 +127,12 @@ void process_holding_registers(_Bool force)
   // Note that modbus doesn't really handle negative values that well.  Everything is a positive integer.
   for (j = 0; j < MODBUS_COUNT; j++)  // for each unit that is polled we check the registers
   {
+    CyDelay(250);
     k = 0;
     for (i = 0; i < 30; i++)
       if (registers[j][i] > 0)
         k = 1;    // all k does is indicate that there is a value other than 0 in one of the fields
-    if (k)  // we got something from a device cause not everything is 0
+    if (k || force)  // we got something from a device cause not everything is 0
     {
       modbus_staleness = (Global_time / 1000) - last_modbus_time + registers[j][25]; // get the real 'how out of date are we?' value
 
@@ -155,7 +147,7 @@ void process_holding_registers(_Bool force)
           last_registers[j][26] = registers[j][26];
           last_registers[j][27] = registers[j][27];
           last_registers[j][28] = registers[j][28];
-          CyDelay(100);  // done to let the buffer clear
+          CyDelay(250);  // done to let the buffer clear
           sprintf(temp_message, "H|%03d|%06.2f|%05.2f|%05.2f|%c|%c\r\n", modbus_staleness,newTemp,registers[j][26] / 10.0, registers[j][27] / 10.0,MODBUS_BASE_ADDR + j,myId);
           Wemos_PutString(temp_message);  // send to mqtt later
         }
@@ -169,7 +161,7 @@ void process_holding_registers(_Bool force)
           if (force || checkDiff(newTemp, last_registers[j][i * 4] / 100.0, 0.55))  // only update if something changed
           {
             last_registers[j][i * 4] = registers[j][i * 4];
-            CyDelay(200);  // done to let the buffer clear
+            CyDelay(250);  // done to let the buffer clear
             sprintf(temp_message, "T|%03d|%06.2f|%04x%04x%04x|%c|%c\r\n", modbus_staleness,newTemp,registers[j][(i*4)+1], registers[j][(i*4)+2], registers[j][(i*4)+3],MODBUS_BASE_ADDR + j,myId);
             Wemos_PutString(temp_message);  // send to mqtt after queuing
           }
@@ -183,7 +175,7 @@ void process_holding_registers(_Bool force)
         {
           last_registers[j][29] = registers[j][29];
           printBinary((uint8_t)(registers[j][29] & 0xff), ts);
-          CyDelay(100);  // done to let the buffer clear
+          CyDelay(250);  // done to let the buffer clear
           sprintf(temp_message, "P|%03d|%s|%c|%c\r\n", modbus_staleness,ts,MODBUS_BASE_ADDR + j,myId);
           Wemos_PutString(temp_message);  // send to mqtt later
         }
@@ -191,7 +183,6 @@ void process_holding_registers(_Bool force)
     }
   }
   // ------ End of processing the holding registers
-
 }
 //========================================================================================
 //========================================================================================
@@ -221,7 +212,7 @@ int main(void)
   uint8_t fault;  // used to check faults on the RTDs
   uint8_t forced;
   char s[20];   // essentially just used to report pin states
-  char ts[128]; // a temporary string used for brief periods to send messages
+  char ts[200]; // a temporary string used for brief periods to send messages
   double f1;
   uint32 Adc_result;
   float fAdc;
@@ -232,12 +223,11 @@ int main(void)
   // TODO Convert the switches to an id
   myId = MY_ID;
   wemos_pos = 0;
-  rs485_pos = 0;
+  //rs485_pos = 0;
   Global_time = 0;
-  rx_timed_out = 0;
   forced = 0;
   sprintf(version,"%02d%02d%02d-%02d%02d", BUILD_YEAR - 2000, BUILD_MONTH, BUILD_DAY, BUILD_HOUR, BUILD_MIN);
-  CyDelay(6000); // Just take a short pause to let the wemos start
+  CyDelay(5000); // Just take a short pause to let the wemos start
   myId = DIP_Read();    // Find out what device this is supposed to be reported as
   myId += 0x40;         // This type of device starts at 'A', and works up to 'O'
   Modbus_begin();       // Initialize the modbus routines
@@ -256,10 +246,8 @@ int main(void)
   Timer_Int_SetVector(Timer_ISR);
 
   RS485_Start();              // all communications are done using RS485 for modbus
-  Rx_Int_Start();             //Start the Interrupt.
-  Rx_Int_SetVector(Rx_ISR);   //Set the Vector to the ISR.
-
-  Rx_Timer_Int_SetVector(Rx_Timer_ISR);
+//  Rx_Int_Start();             //Start the Interrupt.
+//  Rx_Int_SetVector(Rx_ISR);   //Set the Vector to the ISR.
 
   CyGlobalIntEnable; /* Enable global interrupts. */
   max31865_begin(MAX31865_3WIRE); // tell all of the MAX31865 that they use 3-wire connections to the PTCs
@@ -307,6 +295,7 @@ int main(void)
         {
           forced = 1;
           process_holding_registers(true);    // this queues up all the data for mqtt
+          CyDelay(250);
           for (i = 0; i < 8; i++) // clear all last values so we get past the checkDiff function
           {
             last31865[i] = -20.0;
@@ -419,7 +408,7 @@ int main(void)
           }
           CyDelay(50);
         }
-        CyDelay(20);
+        CyDelay(200);
         Wemos_PutString("DONE\r\n");  // Nothing more to send
         wemos_buffer[0] = 0;  // Clear the received character buffer
         forced = 0;     // clear the forced flag
@@ -437,7 +426,7 @@ int main(void)
     //CySoftwareReset();
     LED_Write(0);
   }
-  
+
   switch( modbus_state )
   {
     case 0:
@@ -460,6 +449,8 @@ int main(void)
       modbus_slave++;   // set up for the next slave
       break;
     case 2:
+  while (RS485_GetRxBufferSize() > 0) // something has been received
+    Wemos_PutChar(RS485_ReadRxData());
       Modbus_poll(); // check incoming messages
       if (Modbus_getState() == COM_IDLE)  // COM_IDLE is after we've received our response
       {
@@ -472,7 +463,7 @@ int main(void)
           LED_Write(0);   // Turn the light back off
         }
       }
-      break;
+      //break;
     }  // end of waking up on modbus_state
   }   // end of looping forever
 }

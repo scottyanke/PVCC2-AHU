@@ -3,7 +3,6 @@
 <fileSet version="1" anchorPath="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp" xsi:schemaLocation="http://cypress.com/xsd/cypathdictionary cypathdictionary.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://cypress.com/xsd/cypathdictionary">
   <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\cyfitter_cfg.h" value="HEADER;;;;;" />
   <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\cyfitter_cfg.c" value="SOURCE_C;CortexM3;;;;" />
-  <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\config.hex" value="OTHER;;;;;" />
   <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\cymetadata.c" value="SOURCE_C;CortexM3;;;;" />
   <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\cydevice.h" value="HEADER;;;;;" />
   <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\cydevicegnu.inc" value="HEADER;;;;;" />
@@ -79,11 +78,6 @@
   <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\DIP_aliases.h" value="HEADER;;;;;DIP" />
   <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\DIP.c" value="SOURCE_C;CortexM3;;;;DIP" />
   <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\DIP.h" value="HEADER;;;;;DIP" />
-  <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\Rx_Timer.c" value="SOURCE_C;CortexM3;;;;Rx_Timer" />
-  <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\Rx_Timer.h" value="HEADER;;;;;Rx_Timer" />
-  <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\Rx_Timer_PM.c" value="SOURCE_C;CortexM3;;;;Rx_Timer" />
-  <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\Rx_Timer_Int.c" value="SOURCE_C;CortexM3;;;;Rx_Timer_Int" />
-  <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\Rx_Timer_Int.h" value="HEADER;;;;;Rx_Timer_Int" />
   <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\SPIM.c" value="SOURCE_C;CortexM3;;;;SPIM" />
   <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\SPIM.h" value="HEADER;;;;;SPIM" />
   <file name="X:\projects\PVCC2-AHU\AHU_1.cydsn\codegentemp\SPIM_PM.c" value="SOURCE_C;CortexM3;;;;SPIM" />

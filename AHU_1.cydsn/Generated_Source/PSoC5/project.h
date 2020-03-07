@@ -51,8 +51,6 @@
 #include "RS485.h"
 #include "DIP_aliases.h"
 #include "DIP.h"
-#include "Rx_Timer.h"
-#include "Rx_Timer_Int.h"
 #include "SPIM.h"
 #include "SPIM_PVT.h"
 #include "A0_aliases.h"
