@@ -33,7 +33,7 @@
  *  EEPROM at version 1.0
  *  
  *  Executable segment sizes:
- *  IROM   : 306824          - code in flash         (default or ICACHE_FLASH_ATTR) 
+ *  IROM   : 306776          - code in flash         (default or ICACHE_FLASH_ATTR) 
  *  IRAM   : 27500   / 32768 - code in IRAM          (ICACHE_RAM_ATTR, ISRs...) 
  *  DATA   : 1320  )         - initialized variables (global, static) in RAM/HEAP 
  *  RODATA : 3852  ) / 81920 - constants             (global, static) in RAM/HEAP 
@@ -274,6 +274,7 @@ void setup()
     server.sendHeader(F("Connection"), "close");
     server.send(200, F("text/plain"), (Update.hasError()) ? "FAIL" : "OK");
     ESP.wdtFeed();
+    yield();
     delay(2000);    // Show it for 2 seconds, then restart the ESP8266 using a software command
     client.flush();
     ESP.restart();
@@ -284,13 +285,15 @@ void setup()
     ESP.wdtFeed();
     if (upload.status == UPLOAD_FILE_START) 
     {
-      char ts2[20];   // For some odd reason putting in the Serial prints allows this to work.  Otherwise it quietly fails.
+      char ts2[20];   // This will quietly fail is the yields are not present.
+      yield();
       ESP.wdtFeed();
       uint32_t maxSketchSpace = (ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000;
       ESP.wdtFeed();
       Update.begin(maxSketchSpace);
       ESP.wdtFeed();
       sprintf(ts2,"maxSketchSpace = %zu\r\n",maxSketchSpace);
+      yield();
       ESP.wdtFeed();
     } 
     else 
@@ -298,12 +301,14 @@ void setup()
       { 
         ESP.wdtFeed();
         Update.write(upload.buf, upload.currentSize);
+        yield();
       }
       else 
         if (upload.status == UPLOAD_FILE_END)
         {
           ESP.wdtFeed();
           Update.end(true);
+          yield();
         }
     delay(1);
   }); 
@@ -1193,28 +1198,14 @@ void handleStatus()
         if (!getLine(serial_buffer))   // if getLine returns false then it timed out
         { // timed out, so abandon any further reads
           ESP.wdtFeed();
-          retry_count++;
-          if (retry_count < 4)
-          {
-            if (retry_count > 2)  // only say something if it keeps happening repeatedly
-            {
-              server.sendContent("Polling the PSOC timed out.<br>");
-              request_state = 0;
-              digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
-            }
-          }
-          if (retry_count > 3)
-          {
-            request_state = 0;
-            retry_count = 0;
-            digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
-          }
+          server.sendContent("Polling the PSOC timed out.<br>");
+          request_state = 0;
+          digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
         }
         else  // We didn't time out, so report what we received
         {
           ESP.wdtFeed();
-          retry_count = 0;  // reset this because we successfully got an answer from the PSOC
-          if (strncmp(serial_buffer,"DONE",4))   // Remember the strncmp returns non-zero if the strings DONT match
+          if (!strstr(serial_buffer,"DONE"))
           {
             server.sendContent(serial_buffer);
             server.sendContent("<br>");
